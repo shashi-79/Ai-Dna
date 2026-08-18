@@ -1,6 +1,7 @@
 """
 Multi-Task Loss Functions.
-Joint Training Objective: L_total = lambda_AR * L_AR + lambda_Diff * L_Diff + lambda_bal * L_bal
+Joint Training Objective: L_total = lambda_AR * L_AR + lambda_Diff * L_Diff + lambda_bal * L_bal + lambda_con * L_contrastive
+Implements idea.md Section 12.1.
 """
 
 import torch
@@ -11,7 +12,8 @@ from typing import Dict, Optional, Tuple
 
 class JointLoss(nn.Module):
     """
-    Computes joint loss across Autoregressive, Diffusion, Classification, and MoE Expert balancing.
+    Computes joint loss across Autoregressive, Diffusion, Classification,
+    Contrastive Cross-Modal Alignment, and MoE Expert balancing.
     """
     def __init__(
         self,
@@ -19,12 +21,14 @@ class JointLoss(nn.Module):
         lambda_diff: float = 1.0,
         lambda_cls: float = 1.0,
         lambda_bal: float = 0.01,
+        lambda_con: float = 0.1,
     ):
         super().__init__()
         self.lambda_ar = lambda_ar
         self.lambda_diff = lambda_diff
         self.lambda_cls = lambda_cls
         self.lambda_bal = lambda_bal
+        self.lambda_con = lambda_con
 
         self.ce_loss = nn.CrossEntropyLoss(ignore_index=0)
         self.mse_loss = nn.MSELoss()
@@ -50,9 +54,21 @@ class JointLoss(nn.Module):
         cls_targets: Optional[torch.Tensor] = None,
         diff_pred: Optional[torch.Tensor] = None,
         diff_target: Optional[torch.Tensor] = None,
+        contrastive_loss: Optional[torch.Tensor] = None,
         aux_loss: Optional[torch.Tensor] = None,
     ) -> Tuple[torch.Tensor, Dict[str, float]]:
-        total_loss = torch.tensor(0.0, device=aux_loss.device if aux_loss is not None else torch.device("cpu"))
+        """
+        Calculates combined multi-objective loss:
+        L_total = lambda_ar * L_ar + lambda_cls * L_cls + lambda_diff * L_diff + lambda_con * L_con + L_bal
+        """
+        device = (
+            ar_logits.device if ar_logits is not None else
+            cls_logits.device if cls_logits is not None else
+            diff_pred.device if diff_pred is not None else
+            aux_loss.device if aux_loss is not None else
+            torch.device("cpu")
+        )
+        total_loss = torch.tensor(0.0, device=device)
         breakdown = {}
 
         if ar_logits is not None and ar_targets is not None:
@@ -69,6 +85,10 @@ class JointLoss(nn.Module):
             l_diff = self.diffusion_loss(diff_pred, diff_target)
             total_loss = total_loss + self.lambda_diff * l_diff
             breakdown["loss_diff"] = l_diff.item()
+
+        if contrastive_loss is not None:
+            total_loss = total_loss + self.lambda_con * contrastive_loss
+            breakdown["loss_contrastive"] = contrastive_loss.item()
 
         if aux_loss is not None:
             total_loss = total_loss + aux_loss

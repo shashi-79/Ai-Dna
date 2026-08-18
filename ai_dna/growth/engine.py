@@ -1,7 +1,7 @@
 """
 Growth Engine G(D, C) -> Phenotype Parameters.
 Generates full neural phenotypes from compact genotype representations.
-Supports both Eager (materialized weights) and Lazy (on-the-fly slice evaluation).
+Supports Multi-Head Latent Attention (MLA), Top-K Sparsely-Gated MoE, and Contrastive Omni-Modal Encoders.
 """
 
 import torch
@@ -36,7 +36,6 @@ class GrowthEngine:
 
         if instinct.genetic_parameters:
             try:
-                # Filter out parameters that match the shape
                 model_state = cppn.state_dict()
                 matched_state = {}
                 for k, v in instinct.genetic_parameters.items():
@@ -46,9 +45,8 @@ class GrowthEngine:
                     model_state.update(matched_state)
                     cppn.load_state_dict(model_state)
             except Exception:
-                pass  # Fall back to native random initialization
+                pass  # Fall back to native initialization
         else:
-            # Populate genotype's genetic parameters from initialized CPPN
             genotype.dna_instinct.genetic_parameters = cppn.get_parameter_dict()
 
         return cppn
@@ -79,7 +77,6 @@ class GrowthEngine:
         )
         with torch.no_grad():
             raw_weights = cppn(coords).squeeze(-1)
-            # Xavier/Kaiming normalized scaling
             std = (2.0 / (in_features + out_features)) ** 0.5
             scaled_weights = raw_weights * std
         return scaled_weights
@@ -108,6 +105,7 @@ class GrowthEngine:
     def grow_phenotype_weights(self, genotype: Genotype) -> Dict[str, torch.Tensor]:
         """
         Eager growth: Generates all weight and bias tensors for the target model architecture.
+        Aligned with MLA, Top-K MoE, and Contrastive Encoders.
         """
         cppn = self.instantiate_cppn(genotype)
         arch = genotype.dna_architecture
@@ -117,26 +115,39 @@ class GrowthEngine:
         num_layers = arch.num_layers
         num_experts = arch.num_experts
         d_expert_hidden = arch.d_expert_hidden
+        d_kv_latent = getattr(arch, "kv_latent_dim", max(8, d_model // 4))
         coord_dim = arch.coord_dim
 
-        # 1. Embeddings & Intakes
-        weights["token_emb.weight"] = self.grow_weight_matrix(
+        # 1. Text & Multimodal Encoders
+        weights["text_encoder.token_emb.weight"] = self.grow_weight_matrix(
             cppn, arch.vocab_size, d_model, layer_idx=0, num_layers=num_layers + 2, coord_dim=coord_dim
         )
+        weights["vision_encoder.patch_proj.weight"] = self.grow_weight_matrix(
+            cppn, d_model, 3 * 4 * 4, layer_idx=0, num_layers=num_layers + 2, coord_dim=coord_dim
+        )
+        weights["audio_encoder.proj.weight"] = self.grow_weight_matrix(
+            cppn, d_model, 80, layer_idx=0, num_layers=num_layers + 2, coord_dim=coord_dim
+        )
+        weights["contrastive_head.proj.weight"] = self.grow_weight_matrix(
+            cppn, d_model, d_model, layer_idx=0, num_layers=num_layers + 2, coord_dim=coord_dim
+        )
 
-        # 2. Layer Blocks (Attention Projections & MoE Experts)
+        # 2. Layer Blocks (MLA Attention Projections & MoE Experts)
         for l in range(num_layers):
-            # Attention Projections: Q, K, V, Out
-            weights[f"blocks.{l}.attn.q_proj.weight"] = self.grow_weight_matrix(
+            # MLA Projections: w_q, w_dkv (down), w_uk (up), w_uv (up), o_proj
+            weights[f"blocks.{l}.attn.w_q.weight"] = self.grow_weight_matrix(
                 cppn, d_model, d_model, layer_idx=l, num_layers=num_layers, coord_dim=coord_dim
             )
-            weights[f"blocks.{l}.attn.k_proj.weight"] = self.grow_weight_matrix(
-                cppn, d_model, d_model, layer_idx=l, num_layers=num_layers, coord_dim=coord_dim
+            weights[f"blocks.{l}.attn.w_dkv.weight"] = self.grow_weight_matrix(
+                cppn, d_kv_latent, d_model, layer_idx=l, num_layers=num_layers, coord_dim=coord_dim
             )
-            weights[f"blocks.{l}.attn.v_proj.weight"] = self.grow_weight_matrix(
-                cppn, d_model, d_model, layer_idx=l, num_layers=num_layers, coord_dim=coord_dim
+            weights[f"blocks.{l}.attn.w_uk.weight"] = self.grow_weight_matrix(
+                cppn, d_model, d_kv_latent, layer_idx=l, num_layers=num_layers, coord_dim=coord_dim
             )
-            weights[f"blocks.{l}.attn.out_proj.weight"] = self.grow_weight_matrix(
+            weights[f"blocks.{l}.attn.w_uv.weight"] = self.grow_weight_matrix(
+                cppn, d_model, d_kv_latent, layer_idx=l, num_layers=num_layers, coord_dim=coord_dim
+            )
+            weights[f"blocks.{l}.attn.o_proj.weight"] = self.grow_weight_matrix(
                 cppn, d_model, d_model, layer_idx=l, num_layers=num_layers, coord_dim=coord_dim
             )
 
@@ -150,10 +161,10 @@ class GrowthEngine:
                 )
 
         # 3. Output Head
-        weights["head.weight"] = self.grow_weight_matrix(
+        weights["ar_head.proj.weight"] = self.grow_weight_matrix(
             cppn, arch.vocab_size, d_model, layer_idx=num_layers + 1, num_layers=num_layers + 2, coord_dim=coord_dim
         )
-        weights["head.bias"] = self.grow_bias_vector(
+        weights["ar_head.proj.bias"] = self.grow_bias_vector(
             cppn, arch.vocab_size, layer_idx=num_layers + 1, num_layers=num_layers + 2, coord_dim=coord_dim
         )
 
@@ -162,33 +173,20 @@ class GrowthEngine:
     def grow_phenotype_model(self, genotype: Genotype) -> "PhenotypeNeuralNetwork":
         """
         Creates the complete, instantiated Phenotype Neural Network guided by the DNA.
-        The DNA dictates the architecture, but is NOT retained by the model itself.
         """
         from ..models.phenotype import PhenotypeNeuralNetwork
 
-        # 1. Instantiate the blank architecture
+        # 1. Instantiate the architecture
         model = PhenotypeNeuralNetwork(
             arch=genotype.dna_architecture,
             dna_routing=genotype.dna_routing,
             dna_memory=genotype.dna_memory,
         ).to(self.device)
 
-        # 2. Grow the biological weights from the CPPN
+        # 2. Grow weights from CPPN
         grown_weights = self.grow_phenotype_weights(genotype)
 
-        # 3. Map keys to fit the actual parameter names of PhenotypeNeuralNetwork
-        mapped_weights = {}
-        for k, v in grown_weights.items():
-            if k == "token_emb.weight":
-                mapped_weights["text_encoder.token_emb.weight"] = v
-            elif k == "head.weight":
-                mapped_weights["ar_head.proj.weight"] = v
-            elif k == "head.bias":
-                mapped_weights["ar_head.proj.bias"] = v
-            else:
-                mapped_weights[k] = v
-
-        # 4. Inject the weights into the empty phenotype shell
-        model.load_state_dict(mapped_weights, strict=False)
+        # 3. Load weights into the model
+        model.load_state_dict(grown_weights, strict=False)
 
         return model

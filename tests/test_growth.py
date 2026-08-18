@@ -37,11 +37,18 @@ def test_growth_engine_phenotype_generation():
     genotype.dna_architecture.num_layers = 2
     genotype.dna_architecture.num_experts = 2
     genotype.dna_architecture.d_expert_hidden = 64
+    genotype.dna_architecture.kv_latent_dim = 8
 
     growth_engine = GrowthEngine()
     weights = growth_engine.grow_phenotype_weights(genotype)
 
-    assert "token_emb.weight" in weights
-    assert "blocks.0.attn.q_proj.weight" in weights
+    assert "text_encoder.token_emb.weight" in weights
+    assert "blocks.0.attn.w_q.weight" in weights
+    assert "blocks.0.attn.w_dkv.weight" in weights
     assert "blocks.0.moe.experts.0.up_proj.weight" in weights
-    assert weights["blocks.0.attn.q_proj.weight"].shape == (32, 32)
+    assert weights["blocks.0.attn.w_q.weight"].shape == (32, 32)
+    assert weights["blocks.0.attn.w_dkv.weight"].shape == (8, 32)
+
+    # Test full phenotype model generation
+    model = growth_engine.grow_phenotype_model(genotype)
+    assert model.d_model == 32

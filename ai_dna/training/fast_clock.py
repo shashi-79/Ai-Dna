@@ -2,6 +2,7 @@
 Fast Clock: Parametric Learning Loop.
 Optimizes phenotype parameters W_0 -> W* while keeping genotype D frozen.
 W_{t+1} = Optimizer(W_t, grad_W L_total)
+Supports Autoregressive, Classification, Contrastive Alignment, and Diffusion tasks.
 """
 
 import time
@@ -97,6 +98,88 @@ class FastClockTrainer:
             h, aux_loss, _, _ = self.phenotype(inputs, modality=modality)
             logits = self.phenotype.cls_head(h)
             loss, breakdown = self.loss_fn(cls_logits=logits, cls_targets=targets, aux_loss=aux_loss)
+
+        if self.use_amp:
+            self.scaler.scale(loss).backward()
+            if self.gradient_clip > 0:
+                self.scaler.unscale_(self.optimizer)
+                torch.nn.utils.clip_grad_norm_(self.phenotype.parameters(), self.gradient_clip)
+            self.scaler.step(self.optimizer)
+            self.scaler.update()
+        else:
+            loss.backward()
+            if self.gradient_clip > 0:
+                torch.nn.utils.clip_grad_norm_(self.phenotype.parameters(), self.gradient_clip)
+            self.optimizer.step()
+
+        return loss.item(), breakdown
+
+    def train_step_contrastive(
+        self,
+        inputs_a: torch.Tensor,
+        inputs_b: torch.Tensor,
+        modality_a: str = "text",
+        modality_b: str = "vision",
+    ) -> Tuple[float, Dict[str, float]]:
+        """
+        Executes single gradient descent step for Cross-Modal Contrastive Alignment (Section 6.5).
+        """
+        self.phenotype.train()
+        self.optimizer.zero_grad()
+
+        inputs_a = inputs_a.to(self.device, non_blocking=True)
+        inputs_b = inputs_b.to(self.device, non_blocking=True)
+
+        with torch.autocast(device_type=self.device.type, enabled=self.use_amp):
+            h_a, aux_a, _, _ = self.phenotype(inputs_a, modality=modality_a)
+            h_b, aux_b, _, _ = self.phenotype(inputs_b, modality=modality_b)
+
+            z_a = self.phenotype.contrastive_head(h_a)
+            z_b = self.phenotype.contrastive_head(h_b)
+
+            con_loss = self.phenotype.contrastive_head.compute_loss(z_a, z_b)
+            aux_loss = aux_a + aux_b
+            loss, breakdown = self.loss_fn(contrastive_loss=con_loss, aux_loss=aux_loss)
+
+        if self.use_amp:
+            self.scaler.scale(loss).backward()
+            if self.gradient_clip > 0:
+                self.scaler.unscale_(self.optimizer)
+                torch.nn.utils.clip_grad_norm_(self.phenotype.parameters(), self.gradient_clip)
+            self.scaler.step(self.optimizer)
+            self.scaler.update()
+        else:
+            loss.backward()
+            if self.gradient_clip > 0:
+                torch.nn.utils.clip_grad_norm_(self.phenotype.parameters(), self.gradient_clip)
+            self.optimizer.step()
+
+        return loss.item(), breakdown
+
+    def train_step_diffusion(
+        self,
+        inputs: torch.Tensor,
+        modality: str = "vision",
+        num_steps: int = 1000,
+    ) -> Tuple[float, Dict[str, float]]:
+        """
+        Executes single gradient descent step for Continuous Modality Diffusion Training.
+        """
+        self.phenotype.train()
+        self.optimizer.zero_grad()
+
+        inputs = inputs.to(self.device, non_blocking=True)
+        B = inputs.shape[0]
+
+        with torch.autocast(device_type=self.device.type, enabled=self.use_amp):
+            h, aux_loss, _, _ = self.phenotype(inputs, modality=modality)
+            # Sample random timesteps and noise
+            timesteps = torch.randint(0, num_steps, (B,), device=self.device).long()
+            noise = torch.randn_like(h)
+            noisy_h = h + noise * 0.1
+
+            eps_pred = self.phenotype.diff_head(noisy_h, timesteps, h)
+            loss, breakdown = self.loss_fn(diff_pred=eps_pred, diff_target=noise, aux_loss=aux_loss)
 
         if self.use_amp:
             self.scaler.scale(loss).backward()

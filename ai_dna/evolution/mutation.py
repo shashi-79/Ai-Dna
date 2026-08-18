@@ -1,6 +1,12 @@
 """
 Stochastic Mutation Operator mu(D_t, xi_t).
-Applies parametric and structural mutations across all 6 DNA components.
+Applies parametric and structural mutations across all 6 DNA components:
+- DNAArchitecture (layers, experts, kv_latent_dim, rope_theta)
+- DNARouting (top_k_experts, noise_std, temperature)
+- DNAMemory (chunk_size, compression_rate, kv_quant_bits, page_size)
+- DNALearning (learning_rate, plasticity, weight_decay)
+- DNAInstinct (CPPN genetic parameters)
+- DNAEvolution (mutation rates, compatibility threshold)
 """
 
 import random
@@ -24,7 +30,7 @@ class GenotypeMutator:
         """
         child = genotype.clone(new_id=f"{genotype.genotype_id}_mut")
         child.generation = genotype.generation + 1
-        
+
         evo = child.dna_evolution
         rate = mutation_rate if mutation_rate is not None else evo.mutation_rate
         scale = evo.param_mutation_scale
@@ -35,25 +41,29 @@ class GenotypeMutator:
                 noise = torch.randn_like(param) * scale
                 child.dna_instinct.genetic_parameters[name] = param + noise
 
-        # 2. Mutate Routing Parameters
+        # 2. Mutate Routing Parameters (Top-K, noise std, temperature)
         if random.random() < rate:
-            child.dna_routing.threshold = float(
-                max(0.1, min(0.9, child.dna_routing.threshold + (random.random() - 0.5) * 0.1))
+            child.dna_routing.top_k_experts = random.choice([1, 2, 4])
+        if random.random() < rate:
+            child.dna_routing.routing_noise_std = float(
+                max(0.0, min(2.0, child.dna_routing.routing_noise_std + (random.random() - 0.5) * 0.2))
             )
         if random.random() < rate:
             child.dna_routing.temperature = float(
                 max(0.1, min(5.0, child.dna_routing.temperature + (random.random() - 0.5) * 0.2))
             )
 
-        # 3. Mutate Memory Policies
+        # 3. Mutate Memory Policies (chunk size, compression rate, quant bits, page size)
         if random.random() < rate:
-            # Shift chunk size within valid power-of-two boundaries
-            options = [16, 32, 64, 128]
-            child.dna_memory.chunk_size = random.choice(options)
+            child.dna_memory.chunk_size = random.choice([16, 32, 64, 128])
         if random.random() < rate:
             child.dna_memory.compression_rate = float(
                 max(0.1, min(0.5, child.dna_memory.compression_rate + (random.random() - 0.5) * 0.05))
             )
+        if random.random() < rate:
+            child.dna_memory.kv_quant_bits = random.choice([2, 3, 4, 8])
+        if random.random() < rate:
+            child.dna_memory.page_size = random.choice([8, 16, 32])
 
         # 4. Mutate Learning Dynamics
         if random.random() < rate:
@@ -61,7 +71,13 @@ class GenotypeMutator:
                 max(1e-5, min(1e-2, child.dna_learning.learning_rate * random.choice([0.8, 1.25])))
             )
 
-        # 5. Structural Mutations (Layer & Expert additions with new Innovation IDs)
+        # 5. Mutate Architecture Topology & RoPE/MLA parameters
+        if random.random() < rate:
+            child.dna_architecture.rope_theta = float(random.choice([10000.0, 50000.0, 100000.0]))
+        if random.random() < rate:
+            child.dna_architecture.kv_latent_dim = random.choice([8, 16, 32])
+
+        # 6. Structural Mutations (Expert additions with new Innovation IDs)
         if random.random() < evo.structural_mutation_rate:
             if random.random() < 0.5 and child.dna_architecture.num_experts < 16:
                 child.dna_architecture.num_experts += 1

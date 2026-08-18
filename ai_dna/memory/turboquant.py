@@ -2,7 +2,7 @@
 TurboQuant: Online Vector Quantization with Near-optimal Distortion Rate.
 Implements random rotation via Walsh-Hadamard Transform + Scalar Quantization
 and QJL residual correction for unbiased inner product estimation.
-Based on Zandieh et al., 2025 (arXiv:2504.19874v1).
+Based on Zandieh et al., 2025 (arXiv:2504.19874v1, ICLR 2026).
 Implements idea.md Section 9.2.
 """
 
@@ -14,7 +14,7 @@ import torch.nn as nn
 class TurboQuant:
     """
     TurboQuant: Online Vector Quantization with Near-optimal Distortion Rate.
-    1. Random orthogonal rotation Pi (distributes outlier magnitude, coordinate variance = 1/D).
+    1. Random orthogonal rotation Pi via Walsh-Hadamard with diagonal signs (coordinate variance = 1/D).
     2. Coordinate-wise scalar quantization using Lloyd-Max / scaled centroids.
     3. 1-bit QJL residual correction for unbiased inner product estimation.
     """
@@ -29,16 +29,37 @@ class TurboQuant:
         scale = 3.0 * std
         self.centroids = torch.linspace(-scale, scale, self.num_levels)
 
-        # Generate random orthogonal rotation matrix Pi
-        rand_mat = torch.randn(d_model, d_model)
-        q, r = torch.linalg.qr(rand_mat)
-        d = torch.diag(r)
-        ph = d.sign()
-        q *= ph
-        self.register_buffer("rotation_pi", q)
+        # Generate orthogonal rotation matrix Pi (Walsh-Hadamard or Haar orthogonal)
+        rot_mat = self._build_hadamard_or_haar_matrix(d_model)
+        self.register_buffer("rotation_pi", rot_mat)
 
         # Normalized Gaussian projection matrix for QJL
         self.register_buffer("matrix_s", torch.randn(d_model, d_model) / math.sqrt(d_model))
+
+    @staticmethod
+    def _build_hadamard_or_haar_matrix(dim: int) -> torch.Tensor:
+        """
+        Builds randomized Walsh-Hadamard matrix Pi = H_d * diag(+-1) if dim is power of 2,
+        or Haar orthogonal matrix via QR decomposition otherwise.
+        """
+        # Check if dim is power of 2
+        if (dim & (dim - 1) == 0) and dim > 0:
+            # Recursive Hadamard construction
+            h = torch.tensor([[1.0]], dtype=torch.float32)
+            while h.shape[0] < dim:
+                top = torch.cat([h, h], dim=1)
+                bottom = torch.cat([h, -h], dim=1)
+                h = torch.cat([top, bottom], dim=0) / math.sqrt(2.0)
+            # Apply random diagonal sign flips: Pi = H_d * diag(d_j)
+            signs = torch.randint(0, 2, (dim,)).float() * 2.0 - 1.0
+            return h * signs.unsqueeze(0)
+        else:
+            rand_mat = torch.randn(dim, dim)
+            q, r = torch.linalg.qr(rand_mat)
+            d = torch.diag(r)
+            ph = d.sign()
+            q *= ph
+            return q
 
     def register_buffer(self, name: str, tensor: torch.Tensor):
         setattr(self, name, tensor)
@@ -75,7 +96,6 @@ class TurboQuant:
 
         # 4. Reconstruct MSE approximation to compute residual
         y_hat = centroids[idx]  # (N, D)
-        # x_hat_mse = ||x|| * y_hat * Pi
         x_hat_mse = norms * torch.matmul(y_hat, rot_pi)
 
         # 5. QJL Residual Correction
@@ -117,11 +137,9 @@ class TurboQuant:
         rot_pi = self.rotation_pi.to(idx.device)
         x_hat_mse = norms_flat * torch.matmul(y_hat, rot_pi)
 
-        # QJL correction
-        # bit to [-1, 1]
+        # QJL correction: bit to [-1, 1]
         qjl = qjl_bit.view(-1, D).float() * 2.0 - 1.0
         mat_s = self.matrix_s.to(idx.device)
-        # Residual estimator: gamma * sqrt(pi / (2 * D)) * (qjl * S)
         scale = math.sqrt(math.pi / (2.0 * D))
         qjl_correction = torch.matmul(qjl, mat_s)
         x_hat_prod = x_hat_mse + gamma_flat * scale * qjl_correction
