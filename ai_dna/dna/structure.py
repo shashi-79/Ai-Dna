@@ -22,6 +22,8 @@ class DNAArchitecture:
     vocab_size: int = 1000
     coord_dim: int = 5  # (x1, y1, x2, y2, layer_pos)
     active_expert_threshold: float = 0.5
+    kv_latent_dim: int = 16    # d_kv (MLA latent dimension)
+    rope_theta: float = 10000.0 # Base frequency for RoPE
     innovation_id: int = 1
 
 
@@ -42,11 +44,13 @@ class DNAInstinct:
 
 @dataclass
 class DNARouting:
-    """Defines low-rank sparse gating behavior and Straight-Through routing."""
+    """Defines Top-K Noisy Gating routing behavior."""
     rank: int = 4
     threshold: float = 0.5
     temperature: float = 1.0
     load_balance_weight: float = 0.01
+    top_k_experts: int = 2          # Top-K sparse gating
+    routing_noise_std: float = 1.0  # Noise exploration scale
     innovation_id: int = 3
 
 
@@ -56,6 +60,9 @@ class DNAMemory:
     chunk_size: int = 32          # C_chunk (local attention window)
     compression_rate: float = 0.25 # c_rate (compression ratio for historical latents)
     num_retrieval: int = 8        # N_retrieval (number of retrieved latent memories)
+    kv_quant_bits: int = 3        # TurboQuant scalar quantization bits
+    page_size: int = 16           # PagedAttention archive page size
+    max_pages: int = 1024         # PagedAttention maximum allowed pages
     cost_alpha: float = 1.0       # Sequential time cost weight
     cost_beta: float = 0.5        # Peak memory cost weight
     cost_delta: float = 0.2       # Total memory cost weight

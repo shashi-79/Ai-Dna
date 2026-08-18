@@ -1,22 +1,20 @@
 """
-Generative Sparse Router with Load Balancing Loss and Operational Telemetry.
-Combines Low-Rank expert representation, Straight-Through gating, and auxiliary balancing.
-Implements idea.md Section 8.1: X_in = [X_meta || E_modality || (W_proj * h_t)]
+Generative Sparse Router with Top-K Sparsely-Gated Noisy Routing and Load Balancing.
+Replaces legacy STE and Low-Rank hard gating.
+Implements idea.md Section 8.2 & 8.3.
 """
 
 import torch
 import torch.nn as nn
 from typing import Tuple, Dict, Any, Optional
 from ..dna.structure import DNARouting
-from .low_rank_gate import LowRankExpertGate
-from .ste import StraightThroughEstimator
+from .topk_gate import TopKNoisyGate
 
 
 class GenerativeSparseRouter(nn.Module):
     """
     DNA-controlled Sparse Generative Router (Section 8).
-    Routes latent states to dynamically activated experts.
-    Supports optional operational telemetry (X_meta) per Section 8.1.
+    Routes latent states to dynamically activated Top-K experts with exploration noise and CV^2 load balancing.
     """
     def __init__(
         self,
@@ -32,18 +30,18 @@ class GenerativeSparseRouter(nn.Module):
         self.meta_dim = meta_dim
 
         # Optional X_meta projection (Section 8.1)
-        # When meta_dim > 0, the routing input becomes [X_meta || E_modality || W_proj * h_t]
         if meta_dim > 0:
             self.meta_proj = nn.Linear(meta_dim, d_model)
         else:
             self.meta_proj = None
 
-        self.gate = LowRankExpertGate(
+        # Top-K Noisy Gating module
+        self.gate = TopKNoisyGate(
             d_model=d_model,
             num_experts=num_experts,
-            rank=self.dna_routing.rank,
+            top_k=self.dna_routing.top_k_experts,
+            noise_std=self.dna_routing.routing_noise_std,
         )
-        self.ste = StraightThroughEstimator(threshold=self.dna_routing.threshold)
         self.load_balance_weight = self.dna_routing.load_balance_weight
 
     def forward(
@@ -57,33 +55,24 @@ class GenerativeSparseRouter(nn.Module):
         h: Latent token representation (B, S, D_model)
         modality_emb: Optional modality embedding (B, S, D_model)
         x_meta: Optional operational telemetry tensor (B, S, meta_dim)
-                Contains runtime metrics like compute cost, memory utilization, etc.
         Returns:
-            p_gate: Continuous gating probabilities (B, S, E_max)
-            m_gate: Straight-Through discrete selection mask (B, S, E_max)
+            p_gate: Normalized gating weights across experts (B, S, E_max)
+            m_gate: Binary activation mask (B, S, E_max)
             aux_loss: Expert load balancing loss L_bal
         """
-        # Build routing input: X_in = [X_meta || E_modality || (W_proj * h_t)] (Section 8.1)
         h_routed = h
 
         if modality_emb is not None:
             h_routed = h_routed + modality_emb
 
         if x_meta is not None and self.meta_proj is not None:
-            meta_features = self.meta_proj(x_meta)  # (B, S, D_model)
+            meta_features = self.meta_proj(x_meta)
             h_routed = h_routed + meta_features
 
-        _, p_gate = self.gate(h_routed)
-        m_gate = self.ste(p_gate, threshold=threshold)
+        p_gate, top_indices = self.gate(h_routed)
+        m_gate = (p_gate > 0.0).float()
 
-        # Expert Balancing Loss: L_bal = E_max * sum_{e=1}^{E_max} (P_e * f_e) (Section 12.1)
-        # P_e: mean routing probability across batch and sequence
-        # f_e: actual dispatch fraction
-        batch_size, seq_len, num_exp = p_gate.shape
-        p_e = p_gate.mean(dim=(0, 1))  # (E_max,)
-        f_e = (m_gate > 0.0).float().mean(dim=(0, 1))  # (E_max,)
-
-        l_bal = self.num_experts * (p_e * f_e).sum()
-        aux_loss = self.load_balance_weight * l_bal
+        # Compute auxiliary load balancing loss (Section 8.3 / Section 12.1)
+        aux_loss = self.load_balance_weight * self.gate.get_load_balancing_loss()
 
         return p_gate, m_gate, aux_loss

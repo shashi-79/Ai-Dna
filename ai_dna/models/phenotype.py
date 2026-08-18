@@ -1,6 +1,7 @@
 """
 Phenotype Neural Network Architecture.
-Combines Omni-Modal embeddings, Transformer blocks, and Sparse Low-Rank MoE layers.
+Combines Omni-Modal Contrastive Intake, Multi-Head Latent Attention (MLA),
+Rotary Position Embeddings (RoPE), and Top-K Sparsely-Gated MoE layers.
 """
 
 import math
@@ -11,50 +12,17 @@ from typing import Dict, List, Optional, Tuple, Any
 
 from ..dna.structure import DNAArchitecture, DNARouting, DNAMemory
 from ..routing.router import GenerativeSparseRouter
-from ..memory.hierarchical import HierarchicalMemoryController
+from .mla import MultiHeadLatentAttention
 from .modules import (
     TextEncoder,
     VisionEncoder,
     AudioEncoder,
     VideoEncoder,
+    ContrastiveAlignmentHead,
     AutoregressiveDecoderHead,
     DiffusionDecoderHead,
     ClassificationHead,
 )
-
-
-class MultiHeadSelfAttention(nn.Module):
-    """Multi-Head Self-Attention block with FlashAttention / SDPA GPU acceleration."""
-    def __init__(self, d_model: int, num_heads: int = 4):
-        super().__init__()
-        self.d_model = d_model
-        self.num_heads = num_heads
-        self.head_dim = d_model // num_heads
-
-        self.q_proj = nn.Linear(d_model, d_model)
-        self.k_proj = nn.Linear(d_model, d_model)
-        self.v_proj = nn.Linear(d_model, d_model)
-        self.out_proj = nn.Linear(d_model, d_model)
-
-    def forward(self, x: torch.Tensor, mask: Optional[torch.Tensor] = None) -> torch.Tensor:
-        batch_size, seq_len, d_model = x.shape
-        q = self.q_proj(x).view(batch_size, seq_len, self.num_heads, self.head_dim).transpose(1, 2)
-        k = self.k_proj(x).view(batch_size, seq_len, self.num_heads, self.head_dim).transpose(1, 2)
-        v = self.v_proj(x).view(batch_size, seq_len, self.num_heads, self.head_dim).transpose(1, 2)
-
-        # Utilize FlashAttention / Scaled Dot Product Attention on CUDA GPU
-        try:
-            attn_mask = mask.bool() if mask is not None and mask.dtype != torch.bool else mask
-            out = F.scaled_dot_product_attention(q, k, v, attn_mask=attn_mask)
-        except Exception:
-            scores = torch.matmul(q, k.transpose(-2, -1)) / math.sqrt(self.head_dim)
-            if mask is not None:
-                scores = scores.masked_fill(mask == 0, torch.finfo(scores.dtype).min)
-            attn = F.softmax(scores, dim=-1)
-            out = torch.matmul(attn, v)
-
-        out = out.transpose(1, 2).contiguous().view(batch_size, seq_len, d_model)
-        return self.out_proj(out)
 
 
 class SparseMoEExpert(nn.Module):
@@ -70,7 +38,7 @@ class SparseMoEExpert(nn.Module):
 
 class SparseMoELayer(nn.Module):
     """
-    Sparse MoE Layer with Low-Rank Gate and Straight-Through discrete selection.
+    Sparse MoE Layer with Top-K Noisy Gating.
     Integrates hardware-aware token grouping and Triton GPU acceleration.
     """
     def __init__(self, d_model: int, num_experts: int, d_expert_hidden: int, router: GenerativeSparseRouter, use_hardware_executor: bool = True):
@@ -103,7 +71,6 @@ class SparseMoELayer(nn.Module):
         else:
             out = torch.zeros_like(h)
             for e in range(self.num_experts):
-                # Expert mask for this expert: (B, S, 1)
                 e_mask = m_gate[:, :, e:e+1]
                 e_prob = p_gate[:, :, e:e+1]
                 if (e_mask > 0).any():
@@ -114,11 +81,25 @@ class SparseMoELayer(nn.Module):
 
 
 class PhenotypeTransformerBlock(nn.Module):
-    """Full Transformer block with Self-Attention and Sparse MoE layer."""
-    def __init__(self, d_model: int, num_heads: int, num_experts: int, d_expert_hidden: int, router: GenerativeSparseRouter):
+    """Transformer block with Multi-Head Latent Attention (MLA) and Top-K Sparse MoE."""
+    def __init__(
+        self,
+        d_model: int,
+        num_heads: int,
+        d_kv_latent: int,
+        num_experts: int,
+        d_expert_hidden: int,
+        router: GenerativeSparseRouter,
+        rope_base: float = 10000.0,
+    ):
         super().__init__()
         self.ln1 = nn.LayerNorm(d_model)
-        self.attn = MultiHeadSelfAttention(d_model, num_heads)
+        self.attn = MultiHeadLatentAttention(
+            d_model=d_model,
+            num_heads=num_heads,
+            d_kv_latent=d_kv_latent,
+            rope_base=rope_base,
+        )
         self.ln2 = nn.LayerNorm(d_model)
         self.moe = SparseMoELayer(d_model, num_experts, d_expert_hidden, router)
 
@@ -137,7 +118,8 @@ class PhenotypeTransformerBlock(nn.Module):
 class PhenotypeNeuralNetwork(nn.Module):
     """
     Complete Executable Phenotype Neural Network $W = G(D)$.
-    Supports Omni-Modal inputs, Hierarchical Memory, Dynamic Sparse MoE, and Multi-Mode Decoders.
+    Supports Omni-Modal inputs, Hierarchical Memory with TurboQuant, MLA Attention with RoPE,
+    Dynamic Top-K Sparse MoE, and Multi-Mode Decoders.
     """
     def __init__(
         self,
@@ -160,21 +142,25 @@ class PhenotypeNeuralNetwork(nn.Module):
         self.d_model = arch.d_model
         self.num_layers = arch.num_layers
         self.num_experts = arch.num_experts
+        self.kv_latent_dim = getattr(arch, "kv_latent_dim", max(8, arch.d_model // 4))
+        self.rope_theta = getattr(arch, "rope_theta", 10000.0)
 
-        # 1. Modality Encoders
+        # 1. Modality Encoders (Contrastive patch projection, no static additive embeddings)
         self.text_encoder = TextEncoder(arch.vocab_size, self.d_model)
-        self.vision_encoder = VisionEncoder(in_channels=3, d_model=self.d_model)
+        self.vision_encoder = VisionEncoder(in_channels=3, d_model=self.d_model, patch_size=4)
         self.audio_encoder = AudioEncoder(in_dim=80, d_model=self.d_model)
-        self.video_encoder = VideoEncoder(in_channels=3, d_model=self.d_model)
+        self.video_encoder = VideoEncoder(in_channels=3, d_model=self.d_model, temporal_patch_size=2, spatial_patch_size=4)
+        self.contrastive_head = ContrastiveAlignmentHead(d_model=self.d_model, embed_dim=self.d_model)
 
         # 2. Hierarchical Memory Controller
+        from ..memory.hierarchical import HierarchicalMemoryController
         self.memory = HierarchicalMemoryController(
             d_model=self.d_model,
             num_heads=arch.num_heads,
             dna_memory=dna_memory,
         )
 
-        # 3. Router & Transformer MoE Blocks
+        # 3. Router & Transformer MoE Blocks (MLA + TopK)
         self.shared_router = GenerativeSparseRouter(
             d_model=self.d_model,
             num_experts=arch.num_experts,
@@ -184,9 +170,11 @@ class PhenotypeNeuralNetwork(nn.Module):
             PhenotypeTransformerBlock(
                 d_model=self.d_model,
                 num_heads=arch.num_heads,
+                d_kv_latent=self.kv_latent_dim,
                 num_experts=arch.num_experts,
                 d_expert_hidden=arch.d_expert_hidden,
                 router=self.shared_router,
+                rope_base=self.rope_theta,
             )
             for _ in range(arch.num_layers)
         ])

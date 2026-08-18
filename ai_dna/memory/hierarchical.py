@@ -1,6 +1,7 @@
 """
 Unified Hierarchical Long-Context Memory Controller.
-Combines Working Memory, Compressed Archive, and Retrieval Library.
+Combines Working Memory with RoPE and TurboQuant KV cache, PagedArchive with PagedAttention,
+and GraphRAG-powered Retrieval Library.
 Computes memory compute cost: C_compute = alpha * T_seq + beta * M_peak + delta * M_total.
 """
 
@@ -11,14 +12,14 @@ import torch.nn as nn
 from typing import Tuple, Optional, Dict, Any
 from ..dna.structure import DNAMemory
 from .working_memory import WorkingMemory
-from .archive import CompressedArchive
-from .retrieval import RetrievalLibrary
+from .archive import PagedArchive, CompressedArchive
+from .retrieval import RetrievalLibrary, ExternalVectorDatabase
 
 
 class HierarchicalMemoryController(nn.Module):
     """
     Manages long-context sequence processing by bounding active attention to C_chunk,
-    compressing historical contexts into latent archives at c_rate, and retrieving N_retrieval.
+    compressing historical contexts into latent archives at c_rate in fixed pages, and retrieving N_retrieval.
     """
     def __init__(self, d_model: int, num_heads: int = 4, dna_memory: Optional[DNAMemory] = None):
         super().__init__()
@@ -30,10 +31,14 @@ class HierarchicalMemoryController(nn.Module):
             d_model=d_model,
             num_heads=num_heads,
             chunk_size=self.dna_memory.chunk_size,
+            kv_quant_bits=getattr(self.dna_memory, "kv_quant_bits", 3),
         )
-        self.archive = CompressedArchive(
+        self.archive = PagedArchive(
             d_model=d_model,
             compression_rate=self.dna_memory.compression_rate,
+            page_size=getattr(self.dna_memory, "page_size", 16),
+            max_pages=getattr(self.dna_memory, "max_pages", 1024),
+            kv_quant_bits=getattr(self.dna_memory, "kv_quant_bits", 3),
         )
         self.retrieval = RetrievalLibrary(
             d_model=d_model,
@@ -60,10 +65,10 @@ class HierarchicalMemoryController(nn.Module):
         t0 = time.perf_counter()
         batch_size, seq_len, d_model = x.shape
 
-        # 1. Process local working memory chunks
+        # 1. Process local working memory chunks with RoPE and TurboQuant
         local_out = self.working_mem(x, is_causal=is_causal)
 
-        # 2. Retrieve relevant historical context from existing archive
+        # 2. Retrieve relevant historical context from existing archive or GraphRAG external DB
         retrieved = self.retrieval.retrieve(local_out, cached_archive, external_db=external_db)
 
         if retrieved is not None:
@@ -80,13 +85,19 @@ class HierarchicalMemoryController(nn.Module):
         else:
             updated_archive = new_latents
 
+        # Store in PagedArchive
+        for b in range(batch_size):
+            self.archive.store_latents(new_latents[b], batch_idx=b)
+
         t1 = time.perf_counter()
         t_seq = (t1 - t0) * 1000.0  # ms
 
         # Compute cost tracking: C_compute = alpha * T_seq + beta * M_peak + delta * M_total
         active_window = min(seq_len, self.dna_memory.chunk_size) + self.dna_memory.num_retrieval
         m_peak = float(batch_size * active_window * d_model * 4) / 1024.0  # KB
-        m_total = float(batch_size * updated_archive.shape[1] * d_model * 4) / 1024.0  # KB
+        # Factoring in TurboQuant compression for total memory
+        quant_bits = getattr(self.dna_memory, "kv_quant_bits", 3)
+        m_total = float(batch_size * updated_archive.shape[1] * d_model * (quant_bits / 8.0)) / 1024.0  # KB
 
         c_compute = (
             self.dna_memory.cost_alpha * t_seq
@@ -119,23 +130,6 @@ class HierarchicalMemoryController(nn.Module):
         """
         Memory Policy Optimization (Section 9.5):
         D_memory* = argmin C_compute(D_memory) subject to Perf >= P_min
-
-        Grid searches over (C_chunk, c_rate, N_retrieval) candidates.
-
-        Args:
-            d_model: Model dimension.
-            num_heads: Number of attention heads.
-            sample_input: Representative input tensor (B, S, D_model).
-            perf_fn: Optional callable(controller) -> float returning performance score.
-                     If None, all configs are assumed to meet P_min and only cost is minimized.
-            p_min: Minimum performance threshold.
-            chunk_sizes: Candidate chunk sizes to search.
-            compression_rates: Candidate compression rates to search.
-            num_retrievals: Candidate retrieval counts to search.
-
-        Returns:
-            best_policy: The optimal DNAMemory configuration.
-            search_results: Dict with search metadata and all evaluated configs.
         """
         chunk_sizes = chunk_sizes or [16, 32, 64, 128]
         compression_rates = compression_rates or [0.1, 0.2, 0.25, 0.35, 0.5]
@@ -160,7 +154,6 @@ class HierarchicalMemoryController(nn.Module):
 
                         cost = metrics["c_compute"]
 
-                        # Check performance constraint
                         perf = 1.0
                         if perf_fn is not None:
                             perf = perf_fn(controller)

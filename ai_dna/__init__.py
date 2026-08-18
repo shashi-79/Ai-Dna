@@ -2,7 +2,7 @@
 Omni-Modal AI DNA Architecture: Genotypic Instinct Encoding, Phenotypic Transferability, and Multi-Generational AI Evolution.
 """
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 from .dna.structure import (
     Genotype,
@@ -20,20 +20,23 @@ from .growth.engine import GrowthEngine
 from .growth.cppn import CPPNNetwork
 
 from .routing.router import GenerativeSparseRouter
-from .routing.low_rank_gate import LowRankExpertGate
-from .routing.ste import StraightThroughEstimator
+from .routing.topk_gate import TopKNoisyGate
 
+from .memory.turboquant import TurboQuant
 from .memory.hierarchical import HierarchicalMemoryController
 from .memory.working_memory import WorkingMemory
-from .memory.archive import CompressedArchive
-from .memory.retrieval import RetrievalLibrary
+from .memory.archive import PagedArchive, CompressedArchive
+from .memory.retrieval import GraphRAG, ExternalVectorDatabase, RetrievalLibrary
 
+from .models.rope import RoPE, RoPE2D, RoPE3D
+from .models.mla import MultiHeadLatentAttention
 from .models.phenotype import PhenotypeNeuralNetwork, PhenotypeTransformerBlock
 from .models.modules import (
     TextEncoder,
     VisionEncoder,
     AudioEncoder,
     VideoEncoder,
+    ContrastiveAlignmentHead,
     AutoregressiveDecoderHead,
     DiffusionDecoderHead,
     ClassificationHead,
@@ -72,18 +75,26 @@ __all__ = [
     "GrowthEngine",
     "CPPNNetwork",
     "GenerativeSparseRouter",
-    "LowRankExpertGate",
-    "StraightThroughEstimator",
+    "TopKNoisyGate",
+    "TurboQuant",
     "HierarchicalMemoryController",
     "WorkingMemory",
+    "PagedArchive",
     "CompressedArchive",
+    "GraphRAG",
+    "ExternalVectorDatabase",
     "RetrievalLibrary",
+    "RoPE",
+    "RoPE2D",
+    "RoPE3D",
+    "MultiHeadLatentAttention",
     "PhenotypeNeuralNetwork",
     "PhenotypeTransformerBlock",
     "TextEncoder",
     "VisionEncoder",
     "AudioEncoder",
     "VideoEncoder",
+    "ContrastiveAlignmentHead",
     "AutoregressiveDecoderHead",
     "DiffusionDecoderHead",
     "ClassificationHead",

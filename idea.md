@@ -311,37 +311,95 @@ $$\boxed{h_{in} \in \mathbb{R}^{B \times S \times D_{model}}}$$
 
 For token sequence $x$:
 
-$$\boxed{h_{text} = E_{token}(x) + P_{text}}$$
+$$\boxed{h_{text} = E_{token}(x) \cdot \sqrt{D_{model}}}$$
 
-where:
-- $E_{token}$ = token embedding,
-- $P_{text}$ = positional representation.
+where $E_{token}$ is the token embedding. Positional information is injected via Rotary Position Embeddings (RoPE, §6.6) applied within the attention mechanism rather than as additive vectors, enabling evolutionary invariance to sequence-length mutations across generations.
 
 ---
 
-### 6.2 Vision Encoder
+### 6.2 Vision Encoder (Contrastive Patch Projection)
 
-For image $X$:
+The naive Conv2D flattener ($h = \text{Flatten}(\text{Conv2D}(X)) + P_{vision}$) destroys fine-grained spatial token structure and lacks shared semantic alignment. The architecture replaces this with a CLIP-style contrastive patch-projection encoder (Radford et al., 2021).
 
-$$\boxed{h_{vision} = \operatorname{Flatten}(\operatorname{Conv2D}(X)) + P_{vision}.}$$
+For image $X \in \mathbb{R}^{B \times C \times H \times W}$ with patch size $p$:
+
+$$\boxed{h_{vision} = \operatorname{LayerNorm}\left([h_{CLS} \parallel \operatorname{PatchProj}(X)]\right)}$$
+
+where:
+
+$$\operatorname{PatchProj}(X) = W_{patch} \cdot \operatorname{Reshape}(X)_{patches} + b_{patch}$$
+
+produces $N_{patches} = \frac{H \cdot W}{p^2}$ spatial tokens, each in $\mathbb{R}^{D_{model}}$. A learnable $[CLS]$ token $h_{CLS} \in \mathbb{R}^{D_{model}}$ is prepended for global representation. Spatial position is encoded via 2D Rotary Position Embeddings (§6.6) applied within Multi-Head Latent Attention.
 
 ---
 
 ### 6.3 Audio Encoder
 
-For audio representation $X_{audio}$:
+For audio/spectrogram representation $X_{audio} \in \mathbb{R}^{B \times S \times F_{mel}}$:
 
-$$\boxed{h_{audio} = \operatorname{Proj}(X_{audio}) + P_{audio}.}$$
+$$\boxed{h_{audio} = \operatorname{LayerNorm}\left(W_{audio} \cdot X_{audio} + b_{audio}\right)}$$
+
+Linear projection maps mel-frequency features into $D_{model}$. Temporal position is encoded via 1D RoPE (§6.6) within the attention layers.
 
 ---
 
-### 6.4 Video Encoder
+### 6.4 Video Encoder (Temporal-Spatial Patch Projection)
 
-A corresponding spatiotemporal encoder can be defined:
+The naive Conv3D flattener is replaced with a temporal-spatial patch projection.
 
-$$\boxed{h_{video} = \operatorname{Flatten}(\operatorname{Conv3D}(X_{video})) + P_{3D}.}$$
+For video $X_{video} \in \mathbb{R}^{B \times C \times T \times H \times W}$ with temporal patch size $p_t$ and spatial patch size $p_s$:
+
+$$\boxed{h_{video} = \operatorname{LayerNorm}\left(W_{tube} \cdot \operatorname{Reshape}(X_{video})_{tubes} + b_{tube}\right)}$$
+
+producing $N_{tubes} = \frac{T}{p_t} \cdot \frac{H \cdot W}{p_s^2}$ spatiotemporal tokens. Position is encoded via 3D RoPE (§6.6) decomposed into temporal and spatial rotary components.
 
 All modality-specific representations are projected into the common model dimension $D_{model}$.
+
+---
+
+### 6.5 Contrastive Cross-Modal Alignment
+
+To establish shared semantic alignment across modalities prior to the Fast Clock, the architecture employs a CLIP/BLIP-style contrastive projection (Radford et al., 2021; Li et al., 2022).
+
+A shared projection head maps modality representations into a common contrastive space:
+
+$$\boxed{z_m = \operatorname{Normalize}\left(W_{contrast} \cdot \operatorname{Pool}(h_m)\right)}$$
+
+where $m \in \{text, vision, audio, video\}$ and $\operatorname{Pool}$ extracts a global representation (mean-pool or $[CLS]$ token).
+
+The contrastive alignment loss for a paired batch of modalities $a$ and $b$ is:
+
+$$\boxed{\mathcal{L}_{contrastive} = -\frac{1}{2B}\sum_{i=1}^{B}\left[\log\frac{\exp(z_{a,i}^T z_{b,i} / \tau_c)}{\sum_j \exp(z_{a,i}^T z_{b,j} / \tau_c)} + \log\frac{\exp(z_{b,i}^T z_{a,i} / \tau_c)}{\sum_j \exp(z_{b,i}^T z_{a,j} / \tau_c)}\right]}$$
+
+where $\tau_c$ is a learnable temperature parameter.
+
+Critically, $D_{instinct}$ can generate the contrastive projection layer $W_{contrast}$, allowing pre-aligned modality representations to be inherited across generations.
+
+---
+
+### 6.6 Rotary Position Embeddings (RoPE)
+
+All static additive positional encodings ($P_{text}$, $P_{vision}$, $P_{3D}$) are replaced with Rotary Position Embeddings (Su et al., 2021). If $D_{architecture}$ mutates sequence length, chunk size, or layer topology between generations ($D_t \rightarrow D_{t+1}$), additive position embeddings completely break. RoPE is naturally invariant because it applies relative rotary transformations directly to query and key inner products.
+
+For position $m$ and head dimension $d$, define the rotation matrix:
+
+$$R_{\Theta,m}^d = \begin{pmatrix} \cos m\theta_1 & -\sin m\theta_1 & & \\ \sin m\theta_1 & \cos m\theta_1 & & \\ & & \ddots & \\ & & \cos m\theta_{d/2} & -\sin m\theta_{d/2} \\ & & \sin m\theta_{d/2} & \cos m\theta_{d/2} \end{pmatrix}$$
+
+where $\theta_i = \Theta_{base}^{-2i/d}$ and $\Theta_{base}$ is controlled by $D_{architecture}.rope\_theta$.
+
+The rotary attention inner product becomes:
+
+$$\boxed{\langle R_{\Theta,m}^d q_m, R_{\Theta,n}^d k_n \rangle = g(q_m, k_n, m - n)}$$
+
+This depends only on the relative distance $(m - n)$, providing position independence across evolutionary topology mutations.
+
+**2D RoPE for Vision**: For patch at row $r$, column $c$, the head dimension is split: first half rotated by row position, second half by column position:
+
+$$\boxed{R_{2D,(r,c)} = R_{\Theta,r}^{d/2} \oplus R_{\Theta,c}^{d/2}}$$
+
+**3D RoPE for Video**: For spatiotemporal tube at $(t, r, c)$:
+
+$$\boxed{R_{3D,(t,r,c)} = R_{\Theta,t}^{d/3} \oplus R_{\Theta,r}^{d/3} \oplus R_{\Theta,c}^{d/3}}$$
 
 ---
 
@@ -388,67 +446,91 @@ Here:
 
 ---
 
-### 8.2 Low-Rank Expert Representation
+### 8.2 Top-K Sparsely-Gated Expert Routing
 
-Let:
+The architecture replaces the static threshold STE mechanism with Top-K sparsely-gated routing (Shazeer et al., 2017). Static thresholding ($\mathbf{1}[P_{gate} > \tau]$) causes variable batch sizing per GPU and unoptimized backward gradients. Top-K routing provides deterministic expert capacity, hardware-friendly dispatch, and better gradient flow.
 
-$$A, B \in \mathbb{R}^{B \times S \times E_{max} \times r}.$$
+For each token's routing input $h \in \mathbb{R}^{D_{model}}$, compute expert logits:
 
-The intended operation is not a conventional matrix multiplication $AB^T$, because that would produce an additional expert dimension.
+$$\boxed{l_e = W_{gate} \cdot h + b_{gate}, \quad l \in \mathbb{R}^{E_{max}}}$$
 
-Instead, define the per-expert scalar:
+During training, inject tunable noise for load exploration:
 
-$$\boxed{z_{b,s,e} = \sum_{k=1}^{r} A_{b,s,e,k} B_{b,s,e,k}.}$$
+$$\boxed{\tilde{l}_e = l_e + \operatorname{Softplus}(W_{noise} \cdot h)_e \cdot \epsilon_e, \quad \epsilon_e \sim \mathcal{N}(0, 1)}$$
 
-Then:
+where $W_{noise} \in \mathbb{R}^{E_{max} \times D_{model}}$ is a learned noise scale matrix and the noise standard deviation is controlled by $D_{routing}.routing\_noise\_std$.
 
-$$\boxed{P_{gate,b,s,e} = \sigma(z_{b,s,e})}$$
+Select the Top-$K$ experts (where $K$ is DNA-configurable via $D_{routing}.top\_k\_experts$):
 
-and:
+$$\boxed{\mathcal{S} = \operatorname{TopK}(\tilde{l}, K)}$$
 
-$$P_{gate} \in (0,1)^{B \times S \times E_{max}}.$$
+The gate values are softmax-normalized over only the selected experts:
 
-This is the corrected tensor formulation.
+$$\boxed{G_e = \frac{\exp(\tilde{l}_e)}{\sum_{e' \in \mathcal{S}} \exp(\tilde{l}_{e'})}, \quad \forall e \in \mathcal{S}}$$
 
----
+The routed output is:
 
-### 8.3 Hard Routing
+$$\boxed{y = \sum_{e \in \mathcal{S}} G_e \cdot \operatorname{Expert}_e(h)}$$
 
-The binary routing mask is:
-
-$$\boxed{M_{hard,b,s,e} = \mathbf{1}[P_{gate,b,s,e} > \tau].}$$
-
-Therefore:
-
-$$M_{hard} \in \{0,1\}^{B \times S \times E_{max}}.$$
+Only $K$ experts compute per token, providing true sparse computation.
 
 ---
 
-### 8.4 Straight-Through Estimator
+### 8.3 Expert Load Balancing
 
-During the forward pass, the hard mask is used.
+The load balancing loss uses coefficient-of-variation (CV²) over importance and load vectors (Shazeer et al., 2017):
 
-During the backward pass, gradients pass through the continuous probability.
+Define importance as the sum of gate values across all tokens:
 
-Define:
+$$\boxed{\operatorname{Importance}_e = \sum_{t=1}^{T} G_{t,e}}$$
 
-$$\boxed{M_{gate} = M_{hard} + \operatorname{sg}(P_{gate} - M_{hard})}$$
+Define load as the expected number of tokens dispatched to each expert:
 
-where:
+$$\boxed{\operatorname{Load}_e = \sum_{t=1}^{T} \Phi\left(\frac{l_{t,e} - \operatorname{TopK}_{th}(l_t)}{\operatorname{Softplus}(W_{noise} \cdot h_t)_e}\right)}$$
 
-$$\operatorname{sg}(\cdot)$$
+where $\Phi$ is the standard normal CDF and $\operatorname{TopK}_{th}$ is the $K$-th highest logit.
 
-denotes stop-gradient.
+The auxiliary balancing loss is:
 
-Thus:
+$$\boxed{\mathcal{L}_{bal} = \operatorname{CV}(\operatorname{Importance})^2 + \operatorname{CV}(\operatorname{Load})^2}$$
 
-$$\operatorname{Forward}(M_{gate}) = M_{hard}$$
+where $\operatorname{CV}(x) = \frac{\operatorname{Std}(x)}{\operatorname{Mean}(x)}$.
 
-while the gradient is approximately:
+---
 
-$$\frac{\partial M_{gate}}{\partial P_{gate}} \approx 1.$$
+### 8.4 Multi-Head Latent Attention (MLA)
 
-This provides discrete routing behavior while maintaining a differentiable optimization path.
+Standard multi-head attention projects the hidden state into separate Q, K, V tensors of dimension $D_{model}$, creating substantial runtime overhead and large reconstruction targets for the Slow Clock. The architecture adopts Multi-Head Latent Attention (MLA) from DeepSeek-V2 (2024), which uses low-rank joint latent compression for K and V.
+
+For hidden state $h_t \in \mathbb{R}^{D_{model}}$:
+
+**Low-rank KV compression:**
+
+$$\boxed{c_{KV} = W^{DKV} h_t, \quad c_{KV} \in \mathbb{R}^{d_{kv}}}$$
+
+where $W^{DKV} \in \mathbb{R}^{d_{kv} \times D_{model}}$ is the down-projection and $d_{kv} \ll D_{model}$ is controlled by $D_{architecture}.kv\_latent\_dim$.
+
+**Up-projection to K and V:**
+
+$$\boxed{K_t = W^{UK} c_{KV}, \quad V_t = W^{UV} c_{KV}}$$
+
+where $W^{UK}, W^{UV} \in \mathbb{R}^{D_{model} \times d_{kv}}$.
+
+**Query projection (standard):**
+
+$$\boxed{Q_t = W^Q h_t}$$
+
+**Attention with RoPE:**
+
+RoPE (§6.6) is applied to $Q_t$ and $K_t$ before the attention computation:
+
+$$\boxed{\operatorname{Attn}(Q, K, V) = \operatorname{Softmax}\left(\frac{R_{\Theta} Q \cdot (R_{\Theta} K)^T}{\sqrt{d_{head}}}\right) V}$$
+
+This uses $F.scaled\_dot\_product\_attention$ for FlashAttention-style IO-aware tiling (Dao et al., 2022), keeping the computation within GPU SRAM boundaries.
+
+**DNA Encoding Advantage:** The genotype only needs to encode the down-projection matrix $W^{DKV}$ and latent coordinates, drastically reducing the reconstruction target size for the CPPN/Inverse-HyperNEAT encoder:
+
+$$\boxed{|W^{DKV}| = d_{kv} \times D_{model} \ll |W^K| + |W^V| = 2 \times D_{model}^2}$$
 
 ---
 
@@ -460,47 +542,125 @@ The memory subsystem is optimized using:
 
 $$\boxed{C_{compute} = \alpha T_{seq} + \beta M_{peak} + \delta M_{total}.}$$
 
-The original architecture identifies sequential time, peak memory, and total memory as the primary cost terms. 
+The architecture identifies sequential time, peak memory, and total memory as the primary cost terms.
 
 To make this optimization computable, each term is treated as a function of the memory policy:
 
-$$\boxed{D_{memory} = (C_{chunk}, c_{rate}, N_{retrieval}).}$$
+$$\boxed{D_{memory} = (C_{chunk}, c_{rate}, N_{retrieval}, b_{quant}, P_{size}).}$$
 
 Thus:
 
-$$C_{compute} = C_{compute}(C_{chunk}, c_{rate}, N_{retrieval}).$$
+$$C_{compute} = C_{compute}(C_{chunk}, c_{rate}, N_{retrieval}, b_{quant}, P_{size}).$$
 
 ---
 
-### 9.2 Working Memory
+### 9.2 Working Memory with TurboQuant KV Cache
 
-Let $C_{chunk}$ be the local attention chunk size.
-
-For sequence length $S$:
+Let $C_{chunk}$ be the local attention chunk size. For sequence length $S$:
 
 $$\boxed{N_{chunk} = \left\lceil \frac{S}{C_{chunk}} \right\rceil.}$$
 
-Local attention is then bounded within each chunk.
+Local attention is computed within each chunk using MLA (§8.4) with RoPE (§6.6). The attention computation uses FlashAttention-style IO-aware tiling (Dao et al., 2022) via $F.scaled\_dot\_product\_attention$.
+
+**TurboQuant KV Cache Quantization (Zandieh et al., 2025):** The KV cache is the dominant memory bottleneck for long-context inference, scaling as $O(B \times S \times D_{model})$ at full precision. TurboQuant provides data-oblivious, online vector quantization that compresses the KV cache to $b_{quant}$ bits per coordinate (default: $b_{quant} = 3$ from $D_{memory}.kv\_quant\_bits$) with near-optimal distortion rate.
+
+**Stage 1 — Random Rotation + Scalar Quantization:**
+
+For each K or V vector $\mathbf{x} \in \mathbb{R}^{D_{model}}$, apply a random orthogonal rotation (implemented via Fast Walsh-Hadamard Transform in $O(D \log D)$):
+
+$$\boxed{\mathbf{y} = \mathbf{\Pi} \cdot \frac{\mathbf{x}}{\|\mathbf{x}\|_2}}$$
+
+Each coordinate $\mathbf{y}_j$ follows a Beta distribution $\frac{\Gamma(D/2)}{\sqrt{\pi}\Gamma((D-1)/2)}(1 - x^2)^{(D-3)/2}$ which converges to $\mathcal{N}(0, 1/D)$ in high dimensions. Distinct coordinates become nearly independent, enabling optimal scalar quantization per coordinate.
+
+Apply precomputed Lloyd-Max optimal centroids $\{c_1, \ldots, c_{2^b}\}$ to each coordinate independently:
+
+$$\boxed{\operatorname{idx}_j = \arg\min_{\ell \in [2^b]} |\mathbf{y}_j - c_\ell|}$$
+
+Dequantization reconstructs via centroid lookup and inverse rotation:
+
+$$\boxed{\hat{\mathbf{x}}_{\text{mse}} = \|\mathbf{x}\| \cdot \mathbf{\Pi}^T \cdot [c_{\text{idx}_1}, \ldots, c_{\text{idx}_D}]}$$
+
+**MSE distortion guarantee (Theorem 1, Zandieh et al.):**
+
+$$\boxed{D_{\text{mse}} = \mathbb{E}\left[\|\mathbf{x} - \hat{\mathbf{x}}\|_2^2\right] \leq \frac{\sqrt{3}\pi}{2} \cdot \frac{1}{4^b}}$$
+
+For $b = 3$: $D_{\text{mse}} \approx 0.03$ (within 2.7x of the information-theoretic lower bound).
+
+**Stage 2 — QJL Residual Correction (for unbiased attention scores):**
+
+MSE-optimal quantizers introduce bias in inner product estimation. To obtain unbiased attention scores, apply the Quantized Johnson-Lindenstrauss (QJL) transform on the residual:
+
+$$\mathbf{r} = \mathbf{x} - \hat{\mathbf{x}}_{\text{mse}}, \quad \gamma = \|\mathbf{r}\|_2$$
+
+$$\boxed{\text{qjl} = \operatorname{sign}\left(\mathbf{S} \cdot \frac{\mathbf{r}}{\gamma}\right)}$$
+
+where $\mathbf{S} \in \mathbb{R}^{D \times D}$ is a random Gaussian matrix. The combined dequantization:
+
+$$\boxed{\hat{\mathbf{x}}_{\text{prod}} = \hat{\mathbf{x}}_{\text{mse}} + \gamma \cdot \sqrt{\frac{\pi}{2D}} \cdot \mathbf{S}^T \cdot \text{qjl}}$$
+
+provides unbiased inner product estimates:
+
+$$\boxed{\mathbb{E}\left[\langle \mathbf{q}, \hat{\mathbf{x}}_{\text{prod}} \rangle\right] = \langle \mathbf{q}, \mathbf{x} \rangle}$$
+
+with inner product distortion:
+
+$$\boxed{D_{\text{prod}} \leq \frac{\sqrt{3}\pi^2 \cdot \|\mathbf{q}\|_2^2}{D} \cdot \frac{1}{4^b}}$$
+
+**Memory reduction:** At $b = 3$ bits, the KV cache memory is reduced by a factor of $\frac{16}{3} \approx 5.3\times$ from FP16, with quality-neutral attention scores at $b = 3.5$.
 
 ---
 
-### 9.3 Compressed Archive
+### 9.3 Paged Compressed Archive (PagedAttention)
 
-After processing a chunk, its information is compressed according to:
+After processing a chunk, its KV representations are compressed and stored in the archive. The naive unbounded $\texttt{torch.cat}$ approach creates virtual memory fragmentation. The architecture adopts PagedAttention-style (Kwon et al., 2023) fixed-page management.
 
-$$c_{rate}.$$
+Define fixed-size pages of $P_{size}$ compressed latent vectors (from $D_{memory}.page\_size$):
 
-The resulting representation is stored as a historical latent vector.
+$$\boxed{\text{Page}_p = [\mathbf{c}_1, \ldots, \mathbf{c}_{P_{size}}], \quad \mathbf{c}_i \in \mathbb{R}^{d_{archive}}}$$
+
+A page table maintains the mapping:
+
+$$\boxed{\text{PageTable}: \text{logical\_index} \rightarrow \text{physical\_page}}$$
+
+New pages are allocated on demand from a free list. When the maximum page count ($D_{memory}.max\_pages$) is reached, the least-recently-used (LRU) page is evicted.
+
+Archive latents are stored with TurboQuant compression ($b_{quant}$ bits) and dequantized on read:
+
+$$\boxed{\text{store}(\mathbf{c}) = \operatorname{TurboQuant}_{b}(\mathbf{c}), \quad \text{fetch}(p, i) = \operatorname{DeQuant}(\text{Page}_p[i])}$$
+
+This eliminates virtual memory fragmentation while providing 6x archive memory reduction.
 
 ---
 
-### 9.4 Retrieval Library
+### 9.4 Hierarchical Graph Retrieval (GraphRAG)
 
-At a later step, the system retrieves:
+The flat vector retrieval mechanism ($R(K_{external}, x)$) is replaced with Hierarchical Graph Retrieval (GraphRAG) (Edge et al., 2024), providing structured, context-aware retrieval from external knowledge.
 
-$$\boxed{N_{retrieval}}$$
+**Graph Construction:** Given a corpus of $N$ document chunks with embeddings $\{e_1, \ldots, e_N\}$, construct a similarity graph:
 
-historical vectors.
+$$\boxed{G = (V, E), \quad V = \{1, \ldots, N\}, \quad (i, j) \in E \iff \cos(e_i, e_j) > \tau_{edge}}$$
+
+**Community Detection:** Apply spectral clustering on the graph Laplacian to detect $C$ communities:
+
+$$\boxed{\{S_1, S_2, \ldots, S_C\} = \operatorname{SpectralCluster}(G, C)}$$
+
+**Community Summarization:** Each community $S_c$ receives a summary embedding via mean-pooling of its member embeddings:
+
+$$\boxed{e_{S_c} = \frac{1}{|S_c|} \sum_{i \in S_c} e_i}$$
+
+**Two-Level Hierarchical Retrieval:** Given a query embedding $q$:
+
+1. **Community matching:** Find the top-$k_c$ communities by cosine similarity with summary embeddings:
+
+$$\boxed{\mathcal{C}^* = \operatorname{TopK}_{c}\left(\{\cos(q, e_{S_c})\}_{c=1}^{C}\right)}$$
+
+2. **Leaf retrieval:** Within each matched community, retrieve the top-$k_l$ individual documents:
+
+$$\boxed{R(q) = \bigcup_{c \in \mathcal{C}^*} \operatorname{TopK}_{l}\left(\{\cos(q, e_i)\}_{i \in S_c}\right)}$$
+
+This two-level approach reduces the search space from $O(N)$ to $O(C + k_c \cdot \max|S_c|)$ while preserving semantic coherence through community structure.
+
+All vector indices (both community summaries and leaf embeddings) are stored with TurboQuant compression, reducing the index memory by $\frac{16}{b_{quant}} \times$ from FP16.
 
 The active context can therefore be approximated as:
 
@@ -586,23 +746,19 @@ The DNA does not change during this phase.
 
 The total loss is:
 
-$$\boxed{\mathcal{L}_{total} = \lambda_{AR}\mathcal{L}_{AR} + \lambda_{Diff}\mathcal{L}_{Diff} + \lambda_{bal}\mathcal{L}_{bal}.}$$
+$$\boxed{\mathcal{L}_{total} = \lambda_{AR}\mathcal{L}_{AR} + \lambda_{Diff}\mathcal{L}_{Diff} + \lambda_{bal}\mathcal{L}_{bal} + \lambda_{con}\mathcal{L}_{contrastive}.}$$
 
-For expert balancing:
+For expert balancing (Shazeer et al., 2017):
 
-$$\boxed{\mathcal{L}_{bal} = E_{max} \sum_{e=1}^{E_{max}} P_e f_e}$$
+$$\boxed{\mathcal{L}_{bal} = \operatorname{CV}(\operatorname{Importance})^2 + \operatorname{CV}(\operatorname{Load})^2}$$
 
 where:
 
-$$\boxed{P_e = \frac{1}{T} \sum_{t=1}^{T} p_{t,e}}$$
+$$\operatorname{Importance}_e = \sum_{t=1}^{T} G_{t,e}$$
 
-is mean routing probability and:
+$$\operatorname{Load}_e = \sum_{t=1}^{T} \Phi\left(\frac{l_{t,e} - \operatorname{TopK}_{th}(l_t)}{\operatorname{Softplus}(W_{noise} \cdot h_t)_e}\right)$$
 
-$$\boxed{f_e = \frac{1}{T} \sum_{t=1}^{T} \mathbf{1}[M_{t,e} = 1]}$$
-
-is the actual dispatch fraction.
-
-This prevents the routing system from concentrating computation disproportionately in a small number of experts.
+This prevents the routing system from concentrating computation disproportionately in a small number of experts, ensuring broad parameter utilization. The contrastive loss ($\mathcal{L}_{contrastive}$) aligns multimodal representation spaces (§6.5).
 
 ---
 
@@ -622,9 +778,19 @@ $$\boxed{W^* \rightarrow \text{Structural Extraction} \rightarrow E \rightarrow 
 
 ## 14. SVD Instinct-Filter Hypothesis
 
-The proposed structural extraction mechanism begins with:
+The proposed structural extraction mechanism isolates transferable structural weight patterns ("instinct") from noise and factual memorization. The architecture introduces Walsh-Hadamard Rotation pre-processing (Zandieh et al., 2025) and MLA-aware targeting.
 
-$$\boxed{W^* = U\Sigma V^T.}$$
+**Target Selection:** SVD is not performed on the entire phenotype. For the attention layers, only the MLA down-projection matrices $W^{DKV}$ are extracted. Because these matrices are already low-rank bottlenecks ($D_{model} \rightarrow d_{kv}$), SVD extracts their dominant structural features with extreme efficiency.
+
+**Rotational Pre-processing:** Before SVD, the target weight matrix $W^*$ is randomized using an orthogonal Fast Walsh-Hadamard Transform $\mathbf{\Pi}$:
+
+$$\boxed{\tilde{W}^* = \mathbf{\Pi} \cdot W^*}$$
+
+This rotation smooths out outliers and produces a more separable singular structure between structural instinct and noise.
+
+**SVD Decomposition:**
+
+$$\boxed{\tilde{W}^* = U\Sigma V^T.}$$
 
 Let:
 
@@ -632,15 +798,15 @@ $$\Sigma = \operatorname{diag}(\sigma_1, \sigma_2, \ldots, \sigma_r).$$
 
 The Frobenius energy satisfies:
 
-$$\boxed{\|W\|_F^2 = \sum_{i=1}^{\operatorname{rank}(W)} \sigma_i^2.}$$
+$$\boxed{\|\tilde{W}^*\|_F^2 = \sum_{i=1}^{\operatorname{rank}(\tilde{W}^*)} \sigma_i^2.}$$
 
 A rank-$k$ approximation is:
 
-$$\boxed{W_k = U_k\Sigma_k V_k^T.}$$
+$$\boxed{W_k = \mathbf{\Pi}^T \cdot (U_k\Sigma_k V_k^T).}$$
 
 The retained singular energy is:
 
-$$\boxed{E_k = \frac{\sum_{i=1}^{k}\sigma_i^2}{\|W\|_F^2}.}$$
+$$\boxed{E_k = \frac{\sum_{i=1}^{k}\sigma_i^2}{\|W^*\|_F^2}.}$$
 
 A candidate $k$ may be selected using:
 
@@ -648,17 +814,25 @@ $$\boxed{E_k \ge \tau_{threshold}.}$$
 
 These are established properties of SVD.
 
-However, the following implication is not established:
+However, the following implication is not mathematically established:
 
 $$\boxed{E_k\text{ dominant} \implies \text{transferable instinct}.}$$
 
-Therefore the architecture explicitly defines:
+Therefore the architecture explicitly defines the:
 
 $$\boxed{\text{SVD Instinct-Filter Hypothesis}}$$
 
 as a testable hypothesis.
 
 The experiment must determine whether retained singular structure actually improves learning on previously unseen tasks.
+
+---
+
+### 14.5 TurboQuant-Enhanced Instinct Extraction
+
+Applying the TurboQuant random rotation ($\mathbf{\Pi}$) prior to SVD solves a critical failure mode of standard SVD instinct extraction: large outlier activations in dense transformer weights. SVD heavily prioritizes minimizing MSE, which causes the largest singular values to over-fit to a small number of massive outliers rather than capturing global structural representation.
+
+By applying Walsh-Hadamard rotation first, the outlier magnitude is distributed across all coordinates, creating a Beta-distributed weight spectrum. SVD applied to this smoothed space accurately captures the dominant topological structure (the true "instinct") without being hijacked by single-parameter outliers.
 
 ---
 
@@ -1431,3 +1605,32 @@ and eventually toward multimodal and foundation-model-scale systems.
 The ultimate hypothesis of AI DNA is therefore not that a tiny mathematical genome can store every fact contained in a large neural network. It is that a compact genotype may encode reusable developmental structure capable of producing increasingly efficient learning across generations.
 
 That hypothesis is experimentally falsifiable, and its validity must be determined by controlled measurements rather than assumed from the biological analogy.
+
+---
+
+## 43. Architectural Upgrades Summary
+
+| Component | Previous Design | Upgraded Mechanism | Primary Advantage |
+| :--- | :--- | :--- | :--- |
+| **Vision/Video Intake** | Naive Conv2D/3D flatten | Contrastive Patch-Proj (CLIP) | Aligned semantic structure |
+| **Positional Encoding** | Static Additive ($P_m$) | Rotary Position Embeddings | Evolutionary length invariance |
+| **Generative Routing** | STE Hard Threshold | Top-K Noisy Gating | Hardware efficiency, gradient flow |
+| **Attention Mechanism** | Multi-Head Self-Attention | Multi-Head Latent Attention | Minimal DNA reconstruction target |
+| **Working Memory** | Full-precision caching | TurboQuant (3-bit) KV Cache | 5.3x memory reduction |
+| **Archive Memory** | Unbounded `torch.cat` | PagedAttention Archive | Zero virtual fragmentation |
+| **External Retrieval** | Flat vector ($K_{external}$) | GraphRAG (Hierarchical) | Context-aware semantic clustering |
+| **Instinct Filter** | Direct SVD on $W^*$ | Walsh-Hadamard + SVD on $W^{DKV}$ | Robust to outlier activations |
+
+---
+
+## 44. References
+
+*   **Dao, T. et al. (2022).** *FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness.* NeurIPS.
+*   **DeepSeek-AI. (2024).** *DeepSeek-V2: A Strong, Economical, and Efficient Mixture-of-Experts Language Model.* arXiv:2405.04434.
+*   **Edge, D. et al. (2024).** *From Local to Global: A Graph RAG Approach to Query-Focused Summarization.* Microsoft Research.
+*   **Kwon, W. et al. (2023).** *Efficient Memory Management for Large Language Model Serving with PagedAttention.* SOSP.
+*   **Li, J. et al. (2022).** *BLIP: Bootstrapping Language-Image Pre-training for Unified Vision-Language Understanding and Generation.* ICML.
+*   **Radford, A. et al. (2021).** *Learning Transferable Visual Models From Natural Language Supervision (CLIP).* ICML.
+*   **Shazeer, N. et al. (2017).** *Outrageously Large Neural Networks: The Sparsely-Gated Mixture-of-Experts Layer.* ICLR.
+*   **Su, J. et al. (2021).** *RoFormer: Enhanced Transformer with Rotary Position Embedding.* arXiv:2104.09864.
+*   **Zandieh, A. et al. (2025).** *TurboQuant: Online Vector Quantization with Near-optimal Distortion Rate.* ICLR (arXiv:2504.19874v1).

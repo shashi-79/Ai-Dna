@@ -1,82 +1,140 @@
 """
-Multi-Modal Encoders and Dynamic Output Decoders.
-Maps heterogeneous inputs into unified latent dimension h_in, and decodes representations into diverse modalities.
+Multi-Modal Encoders, Contrastive Alignment, and Dynamic Output Decoders.
+Maps heterogeneous inputs into unified latent dimension h_in without static additive position embeddings
+(positional information is handled dynamically via RoPE in attention layers).
 """
 
 import math
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Dict, Any
 
 
 class TextEncoder(nn.Module):
-    """Encodes text token sequences: h_text = E_token(x) + P_text."""
-    def __init__(self, vocab_size: int, d_model: int, max_seq_len: int = 2048):
+    """Encodes text token sequences: h_text = E_token(x) * sqrt(D_model). No additive positional embeddings."""
+    def __init__(self, vocab_size: int, d_model: int):
         super().__init__()
         self.d_model = d_model
         self.token_emb = nn.Embedding(vocab_size, d_model)
-        self.pos_emb = nn.Embedding(max_seq_len, d_model)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """x: (B, S) integer token ids -> (B, S, D_model)"""
-        batch_size, seq_len = x.shape
-        pos = torch.arange(0, seq_len, device=x.device).unsqueeze(0).expand(batch_size, seq_len)
-        return self.token_emb(x) * math.sqrt(self.d_model) + self.pos_emb(pos)
+        return self.token_emb(x) * math.sqrt(self.d_model)
 
 
 class VisionEncoder(nn.Module):
-    """Encodes 2D image inputs: h_vision = Flatten(Conv2D(X)) + P_vision."""
-    def __init__(self, in_channels: int = 3, d_model: int = 64, patch_size: int = 4, max_patches: int = 256):
+    """
+    CLIP-style Contrastive Patch Projection Vision Encoder.
+    Divides image into non-overlapping patches, applies linear projection, prepends [CLS] token,
+    and applies LayerNorm. Positional information is injected via 2D RoPE in attention.
+    """
+    def __init__(self, in_channels: int = 3, d_model: int = 64, patch_size: int = 4):
         super().__init__()
         self.d_model = d_model
-        self.conv = nn.Conv2d(in_channels, d_model, kernel_size=patch_size, stride=patch_size)
-        self.pos_emb = nn.Embedding(max_patches, d_model)
+        self.patch_size = patch_size
+        self.patch_dim = in_channels * patch_size * patch_size
+        
+        self.patch_proj = nn.Linear(self.patch_dim, d_model)
+        self.cls_token = nn.Parameter(torch.randn(1, 1, d_model) * 0.02)
+        self.ln = nn.LayerNorm(d_model)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        """x: (B, C, H, W) -> (B, num_patches, D_model)"""
-        # Conv2D -> (B, D_model, H', W')
-        feat = self.conv(x)
-        batch_size, d_model, h_p, w_p = feat.shape
-        num_patches = h_p * w_p
+        """x: (B, C, H, W) -> (B, num_patches + 1, D_model)"""
+        B, C, H, W = x.shape
+        p = self.patch_size
+        assert H % p == 0 and W % p == 0, f"Image dims ({H}, {W}) must be divisible by patch size {p}"
         
-        # Flatten spatial dimensions -> (B, num_patches, D_model)
-        flat = feat.flatten(2).transpose(1, 2)
-        pos = torch.arange(0, num_patches, device=x.device).unsqueeze(0).expand(batch_size, num_patches)
-        return flat + self.pos_emb(pos)
+        # Reshape to patches: (B, C, H//p, p, W//p, p) -> (B, (H//p)*(W//p), C*p*p)
+        h_p, w_p = H // p, W // p
+        patches = x.view(B, C, h_p, p, w_p, p).permute(0, 2, 4, 1, 3, 5).contiguous()
+        patches = patches.view(B, h_p * w_p, self.patch_dim)
+        
+        # Project patches
+        projected = self.patch_proj(patches) # (B, N, D_model)
+        
+        # Prepend [CLS] token
+        cls_tokens = self.cls_token.expand(B, -1, -1)
+        out = torch.cat([cls_tokens, projected], dim=1)
+        return self.ln(out)
 
 
 class AudioEncoder(nn.Module):
-    """Encodes 1D audio or spectrogram features: h_audio = Proj(X_audio) + P_audio."""
-    def __init__(self, in_dim: int = 80, d_model: int = 64, max_seq_len: int = 1024):
+    """
+    Encodes 1D audio or spectrogram features: h_audio = LayerNorm(Proj(X_audio)).
+    No static additive positional embeddings (1D RoPE applied in attention).
+    """
+    def __init__(self, in_dim: int = 80, d_model: int = 64):
         super().__init__()
         self.d_model = d_model
         self.proj = nn.Linear(in_dim, d_model)
-        self.pos_emb = nn.Embedding(max_seq_len, d_model)
+        self.ln = nn.LayerNorm(d_model)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """x: (B, S, in_dim) -> (B, S, D_model)"""
-        batch_size, seq_len, _ = x.shape
-        pos = torch.arange(0, seq_len, device=x.device).unsqueeze(0).expand(batch_size, seq_len)
-        return self.proj(x) + self.pos_emb(pos)
+        return self.ln(self.proj(x))
 
 
 class VideoEncoder(nn.Module):
-    """Encodes 3D spatiotemporal video: h_video = Flatten(Conv3D(X_video)) + P_3D."""
-    def __init__(self, in_channels: int = 3, d_model: int = 64, kernel_size: Tuple[int, int, int] = (2, 4, 4), max_tubes: int = 256):
+    """
+    Temporal-Spatial Patch Projection Video Encoder.
+    Projects spatiotemporal tubes into D_model, prepends [CLS] token, and applies LayerNorm.
+    """
+    def __init__(self, in_channels: int = 3, d_model: int = 64, temporal_patch_size: int = 2, spatial_patch_size: int = 4):
         super().__init__()
         self.d_model = d_model
-        self.conv3d = nn.Conv3d(in_channels, d_model, kernel_size=kernel_size, stride=kernel_size)
-        self.pos_emb = nn.Embedding(max_tubes, d_model)
+        self.t_p = temporal_patch_size
+        self.s_p = spatial_patch_size
+        self.tube_dim = in_channels * temporal_patch_size * spatial_patch_size * spatial_patch_size
+        
+        self.tube_proj = nn.Linear(self.tube_dim, d_model)
+        self.cls_token = nn.Parameter(torch.randn(1, 1, d_model) * 0.02)
+        self.ln = nn.LayerNorm(d_model)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        """x: (B, C, T, H, W) -> (B, num_tubes, D_model)"""
-        feat = self.conv3d(x)
-        batch_size, d_model, t_p, h_p, w_p = feat.shape
-        num_tubes = t_p * h_p * w_p
-        flat = feat.flatten(2).transpose(1, 2)
-        pos = torch.arange(0, num_tubes, device=x.device).unsqueeze(0).expand(batch_size, num_tubes)
-        return flat + self.pos_emb(pos)
+        """x: (B, C, T, H, W) -> (B, num_tubes + 1, D_model)"""
+        B, C, T, H, W = x.shape
+        t_p, s_p = self.t_p, self.s_p
+        assert T % t_p == 0 and H % s_p == 0 and W % s_p == 0, "Video dimensions must be divisible by tube sizes"
+        
+        n_t, n_h, n_w = T // t_p, H // s_p, W // s_p
+        tubes = x.view(B, C, n_t, t_p, n_h, s_p, n_w, s_p).permute(0, 2, 4, 6, 1, 3, 5, 7).contiguous()
+        tubes = tubes.view(B, n_t * n_h * n_w, self.tube_dim)
+        
+        projected = self.tube_proj(tubes)
+        cls_tokens = self.cls_token.expand(B, -1, -1)
+        out = torch.cat([cls_tokens, projected], dim=1)
+        return self.ln(out)
+
+
+class ContrastiveAlignmentHead(nn.Module):
+    """
+    CLIP/BLIP-style cross-modal contrastive alignment projector and loss (Section 6.5).
+    Maps pooled modality representations into a common normalized embedding space.
+    """
+    def __init__(self, d_model: int, embed_dim: int = 64, temperature: float = 0.07):
+        super().__init__()
+        self.proj = nn.Linear(d_model, embed_dim, bias=False)
+        self.temperature = nn.Parameter(torch.tensor(temperature))
+
+    def forward(self, h: torch.Tensor) -> torch.Tensor:
+        """
+        h: (B, S, D_model)
+        Returns: z: (B, embed_dim) normalized representation
+        """
+        pooled = h.mean(dim=1)  # Mean pool across sequence
+        z = self.proj(pooled)
+        return F.normalize(z, p=2, dim=-1)
+
+    def compute_loss(self, z_a: torch.Tensor, z_b: torch.Tensor) -> torch.Tensor:
+        """
+        Symmetric InfoNCE loss between batch of modality A and modality B.
+        """
+        logits = torch.matmul(z_a, z_b.t()) / torch.clamp(self.temperature, min=1e-4)
+        labels = torch.arange(z_a.size(0), device=z_a.device)
+        loss_a = F.cross_entropy(logits, labels)
+        loss_b = F.cross_entropy(logits.t(), labels)
+        return 0.5 * (loss_a + loss_b)
 
 
 class AutoregressiveDecoderHead(nn.Module):

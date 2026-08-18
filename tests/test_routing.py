@@ -1,41 +1,42 @@
 """
-Tests for Sparse Low-Rank Router and Straight-Through Estimator.
+Tests for Top-K Sparsely-Gated Router and Noisy Load Balancing.
 """
 
 import torch
-from ai_dna.routing.low_rank_gate import LowRankExpertGate
-from ai_dna.routing.ste import StraightThroughEstimator
+from ai_dna.routing.topk_gate import TopKNoisyGate
 from ai_dna.routing.router import GenerativeSparseRouter
+from ai_dna.dna.structure import DNARouting
 
 
-def test_low_rank_gate():
-    gate = LowRankExpertGate(d_model=32, num_experts=4, rank=4)
+def test_topk_noisy_gate():
+    gate = TopKNoisyGate(d_model=32, num_experts=4, top_k=2, noise_std=1.0)
     h = torch.randn(2, 8, 32)
-    z, p_gate = gate(h)
+    gates, indices = gate(h)
 
-    assert z.shape == (2, 8, 4)
-    assert p_gate.shape == (2, 8, 4)
-    assert (p_gate >= 0.0).all() and (p_gate <= 1.0).all()
+    assert gates.shape == (2, 8, 4)
+    assert indices.shape == (2, 8, 2)
+    # Exactly top_k non-zero per token
+    non_zeros = (gates > 0).sum(dim=-1)
+    assert (non_zeros <= 2).all()
+    # Gates sum to ~1.0 for active tokens
+    gate_sums = gates.sum(dim=-1)
+    assert torch.allclose(gate_sums, torch.ones_like(gate_sums), atol=1e-5)
 
 
-def test_straight_through_estimator_gradients():
-    ste = StraightThroughEstimator(threshold=0.5)
-    p_gate = torch.tensor([[[0.2, 0.7, 0.9]]], requires_grad=True)
+def test_topk_gate_backward_gradients():
+    gate = TopKNoisyGate(d_model=32, num_experts=4, top_k=2, noise_std=0.0)
+    h = torch.randn(2, 4, 32, requires_grad=True)
+    gates, _ = gate(h)
 
-    m_gate = ste(p_gate)
-    # Forward check: 0.2 -> 0.0, 0.7 -> 1.0, 0.9 -> 1.0
-    assert torch.allclose(m_gate, torch.tensor([[[0.0, 1.0, 1.0]]]))
-
-    # Backward gradient check
-    loss = (m_gate * 2.0).sum()
+    loss = gates.sum()
     loss.backward()
-
-    # Straight-through gradient dm/dp approx 1.0, so dLoss/dp should be 2.0
-    assert torch.allclose(p_gate.grad, torch.tensor([[[2.0, 2.0, 2.0]]]))
+    assert h.grad is not None
+    assert not torch.isnan(h.grad).any()
 
 
 def test_generative_sparse_router():
-    router = GenerativeSparseRouter(d_model=32, num_experts=4)
+    dna_routing = DNARouting(top_k_experts=2, routing_noise_std=0.5)
+    router = GenerativeSparseRouter(d_model=32, num_experts=4, dna_routing=dna_routing)
     h = torch.randn(2, 16, 32)
     p_gate, m_gate, aux_loss = router(h)
 

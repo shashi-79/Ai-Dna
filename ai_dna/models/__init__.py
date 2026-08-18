@@ -7,12 +7,20 @@ from .modules import (
     VisionEncoder,
     AudioEncoder,
     VideoEncoder,
+    ContrastiveAlignmentHead,
     AutoregressiveDecoderHead,
     DiffusionDecoderHead,
     ClassificationHead,
 )
+from .rope import (
+    RoPE,
+    RoPE2D,
+    RoPE3D,
+)
+from .mla import (
+    MultiHeadLatentAttention,
+)
 from .phenotype import (
-    MultiHeadSelfAttention,
     SparseMoEExpert,
     SparseMoELayer,
     PhenotypeTransformerBlock,
@@ -24,10 +32,14 @@ __all__ = [
     "VisionEncoder",
     "AudioEncoder",
     "VideoEncoder",
+    "ContrastiveAlignmentHead",
     "AutoregressiveDecoderHead",
     "DiffusionDecoderHead",
     "ClassificationHead",
-    "MultiHeadSelfAttention",
+    "RoPE",
+    "RoPE2D",
+    "RoPE3D",
+    "MultiHeadLatentAttention",
     "SparseMoEExpert",
     "SparseMoELayer",
     "PhenotypeTransformerBlock",
