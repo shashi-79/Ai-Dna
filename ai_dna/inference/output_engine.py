@@ -108,12 +108,14 @@ class OutputEngine(nn.Module):
         h_context: torch.Tensor,
         num_steps: int = 20,
         shape: Optional[Tuple[int, ...]] = None,
-        device: torch.device = torch.device("cpu"),
+        device: Optional[torch.device] = None,
     ) -> torch.Tensor:
         """
         Samples continuous modality representations using DDPM denoising.
         h_context: (B, S, D_model)
         """
+        if device is None:
+            device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         batch_size, seq_len, d_model = h_context.shape
         out_shape = shape or (batch_size, seq_len, d_model)
         

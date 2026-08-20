@@ -20,7 +20,7 @@ class SubstrateCoordinateGenerator:
         num_layers: int = 4,
         expert_idx: int = 0,
         num_experts: int = 1,
-        device: torch.device = torch.device("cpu"),
+        device: Optional[torch.device] = None,
         coord_dim: int = 5,
     ) -> torch.Tensor:
         """
@@ -28,6 +28,9 @@ class SubstrateCoordinateGenerator:
         Returns: Tensor of shape (out_features, in_features, coord_dim)
         Coordinates: (x1_src, y1_src, x2_dst, y2_dst, norm_layer_idx, [norm_expert_idx])
         """
+        if device is None:
+            device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
         # Normalized source coordinates in [-1, 1]
         x1 = torch.linspace(-1.0, 1.0, in_features, device=device)
         
@@ -62,13 +65,16 @@ class SubstrateCoordinateGenerator:
         features: int,
         layer_idx: int = 0,
         num_layers: int = 4,
-        device: torch.device = torch.device("cpu"),
+        device: Optional[torch.device] = None,
         coord_dim: int = 5,
     ) -> torch.Tensor:
         """
         Generates coordinate vector for a 1D bias vector of shape (features,).
         Returns: Tensor of shape (features, coord_dim)
         """
+        if device is None:
+            device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
         x = torch.linspace(-1.0, 1.0, features, device=device)
         norm_layer = (2.0 * layer_idx / max(1, num_layers - 1)) - 1.0 if num_layers > 1 else 0.0
         

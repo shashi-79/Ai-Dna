@@ -25,9 +25,10 @@ class FastClockTrainer:
         learning_rate: float = 1e-3,
         weight_decay: float = 1e-4,
         gradient_clip: float = 1.0,
-        device: torch.device = torch.device("cpu"),
+        device: Optional[torch.device] = None,
         use_amp: Optional[bool] = None,
     ):
+        device = device or torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.phenotype = phenotype.to(device)
         self.device = device
         self.gradient_clip = gradient_clip

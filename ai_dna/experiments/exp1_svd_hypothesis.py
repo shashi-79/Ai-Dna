@@ -13,7 +13,7 @@ Baselines evaluated:
 import time
 import torch
 import torch.nn as nn
-from typing import Dict, Any, List, Tuple
+from typing import Dict, Any, List, Tuple, Optional
 from ..dna.structure import Genotype
 from ..models.phenotype import PhenotypeNeuralNetwork
 from ..encoding.svd_filter import SVDInstinctFilter
@@ -53,43 +53,65 @@ def train_to_target_accuracy(
     target_acc: float = 0.70,
     max_steps: int = 100,
     lr: float = 1e-3,
-    device: torch.device = torch.device("cpu"),
+    batch_size: int = 32,
+    device: Optional[torch.device] = None,
 ) -> Tuple[int, float, List[float]]:
     """
     Trains a phenotype model until reaching target validation accuracy or max_steps.
     Returns: (steps_taken, final_val_acc, history)
     """
+    if device is None:
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
     trainer = FastClockTrainer(phenotype=model, learning_rate=lr, device=device)
-    batch_size = 32
     num_batches = max(1, x_train.shape[0] // batch_size)
     history = []
 
     steps_to_target = max_steps
     reached_target = False
 
+    # Pre-shuffle dataset indices for the run
+    indices = torch.randperm(x_train.size(0))
+    x_train_shuffled = x_train[indices]
+    y_train_shuffled = y_train[indices]
+
     for step in range(1, max_steps + 1):
         idx = (step - 1) % num_batches
-        batch_x = x_train[idx * batch_size : (idx + 1) * batch_size]
-        batch_y = y_train[idx * batch_size : (idx + 1) * batch_size]
+        # If we loop over the dataset, reshuffle
+        if idx == 0 and step > 1:
+            indices = torch.randperm(x_train.size(0))
+            x_train_shuffled = x_train[indices]
+            y_train_shuffled = y_train[indices]
+
+        batch_x = x_train_shuffled[idx * batch_size : (idx + 1) * batch_size]
+        batch_y = y_train_shuffled[idx * batch_size : (idx + 1) * batch_size]
 
         loss, _ = trainer.train_step_classification(batch_x, batch_y, modality="text")
 
         if step % 5 == 0 or step == max_steps:
             val_acc, _ = trainer.evaluate_classification(x_val, y_val, modality="text")
             history.append(val_acc)
-            if val_acc >= target_acc and not reached_target:
+            if val_acc >= target_acc:
                 steps_to_target = step
                 reached_target = True
+                break
 
-    final_acc, _ = trainer.evaluate_classification(x_val, y_val, modality="text")
+    if reached_target:
+        final_acc = val_acc
+    else:
+        final_acc, _ = trainer.evaluate_classification(x_val, y_val, modality="text")
+        
     return steps_to_target, final_acc, history
 
 
-def run_experiment_1(quick: bool = False, device_str: str = "cpu") -> Dict[str, Any]:
+def run_experiment_1(quick: bool = False, device_str: Optional[str] = None) -> Dict[str, Any]:
     """
     Executes Experiment 1 comparing W_R, W*, W_k^SVD, and W_k^random on unseen task T_B.
     """
+    if device_str is None:
+        device_str = "cuda" if torch.cuda.is_available() else "cpu"
     device = torch.device(device_str)
+
     print("=== [Experiment 1] SVD Instinct-Filter Hypothesis ===")
 
     # 1. Prepare Genotype and Task Data

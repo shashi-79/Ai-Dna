@@ -21,11 +21,11 @@ class InferencePipeline:
         self,
         phenotype: Optional[PhenotypeNeuralNetwork] = None,
         tokenizer: Optional[TextTokenizer] = None,
-        device: torch.device = torch.device("cpu"),
+        device: Optional[torch.device] = None,
         genotype: Optional[Any] = None,
         **kwargs,
     ):
-        self.device = device
+        self.device = device or torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
         if tokenizer is None:
             from .tokenizer import TextTokenizer

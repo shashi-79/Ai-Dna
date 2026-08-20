@@ -6,6 +6,8 @@ Executes Experiments 1 to 6 and outputs validation metrics.
 import argparse
 import sys
 import os
+import torch
+
 
 # Add local package directory to path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -37,7 +39,7 @@ def main():
     parser.add_argument(
         "--device",
         type=str,
-        default="cpu",
+        default="cuda" if torch.cuda.is_available() else "cpu",
         help="Execution device ('cpu' or 'cuda')",
     )
 

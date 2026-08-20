@@ -6,7 +6,7 @@ Evaluates zero-shot and few-shot capabilities across T_A, T_B, and joint T_AB.
 """
 
 import torch
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 from .exp1_svd_hypothesis import (
     generate_synthetic_task,
     train_to_target_accuracy,
@@ -19,10 +19,12 @@ from ..evolution.fusion import MultiParentFusion
 from ..training.fast_clock import FastClockTrainer
 
 
-def run_experiment_6(quick: bool = False, device_str: str = "cpu") -> Dict[str, Any]:
+def run_experiment_6(quick: bool = False, device_str: Optional[str] = None) -> Dict[str, Any]:
     """
     Executes Experiment 6 testing multi-parent fusion and skill combination.
     """
+    if device_str is None:
+        device_str = "cuda" if torch.cuda.is_available() else "cpu"
     device = torch.device(device_str)
     print("=== [Experiment 6] Multi-Parent Specialization Fusion ===")
 

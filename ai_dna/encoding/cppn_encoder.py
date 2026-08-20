@@ -29,7 +29,7 @@ class InverseCPPNEncoder:
         lambda_behavior: float = 0.1,
         lambda_future: float = 0.0,
         lambda_size: float = 1e-4,
-        device: torch.device = torch.device("cpu"),
+        device: Optional[torch.device] = None,
     ):
         self.learning_rate = learning_rate
         self.max_steps = max_steps
@@ -37,7 +37,7 @@ class InverseCPPNEncoder:
         self.lambda_behavior = lambda_behavior
         self.lambda_future = lambda_future
         self.lambda_size = lambda_size
-        self.device = device
+        self.device = device or torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     def _compute_reconstruction_loss(
         self,

@@ -6,7 +6,7 @@ Directly measures whether the compact genotype preserves and accelerates downstr
 """
 
 import torch
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 from .exp1_svd_hypothesis import (
     generate_synthetic_task,
     train_to_target_accuracy,
@@ -18,10 +18,12 @@ from ..encoding.slow_clock import SlowClockEncoder
 from ..training.metrics import EvaluationMetrics
 
 
-def run_experiment_4(quick: bool = False, device_str: str = "cpu") -> Dict[str, Any]:
+def run_experiment_4(quick: bool = False, device_str: Optional[str] = None) -> Dict[str, Any]:
     """
     Executes Experiment 4 validating full genotypic regeneration.
     """
+    if device_str is None:
+        device_str = "cuda" if torch.cuda.is_available() else "cpu"
     device = torch.device(device_str)
     print("=== [Experiment 4] Genotypic Regeneration Lifecycle ===")
 

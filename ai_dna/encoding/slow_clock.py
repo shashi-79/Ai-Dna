@@ -32,10 +32,10 @@ class SlowClockEncoder:
         lambda_behavior: float = 0.1,
         lambda_future: float = 0.0,
         lambda_size: float = 1e-4,
-        device: torch.device = torch.device("cpu"),
+        device: Optional[torch.device] = None,
     ):
         self.rank_ratio = rank_ratio
-        self.device = device
+        self.device = device or torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.svd_filter = SVDInstinctFilter()
         self.cppn_encoder = InverseCPPNEncoder(
             learning_rate=encoder_lr,

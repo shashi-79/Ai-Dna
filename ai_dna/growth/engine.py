@@ -19,8 +19,8 @@ class GrowthEngine:
     """
     Growth Engine that translates a constitutional Genotype D into phenotype weights W_0 = G(D).
     """
-    def __init__(self, device: torch.device = torch.device("cpu")):
-        self.device = device
+    def __init__(self, device: Optional[torch.device] = None):
+        self.device = device or torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     def instantiate_cppn(self, genotype: Genotype) -> CPPNNetwork:
         """Instantiates and loads the CPPN from genotype's genetic parameters."""

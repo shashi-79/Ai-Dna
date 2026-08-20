@@ -6,7 +6,7 @@ while tracking retention R_old.
 """
 
 import torch
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 from .exp1_svd_hypothesis import (
     generate_synthetic_task,
     train_to_target_accuracy,
@@ -19,10 +19,12 @@ from ..evolution.mutation import GenotypeMutator
 from ..training.metrics import EvaluationMetrics
 
 
-def run_experiment_5(num_generations: int = 3, quick: bool = False, device_str: str = "cpu") -> Dict[str, Any]:
+def run_experiment_5(num_generations: int = 3, quick: bool = False, device_str: Optional[str] = None) -> Dict[str, Any]:
     """
     Executes Experiment 5 simulating multi-generational evolution.
     """
+    if device_str is None:
+        device_str = "cuda" if torch.cuda.is_available() else "cpu"
     device = torch.device(device_str)
     print(f"=== [Experiment 5] Multi-Generational Evolutionary Scaling ({num_generations} gens) ===")
 

@@ -5,7 +5,7 @@ and downstream Sample Efficiency S_E.
 """
 
 import torch
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 from .exp1_svd_hypothesis import (
     generate_synthetic_task,
     train_to_target_accuracy,
@@ -16,10 +16,12 @@ from ..encoding.svd_filter import SVDInstinctFilter
 from ..training.metrics import EvaluationMetrics
 
 
-def run_experiment_2(quick: bool = False, device_str: str = "cpu") -> Dict[str, Any]:
+def run_experiment_2(quick: bool = False, device_str: Optional[str] = None) -> Dict[str, Any]:
     """
     Executes Experiment 2 measuring S_E = f(E_k) across granular energy retention thresholds.
     """
+    if device_str is None:
+        device_str = "cuda" if torch.cuda.is_available() else "cpu"
     device = torch.device(device_str)
     print("=== [Experiment 2] Transferability Curve S_E = f(E_k) ===")
 
