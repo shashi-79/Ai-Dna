@@ -20,15 +20,27 @@ def test_cppn_forward_and_bounds():
 
 
 def test_substrate_coordinates():
-    coords_2d = SubstrateCoordinateGenerator.get_2d_weight_coordinates(
+    # 32D Universal Coordinate Manifold
+    coords_32d = SubstrateCoordinateGenerator.get_2d_weight_coordinates(
         out_features=32,
         in_features=16,
         layer_idx=1,
         num_layers=4,
+        coord_dim=32,
     )
-    assert coords_2d.shape == (32, 16, 5)
-    assert coords_2d[..., 0].min() >= -1.0
-    assert coords_2d[..., 0].max() <= 1.0
+    assert coords_32d.shape == (32, 16, 32)
+    assert coords_32d[..., 0].min() >= -1.0
+    assert coords_32d[..., 0].max() <= 1.0
+
+    # Backward compatibility with 5D
+    coords_5d = SubstrateCoordinateGenerator.get_2d_weight_coordinates(
+        out_features=32,
+        in_features=16,
+        layer_idx=1,
+        num_layers=4,
+        coord_dim=5,
+    )
+    assert coords_5d.shape == (32, 16, 5)
 
 
 def test_growth_engine_phenotype_generation():

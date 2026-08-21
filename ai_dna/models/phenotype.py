@@ -242,3 +242,49 @@ class PhenotypeNeuralNetwork(nn.Module):
 
         h = self.ln_final(h)
         return h, total_aux_loss, new_archive, mem_metrics
+
+    def forward_multimodal(
+        self,
+        text_inputs: Optional[torch.Tensor] = None,
+        vision_inputs: Optional[torch.Tensor] = None,
+        audio_inputs: Optional[torch.Tensor] = None,
+        video_inputs: Optional[torch.Tensor] = None,
+        cached_archive: Optional[torch.Tensor] = None,
+        external_db: Optional[Any] = None,
+        is_causal: bool = False,
+    ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, Dict[str, float]]:
+        """
+        Processes a heterogeneous Unified Multimodal Token Stream [Text | Vision | Audio | Video]
+        through the shared transformer substrate and genotypic MoE router (idea.md Section 6.7).
+        """
+        token_streams = []
+        if text_inputs is not None:
+            token_streams.append(self.encode_input(text_inputs, modality="text"))
+        if vision_inputs is not None:
+            token_streams.append(self.encode_input(vision_inputs, modality="vision"))
+        if audio_inputs is not None:
+            token_streams.append(self.encode_input(audio_inputs, modality="audio"))
+        if video_inputs is not None:
+            token_streams.append(self.encode_input(video_inputs, modality="video"))
+
+        if not token_streams:
+            raise ValueError("forward_multimodal requires at least one sensory input.")
+
+        # Concatenate along sequence dimension into Unified Multimodal Token Stream
+        h_unified = torch.cat(token_streams, dim=1)
+
+        # Pass through memory & transformer backbone
+        h, new_archive, mem_metrics = self.memory(h_unified, cached_archive=cached_archive, external_db=external_db, is_causal=is_causal)
+
+        seq_len = h.shape[1]
+        mask = None
+        if is_causal:
+            mask = torch.tril(torch.ones((seq_len, seq_len), device=h.device)).unsqueeze(0).unsqueeze(0)
+
+        total_aux_loss = torch.tensor(0.0, device=h.device)
+        for block in self.blocks:
+            h, aux_loss = block(h, mask=mask)
+            total_aux_loss = total_aux_loss + aux_loss
+
+        h = self.ln_final(h)
+        return h, total_aux_loss, new_archive, mem_metrics

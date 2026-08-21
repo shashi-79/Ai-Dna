@@ -45,18 +45,47 @@ class SubstrateCoordinateGenerator:
         norm_expert = (2.0 * expert_idx / max(1, num_experts - 1)) - 1.0 if num_experts > 1 else 0.0
         
         layer_grid = torch.full_like(x1_grid, norm_layer)
+        expert_grid = torch.full_like(x1_grid, norm_expert)
+        zeros = torch.zeros_like(x1_grid)
+        ones = torch.ones_like(x1_grid)
         
-        if coord_dim >= 6:
-            y1_grid = torch.zeros_like(x1_grid)
-            y2_grid = torch.zeros_like(x2_grid)
-            expert_grid = torch.full_like(x1_grid, norm_expert)
-            coords = torch.stack([x1_grid, y1_grid, x2_grid, y2_grid, layer_grid, expert_grid], dim=-1)
+        if coord_dim == 32:
+            # 32D Universal Manifold: 16D Source Address + 16D Target Address
+            # Source 16D: [x1, y1=0, z1=layer, t1=0, dt1=0, m_T=1, m_V=0, m_A=0, m_S=0, e_c=expert, e_id=expert, tau=0.5, h_w=1, h_a=0, h_g=0, eta=0.1]
+            # Target 16D: [x2, y2=0, z2=layer, t2=0, dt2=0, m_T=1, m_V=0, m_A=0, m_S=0, e_c=expert, e_id=expert, tau=0.5, h_w=1, h_a=0, h_g=0, eta=0.1]
+            y1_grid = zeros
+            y2_grid = zeros
+            
+            src_16d = [
+                x1_grid, y1_grid, layer_grid,
+                zeros, zeros,
+                ones, zeros, zeros, zeros,
+                expert_grid, expert_grid, torch.full_like(x1_grid, 0.5),
+                ones, zeros, zeros,
+                torch.full_like(x1_grid, 0.1)
+            ]
+            tgt_16d = [
+                x2_grid, y2_grid, layer_grid,
+                zeros, zeros,
+                ones, zeros, zeros, zeros,
+                expert_grid, expert_grid, torch.full_like(x1_grid, 0.5),
+                ones, zeros, zeros,
+                torch.full_like(x1_grid, 0.1)
+            ]
+            coords = torch.stack(src_16d + tgt_16d, dim=-1)
+        elif coord_dim >= 6:
+            y1_grid = zeros
+            y2_grid = zeros
+            channels = [x1_grid, y1_grid, x2_grid, y2_grid, layer_grid, expert_grid]
+            while len(channels) < coord_dim:
+                channels.append(zeros)
+            coords = torch.stack(channels[:coord_dim], dim=-1)
         else:
-            # If coord_dim is 5, encode expert index in the unused y1 dimension
-            # to ensure different experts generate different weights.
+            # If coord_dim is 5, encode expert index in the y1 dimension
             y1_grid = torch.full_like(x1_grid, norm_expert)
-            y2_grid = torch.zeros_like(x2_grid)
-            coords = torch.stack([x1_grid, y1_grid, x2_grid, y2_grid, layer_grid], dim=-1)
+            y2_grid = zeros
+            channels = [x1_grid, y1_grid, x2_grid, y2_grid, layer_grid]
+            coords = torch.stack(channels[:coord_dim], dim=-1)
             
         return coords
 
@@ -66,7 +95,7 @@ class SubstrateCoordinateGenerator:
         layer_idx: int = 0,
         num_layers: int = 4,
         device: Optional[torch.device] = None,
-        coord_dim: int = 5,
+        coord_dim: int = 32,
     ) -> torch.Tensor:
         """
         Generates coordinate vector for a 1D bias vector of shape (features,).
@@ -81,8 +110,15 @@ class SubstrateCoordinateGenerator:
         layer_col = torch.full_like(x, norm_layer)
         zeros = torch.zeros_like(x)
         
-        if coord_dim >= 6:
-            coords = torch.stack([zeros, zeros, x, zeros, layer_col, zeros], dim=-1)
+        if coord_dim == 32:
+            channels = [zeros, zeros, layer_col, zeros, zeros, zeros, zeros, zeros, zeros, zeros, zeros, zeros, zeros, zeros, zeros, zeros]
+            channels += [x, zeros, layer_col, zeros, zeros, zeros, zeros, zeros, zeros, zeros, zeros, zeros, zeros, zeros, zeros, zeros]
+            coords = torch.stack(channels, dim=-1)
+        elif coord_dim >= 6:
+            channels = [zeros, zeros, x, zeros, layer_col, zeros]
+            while len(channels) < coord_dim:
+                channels.append(zeros)
+            coords = torch.stack(channels[:coord_dim], dim=-1)
         else:
-            coords = torch.stack([zeros, zeros, x, zeros, layer_col], dim=-1)
+            coords = torch.stack([zeros, zeros, x, zeros, layer_col][:coord_dim], dim=-1)
         return coords

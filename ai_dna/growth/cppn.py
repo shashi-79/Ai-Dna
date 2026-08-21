@@ -36,7 +36,7 @@ class CPPNNetwork(nn.Module):
     Input: coordinate tensor (..., in_features)
     Output: scalar weight (..., 1) or vector representation
     """
-    def __init__(self, in_features: int = 5, hidden_dim: int = 32, num_layers: int = 3, out_features: int = 1):
+    def __init__(self, in_features: int = 32, hidden_dim: int = 32, num_layers: int = 3, out_features: int = 1):
         super().__init__()
         self.in_features = in_features
         self.hidden_dim = hidden_dim

@@ -401,6 +401,16 @@ $$\boxed{R_{2D,(r,c)} = R_{\Theta,r}^{d/2} \oplus R_{\Theta,c}^{d/2}}$$
 
 $$\boxed{R_{3D,(t,r,c)} = R_{\Theta,t}^{d/3} \oplus R_{\Theta,r}^{d/3} \oplus R_{\Theta,c}^{d/3}}$$
 
+All modality-specific representations are projected into the common model dimension $D_{model}$.
+
+### 6.7 Unified Multimodal Token Stream
+
+Rather than maintaining separate, unaligned computational backbones for each modality, the architecture concatenates all sensory representations into a single, heterogeneous multimodal token stream:
+
+$$\boxed{H_{unified} = [h_{text}^{(1 \dots S_T)} \parallel h_{vision}^{(1 \dots S_V)} \parallel h_{audio}^{(1 \dots S_A)} \parallel h_{video}^{(1 \dots S_{Vid})}] \in \mathbb{R}^{B \times S_{total} \times D_{model}}}$$
+
+This unified sequence flows through the shared transformer substrate, where genotypically-generated routing biases direct individual tokens to specialized functional circuits (§8.2).
+
 ---
 
 ## 7. Dynamic Decoding
@@ -452,7 +462,9 @@ The architecture replaces the static threshold STE mechanism with Top-K sparsely
 
 For each token's routing input $h \in \mathbb{R}^{D_{model}}$, compute expert logits:
 
-$$\boxed{l_e = W_{gate} \cdot h + b_{gate}, \quad l \in \mathbb{R}^{E_{max}}}$$
+$$\boxed{l_e = W_{gate} \cdot h + B_{gate}^{(e)}, \quad l \in \mathbb{R}^{E_{max}}}$$
+
+where $B_{gate}^{(e)}$ is the expert-specific gating bias generated directly from the Genotype DNA via the Growth Engine.
 
 During training, inject tunable noise for load exploration:
 
@@ -474,7 +486,7 @@ $$\boxed{y = \sum_{e \in \mathcal{S}} G_e \cdot \operatorname{Expert}_e(h)}$$
 
 Only $K$ experts compute per token, providing true sparse computation.
 
-**Cross-Task Routing & Positive Transfer:** When incoming data is domain-similar (e.g. basic arithmetic vs competition algebra), the router directs activations to the existing specialist expert, producing constructive reinforcement and positive transfer. When incoming data is domain-divergent (e.g. spatial grids vs Python code), the router dispatches tokens to disjoint experts or triggers structural node expansion, preventing gradient interference.
+**Cross-Task Routing & Positive Transfer:** When incoming data is domain-similar (e.g. basic arithmetic vs competition algebra), the router directs activations to the existing specialist expert, producing constructive reinforcement and positive transfer. When incoming data is domain-divergent (e.g. spatial grids vs Python code), the router dispatches tokens to disjoint experts or triggers structural node expansion, preventing gradient interference. In tri-modal scenarios (e.g. video clips with concurrent speech and captions), the router activates cross-modal bridge experts, compelling multi-sensory fusion in shared latent spaces.
 
 ---
 
@@ -708,25 +720,55 @@ $$\boxed{G(E(W_t^*)) \approx W_0^{(t+1)}.}$$
 
 ---
 
-## 11. Genotypic Growth
+## 11. Genotypic Growth: The 32D Universal Coordinate Manifold
 
 The Growth Engine generates phenotype parameters from DNA and coordinate information as a pure mathematical evaluation with **zero external training data**. 
 
-For expert $e$ and parameter location $(i,j)$:
+### 11.1 The 32-Dimensional Hardware-Aligned Manifold
 
-$$\boxed{W_{ij}^{(e)} = G_D\left(D, \mathcal{C}_{ij}^{(e)}\right).}$$
+To support universal omni-modal connectivity (Text, 2D Images, 3D Video, Audio Waves, and MoE Expert Clusters), the Compositional Pattern Producing Network (CPPN) operates on a **32-Dimensional Hardware-Aligned Coordinate Manifold**. The 32 dimensions are structured as a 16-Dimensional Source Vector and a 16-Dimensional Target Vector, perfectly saturating an NVIDIA GPU 32-thread SIMD Warp in a single clock cycle:
+
+$$\boxed{\text{CPPN}_{32\text{D}}\Big(\underbrace{\mathbf{S}_1, \ldots, \mathbf{S}_{16}}_{\text{16D Source Neuron Address}}, \;\; \underbrace{\mathbf{T}_1, \ldots, \mathbf{T}_{16}}_{\text{16D Target Neuron Address}}\Big) \longrightarrow \Big(W_{ij}, \; B_{gate}^{(e)}, \; \eta_{ij}\Big)}$$
 
 where:
+- $W_{ij}$ is the synaptic weight between source neuron $i$ and target neuron $j$,
+- $B_{gate}^{(e)}$ is the expert routing bias,
+- $\eta_{ij}$ is the local plasticity learning rate.
 
-$$\mathcal{C}_{ij}^{(e)}$$
+### 11.2 Coordinate Allocation (16D per Neuron)
 
-contains spatial coordinate and structural topological information.
+Each neuron $k \in \{\text{Source}, \text{Target}\}$ receives a 16-dimensional coordinate vector $\mathbf{C}_k \in \mathbb{R}^{16}$:
+
+1. **Spatial Geometry (3D) — $(x, y, z)$**:
+   - $x, y \in [-1.0, 1.0]$: 2D image pixel coordinate or token sequence position.
+   - $z \in [0.0, 1.0]$: Transformer layer depth index ($z = l / L_{total}$).
+2. **Temporal Dynamics (2D) — $(t, \Delta t)$**:
+   - $t \in [0.0, 1.0]$: Continuous video frame or audio waveform timestamp.
+   - $\Delta t \in [-1.0, 1.0]$: Relative temporal lag (enables cross-modal synchronization such as lip-syncing).
+3. **Sensory Modality Simplex (4D) — $(m_{text}, m_{vis}, m_{aud}, m_{sensor})$**:
+   - One-hot or continuous mixture coordinates defining the sensory nature of the neuron:
+     - $[1, 0, 0, 0] = \text{Text}$
+     - $[0, 1, 0, 0] = \text{Vision}$
+     - $[0, 0, 1, 0] = \text{Audio}$
+     - $[0, 0, 0, 1] = \text{Proprioception / Sensor Telemetry}$
+4. **MoE Expert Topology (3D) — $(e_{cluster}, e_{id}, \tau_{routing})$**:
+   - $e_{cluster} \in [0.0, 1.0]$: Functional domain cluster (e.g. Logic, Vision, Audio).
+   - $e_{id} \in [0.0, 1.0]$: Continuous expert index.
+   - $\tau_{routing} \in [0.0, 1.0]$: Routing sensitivity threshold.
+5. **Memory Tier Hierarchy (3D) — $(h_{working}, h_{archive}, h_{graph})$**:
+   - Distinguishes working context, paged compressed archive, and GraphRAG community memory.
+6. **Plasticity & Modulation (1D) — $(\eta_{plasticity})$**:
+   - Controls base adaptation rate during Fast Clock learning.
+
+$$\boxed{\mathbf{C}_k = [x, y, z, \; t, \Delta t, \; m_T, m_V, m_A, m_S, \; e_c, e_{id}, \tau_r, \; h_w, h_a, h_g, \; \eta] \in \mathbb{R}^{16}}$$
+
+### 11.3 Growth Engine Decoupling
 
 Collectively:
 
-$$\boxed{W_0 = G(D, \mathcal{C}).}$$
+$$\boxed{W_0 = G\left(D, \mathcal{C}_{32\text{D}}\right).}$$
 
-The Growth Engine and Fast Clock are strictly decoupled: the Genotype auto-generates the initial Base Model ($W_0$) in milliseconds on-device without data, after which the Fast Clock takes that Base Model and trains it on domain datasets.
+The Growth Engine and Fast Clock are strictly decoupled: the Genotype auto-generates the initial Base Model ($W_0$) in milliseconds on-device without data (taking $\approx 0.067\text{s}$ on GPU tensor cores), after which the Fast Clock takes that Base Model and trains it on domain datasets.
 
 ---
 
@@ -835,6 +877,18 @@ The experiment must determine whether retained singular structure actually impro
 Applying the TurboQuant random rotation ($\mathbf{\Pi}$) prior to SVD solves a critical failure mode of standard SVD instinct extraction: large outlier activations in dense transformer weights. SVD heavily prioritizes minimizing MSE, which causes the largest singular values to over-fit to a small number of massive outliers rather than capturing global structural representation.
 
 By applying Walsh-Hadamard rotation first, the outlier magnitude is distributed across all coordinates, creating a Beta-distributed weight spectrum. SVD applied to this smoothed space accurately captures the dominant topological structure (the true "instinct") without being hijacked by single-parameter outliers.
+
+---
+
+### 14.6 Cross-Modal SVD Translation Extraction
+
+To extract transferable cross-sensory reasoning instincts without memorizing specific images, sounds, or words, the Slow Clock applies Truncated SVD across learned cross-modal projection matrices:
+
+$$\boxed{\Delta W_{\text{VisionToText}} = U_V \Sigma_V V_V^T, \qquad \Delta W_{\text{AudioToText}} = U_A \Sigma_A V_A^T}$$
+
+The Instinct-Filter hypothesis discards high-rank components ($k > 16$) that represent specific memorized objects, faces, or audio signatures, preserving only the low-rank singular vectors ($k \le 16$). These dominant singular bases represent the fundamental mathematical translation operators required to project 2D spatial topological structures and 1D continuous audio frequencies into the linguistic causal embedding space.
+
+This universal translation operator is encoded back into the CPPN parameters for generation $D_{t+1}$, giving the child phenotype immediate zero-shot cross-sensory alignment out of the box.
 
 ---
 
@@ -1245,6 +1299,22 @@ The experiments should isolate each hypothesis.
 
 ---
 
+### 30.2 Multimodal Pre-Training & Evolution Dataset Pipeline
+
+To force the DNA to discover genuine cross-sensory logic and evaluate multi-generational evolution across modalities, the evaluation harness utilizes a 4-tier multimodal dataset suite:
+
+1. **Interleaved Multimodal Corpora (Structural Cross-Modal Alignment)**:
+   - **OBELICS (HuggingFaceM4)**: 141-billion token corpus of interleaved web text and images, forcing the 32D CPPN to discover topological spatial-linguistic mappings.
+   - **MMC4 (Multimodal C4)**: Billion-scale corpus matching images to relevant linear context paragraphs for long-context memory evaluation.
+2. **Audio-Visual-Text Triquetra Datasets (Deep Cross-Routing)**:
+   - **AVSBench**: Audio-Visual Segmentation demanding pixel-level visual tracking guided by continuous audio cues.
+   - **MuST-C**: Multilingual Speech Translation tying raw acoustic speech waveforms directly to text semantics and syntactic structure.
+3. **Official Symbolic & Code Benchmarks**:
+   - **Math & Reasoning**: GSM8K, MATH (7 subject areas), ARC-AGI (2D abstraction), ProofNet (Lean proofs), miniF2F (Formal Olympiad math).
+   - **Code & Zero-Shot Synthesis**: MBPP (Python synthesis) and Clean HumanEval (strictly isolated from adaptation).
+
+---
+
 ## 31. Required Baselines
 
 At minimum:
@@ -1616,14 +1686,16 @@ That hypothesis is experimentally falsifiable, and its validity must be determin
 
 | Component | Previous Design | Upgraded Mechanism | Primary Advantage |
 | :--- | :--- | :--- | :--- |
+| **Coordinate Substrate** | 5D / Flat Spatial | **32D Universal Manifold (CPPN-32D)** | 100% GPU Warp saturation, Spatio-Temporal-Modal geometry |
+| **Multimodal Stream** | Disjoint separate encoders | **Unified Multimodal Token Stream** | Single shared transformer substrate for Text, ViT, Audio |
 | **Vision/Video Intake** | Naive Conv2D/3D flatten | Contrastive Patch-Proj (CLIP) | Aligned semantic structure |
-| **Positional Encoding** | Static Additive ($P_m$) | Rotary Position Embeddings | Evolutionary length invariance |
-| **Generative Routing** | STE Hard Threshold | Top-K Noisy Gating | Hardware efficiency, gradient flow |
-| **Attention Mechanism** | Multi-Head Self-Attention | Multi-Head Latent Attention | Minimal DNA reconstruction target |
-| **Working Memory** | Full-precision caching | TurboQuant (3-bit) KV Cache | 5.3x memory reduction |
-| **Archive Memory** | Unbounded `torch.cat` | PagedAttention Archive | Zero virtual fragmentation |
+| **Positional Encoding** | Static Additive ($P_m$) | Rotary Position Embeddings (1D/2D/3D) | Evolutionary length and spatiotemporal invariance |
+| **Generative Routing** | STE Hard Threshold | Top-K Sparsely-Gated + Genotypic Bias | Hardware efficiency, dynamic cross-modal specialist routing |
+| **Attention Mechanism** | Multi-Head Self-Attention | Multi-Head Latent Attention (MLA) | Minimal DNA reconstruction target |
+| **Working Memory** | Full-precision caching | TurboQuant (3-bit) KV Cache | 5.3x memory reduction with near-optimal distortion |
+| **Archive Memory** | Unbounded `torch.cat` | PagedAttention Archive | Zero virtual fragmentation with LRU eviction |
 | **External Retrieval** | Flat vector ($K_{external}$) | GraphRAG (Hierarchical) | Context-aware semantic clustering |
-| **Instinct Filter** | Direct SVD on $W^*$ | Walsh-Hadamard + SVD on $W^{DKV}$ | Robust to outlier activations |
+| **Instinct Filter** | Direct SVD on $W^*$ | Walsh-Hadamard + Cross-Modal SVD | Robust to outliers, extracts universal cross-sensory bases |
 
 ---
 

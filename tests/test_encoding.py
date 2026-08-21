@@ -47,3 +47,20 @@ def test_slow_clock_step():
     assert new_genotype.generation == 1
     assert "mean_retained_energy" in summary
     assert "reconstruction_loss" in summary
+
+
+def test_extract_cross_modal_instinct():
+    vision_delta = torch.randn(64, 48)
+    audio_delta = torch.randn(64, 80)
+    deltas = {
+        "vision_to_text": vision_delta,
+        "audio_to_text": audio_delta,
+    }
+    bases = SVDInstinctFilter.extract_cross_modal_instinct(deltas, rank_k=8)
+
+    assert "vision_to_text" in bases
+    assert "audio_to_text" in bases
+    u_v, s_v, vh_v = bases["vision_to_text"]
+    assert u_v.shape == (64, 8)
+    assert s_v.shape == (8,)
+    assert vh_v.shape == (8, 48)

@@ -108,3 +108,13 @@ def test_phenotype_neural_network_forward_all_modalities():
     h_vid, _, _, _ = phenotype(vid, modality="video")
     assert h_vid.shape[0] == 2
     assert h_vid.shape[2] == genotype.dna_architecture.d_model
+
+    # Forward Unified Multimodal Token Stream (Text + Vision + Audio)
+    h_uni, aux_uni, _, _ = phenotype.forward_multimodal(
+        text_inputs=tokens,
+        vision_inputs=img,
+        audio_inputs=aud,
+    )
+    # Expected sequence length = 16 (text) + 17 (vision) + 20 (audio) = 53
+    assert h_uni.shape == (2, 53, genotype.dna_architecture.d_model)
+    assert aux_uni.item() >= 0.0

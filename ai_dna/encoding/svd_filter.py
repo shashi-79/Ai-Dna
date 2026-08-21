@@ -162,10 +162,26 @@ class SVDInstinctFilter:
         b = torch.randn(k, n, device=w_ref.device)
         w_rand = torch.matmul(a, b)
 
-        # Scale Frobenius norm to match reference
         ref_norm = torch.linalg.norm(w_2d)
         rand_norm = torch.linalg.norm(w_rand)
         if rand_norm > 1e-12:
             w_rand = w_rand * (ref_norm / rand_norm)
 
         return w_rand.reshape(orig_shape)
+
+    @classmethod
+    def extract_cross_modal_instinct(
+        cls,
+        projection_deltas: Dict[str, torch.Tensor],
+        rank_k: int = 16,
+    ) -> Dict[str, Tuple[torch.Tensor, torch.Tensor, torch.Tensor]]:
+        """
+        Extracts dominant cross-modal singular translation bases from modality projection weight deltas.
+        Section 14.6: Delta W_{CrossModal} = U \Sigma V^T (top k singular bases).
+        """
+        cross_modal_bases = {}
+        for name, delta_w in projection_deltas.items():
+            u, s, vh, _ = cls.decompose_matrix(delta_w, use_rotation=False)
+            k = min(rank_k, s.shape[0])
+            cross_modal_bases[name] = (u[:, :k], s[:k], vh[:k, :])
+        return cross_modal_bases

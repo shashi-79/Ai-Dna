@@ -20,7 +20,7 @@ class DNAArchitecture:
     num_experts: int = 4
     d_expert_hidden: int = 128
     vocab_size: int = 1000
-    coord_dim: int = 5  # (x1, y1, x2, y2, layer_pos)
+    coord_dim: int = 32  # 32D Hardware-Aligned Universal Coordinate Manifold (16D Source + 16D Target)
     active_expert_threshold: float = 0.5
     kv_latent_dim: int = 16    # d_kv (MLA latent dimension)
     rope_theta: float = 10000.0 # Base frequency for RoPE

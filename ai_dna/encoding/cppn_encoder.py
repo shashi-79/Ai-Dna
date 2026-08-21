@@ -113,6 +113,7 @@ class InverseCPPNEncoder:
                     layer_idx=0,
                     num_layers=num_layers,
                     device=self.device,
+                    coord_dim=cppn.in_features,
                 )
                 w_target = w_2d.to(self.device)
                 norm_sq = (w_target ** 2).sum() + 1e-8
