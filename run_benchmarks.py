@@ -19,6 +19,7 @@ from ai_dna.experiments import (
     run_experiment_4,
     run_experiment_5,
     run_experiment_6,
+    run_experiment_7_official_benchmarks,
 )
 
 
@@ -28,7 +29,7 @@ def main():
         "--experiment",
         type=str,
         default="all",
-        choices=["all", "exp1", "exp2", "exp3", "exp4", "exp5", "exp6"],
+        choices=["all", "exp1", "exp2", "exp3", "exp4", "exp5", "exp6", "exp7"],
         help="Experiment to execute (default: all)",
     )
     parser.add_argument(
@@ -41,6 +42,12 @@ def main():
         type=str,
         default="cuda" if torch.cuda.is_available() else "cpu",
         help="Execution device ('cpu' or 'cuda')",
+    )
+    parser.add_argument(
+        "--data-dir",
+        type=str,
+        default="./ai-dna-data",
+        help="Directory containing partitioned AI-DNA datasets (default: ./ai-dna-data)",
     )
 
     args = parser.parse_args()
@@ -75,6 +82,15 @@ def main():
         results["exp6"] = run_experiment_6(quick=args.quick, device_str=args.device)
         print("\n" + "-"*56 + "\n")
 
+    if args.experiment in ["all", "exp7"]:
+        results["exp7"] = run_experiment_7_official_benchmarks(
+            data_dir=args.data_dir,
+            num_generations=2 if args.quick else 3,
+            quick=args.quick,
+            device_str=args.device,
+        )
+        print("\n" + "-"*56 + "\n")
+
     print("========================================================")
     print(" Benchmarks Completed Successfully!")
     print("========================================================\n")
@@ -82,3 +98,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

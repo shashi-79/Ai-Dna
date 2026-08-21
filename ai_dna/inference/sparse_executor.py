@@ -118,6 +118,6 @@ class SparseHardwareExecutor(nn.Module):
             scaled_y = y_e * probs_e
 
             # 3. Un-permute / Scatter-Add back to original positions
-            out_flat.index_add_(0, active_indices, scaled_y)
+            out_flat.index_add_(0, active_indices, scaled_y.to(dtype=out_flat.dtype))
 
         return out_flat.view(batch_size, seq_len, d_model)

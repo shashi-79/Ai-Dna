@@ -1357,7 +1357,147 @@ def get_dataloader(
 
 
 # =====================================================================
-# 7. Command-Line Interface & Inspection Tool
+# 7. Official AI-DNA Benchmark Suite Datasets
+# =====================================================================
+
+class AIDNABenchmarkDataset(Dataset):
+    """
+    Dedicated PyTorch Dataset loader for partitioned AI-DNA benchmarks:
+    - GSM8K, MATH, MBPP, HumanEval, ARC-AGI, ProofNet, miniF2F, Wikipedia, Synthetic.
+    Supports splits: 'adaptation', 'public_eval', 'private_heldout', 'clean_eval', 'training'.
+    """
+    def __init__(
+        self,
+        task: str = "gsm8k",
+        split: str = "adaptation",
+        data_dir: str = "./ai-dna-data",
+        seq_len: int = 64,
+        tokenizer: Optional[CustomTextTokenizer] = None,
+        max_samples: Optional[int] = None,
+    ):
+        self.task = task.lower()
+        self.split = split.lower()
+        self.data_dir = os.path.abspath(data_dir)
+        self.seq_len = seq_len
+        self.tokenizer = tokenizer or CustomTextTokenizer(vocab_size=256, mode="word")
+        self.raw_records: List[Dict[str, Any]] = []
+        self.samples: List[Tuple[torch.Tensor, torch.Tensor]] = []
+
+        self._load_records()
+        self._build_samples(max_samples)
+
+    def _get_target_filepath(self) -> str:
+        """Resolve file path based on task and partition split."""
+        if self.split in ["adaptation", "train"]:
+            if self.task in ["gsm8k", "math", "mbpp", "arc"]:
+                return os.path.join(self.data_dir, "adaptation", self.task, f"{self.task}_train.jsonl")
+            elif self.task == "humaneval":
+                raise ValueError("HumanEval is strictly reserved for clean evaluation! Never load HumanEval in adaptation split.")
+            elif self.task in ["synthetic", "wikipedia"]:
+                sub = "synthetic_developmental.jsonl" if self.task == "synthetic" else "wikipedia_foundation.jsonl"
+                return os.path.join(self.data_dir, "training", self.task, sub)
+            else:
+                return os.path.join(self.data_dir, "adaptation", self.task, f"{self.task}_train.jsonl")
+        elif self.split in ["public_eval", "eval_public", "validation"]:
+            return os.path.join(self.data_dir, "evaluation", self.task, "public_eval.jsonl")
+        elif self.split in ["private_heldout", "heldout", "private_eval"]:
+            return os.path.join(self.data_dir, "evaluation", self.task, "private_heldout.jsonl")
+        elif self.split in ["clean_eval", "humaneval", "test"]:
+            if self.task == "humaneval":
+                return os.path.join(self.data_dir, "evaluation", "humaneval", "humaneval_clean.jsonl")
+            return os.path.join(self.data_dir, "evaluation", self.task, "public_eval.jsonl")
+        elif self.split == "training":
+            sub = "synthetic_developmental.jsonl" if self.task == "synthetic" else "wikipedia_foundation.jsonl"
+            return os.path.join(self.data_dir, "training", self.task, sub)
+        else:
+            return os.path.join(self.data_dir, "evaluation", self.task, f"{self.split}.jsonl")
+
+    def _load_records(self) -> None:
+        """Load JSONL records from disk with fallback if not found."""
+        filepath = self._get_target_filepath()
+        if os.path.exists(filepath):
+            with open(filepath, "r", encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if line:
+                        try:
+                            self.raw_records.append(json.loads(line))
+                        except Exception:
+                            pass
+        else:
+            # Fallback mock items if files not yet created
+            self.raw_records = [
+                {"prompt": f"Benchmark task {self.task} problem 1", "solution": "Step 1 answer: 42", "target": "42"},
+                {"prompt": f"Benchmark task {self.task} problem 2", "solution": "Step 1 answer: 84", "target": "84"},
+            ]
+
+    def _build_samples(self, max_samples: Optional[int]) -> None:
+        """Tokenize text into input and target tensor pairs."""
+        limit = max_samples if (max_samples is not None and max_samples > 0) else len(self.raw_records)
+        for row in self.raw_records[:limit]:
+            if "question" in row and "answer" in row:
+                text = f"Question: {row['question']}\nAnswer: {row['answer']}"
+            elif "problem" in row and "solution" in row:
+                text = f"Problem: {row['problem']}\nSolution: {row['solution']}"
+            elif "prompt" in row and "code" in row:
+                text = f"# {row['prompt']}\n{row['code']}"
+            elif "prompt" in row and "canonical_solution" in row:
+                text = f"{row['prompt']}\n{row['canonical_solution']}"
+            elif "statement" in row:
+                text = row["statement"]
+            elif "text" in row:
+                text = row["text"]
+            elif "prompt" in row and "solution" in row:
+                text = f"Prompt: {row['prompt']}\nSolution: {row['solution']}"
+            else:
+                text = json.dumps(row)
+
+            tokens = self.tokenizer.encode(text)
+            if len(tokens) < self.seq_len + 1:
+                pad = torch.full((self.seq_len + 1 - len(tokens),), self.tokenizer.pad_token_id, dtype=torch.long)
+                full_seq = torch.cat([tokens, pad])
+            else:
+                full_seq = tokens[: self.seq_len + 1]
+
+            self.samples.append((full_seq[:-1], full_seq[1:]))
+
+    def __len__(self) -> int:
+        return len(self.samples)
+
+    def __getitem__(self, idx: int) -> Tuple[torch.Tensor, torch.Tensor]:
+        return self.samples[idx]
+
+
+def load_ai_dna_benchmarks(
+    task: str = "gsm8k",
+    split: str = "adaptation",
+    data_dir: str = "./ai-dna-data",
+    batch_size: int = 16,
+    seq_len: int = 64,
+    tokenizer: Optional[CustomTextTokenizer] = None,
+    max_samples: Optional[int] = None,
+    shuffle: bool = True,
+) -> DataLoader:
+    """Helper to get a PyTorch DataLoader for an official AI-DNA benchmark dataset."""
+    ds = AIDNABenchmarkDataset(
+        task=task,
+        split=split,
+        data_dir=data_dir,
+        seq_len=seq_len,
+        tokenizer=tokenizer,
+        max_samples=max_samples,
+    )
+    return DataLoader(
+        ds,
+        batch_size=batch_size,
+        shuffle=shuffle,
+        pin_memory=torch.cuda.is_available(),
+        drop_last=False,
+    )
+
+
+# =====================================================================
+# 8. Command-Line Interface & Inspection Tool
 # =====================================================================
 
 def main():

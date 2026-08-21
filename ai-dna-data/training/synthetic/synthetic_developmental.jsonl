@@ -1,0 +1,500 @@
+{"id": "synth_arith_0", "prompt": "Calculate 26 - 95.", "solution": "Step 1: Compute 26 - 95 = -69. Output: -69", "target": "-69"}
+{"id": "synth_seq_1", "prompt": "What is the next number in sequence [9, 14, 19, 24, 29]?", "solution": "Pattern is adding 5. Next number is 34.", "target": "34"}
+{"id": "synth_arith_2", "prompt": "Calculate 693 * 95.", "solution": "Step 1: Compute 693 * 95 = 65835. Output: 65835", "target": "65835"}
+{"id": "synth_arith_3", "prompt": "Calculate 605 + 55.", "solution": "Step 1: Compute 605 + 55 = 660. Output: 660", "target": "660"}
+{"id": "synth_arith_4", "prompt": "Calculate 96 + 28.", "solution": "Step 1: Compute 96 + 28 = 124. Output: 124", "target": "124"}
+{"id": "synth_dna_5", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_dna_6", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_arith_7", "prompt": "Calculate 575 * 26.", "solution": "Step 1: Compute 575 * 26 = 14950. Output: 14950", "target": "14950"}
+{"id": "synth_dna_8", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_algo_9", "prompt": "Reverse the string 'fpvaus'.", "solution": "Reversed string is 'suavpf'.", "target": "suavpf"}
+{"id": "synth_logic_10", "prompt": "If beta contains delta, and delta contains alpha, does beta contain alpha?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_logic_11", "prompt": "If gamma contains beta, and beta contains delta, does gamma contain delta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_arith_12", "prompt": "Calculate 368 * 45.", "solution": "Step 1: Compute 368 * 45 = 16560. Output: 16560", "target": "16560"}
+{"id": "synth_logic_13", "prompt": "If delta contains beta, and beta contains gamma, does delta contain gamma?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_dna_14", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_arith_15", "prompt": "Calculate 997 + 49.", "solution": "Step 1: Compute 997 + 49 = 1046. Output: 1046", "target": "1046"}
+{"id": "synth_dna_16", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_logic_17", "prompt": "If beta contains alpha, and alpha contains delta, does beta contain delta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_arith_18", "prompt": "Calculate 47 + 85.", "solution": "Step 1: Compute 47 + 85 = 132. Output: 132", "target": "132"}
+{"id": "synth_logic_19", "prompt": "If beta contains gamma, and gamma contains delta, does beta contain delta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_algo_20", "prompt": "Reverse the string 'hqjjfg'.", "solution": "Reversed string is 'gfjjqh'.", "target": "gfjjqh"}
+{"id": "synth_arith_21", "prompt": "Calculate 624 + 82.", "solution": "Step 1: Compute 624 + 82 = 706. Output: 706", "target": "706"}
+{"id": "synth_dna_22", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_seq_23", "prompt": "What is the next number in sequence [30, 34, 38, 42, 46]?", "solution": "Pattern is adding 4. Next number is 50.", "target": "50"}
+{"id": "synth_algo_24", "prompt": "Reverse the string 'hyrfit'.", "solution": "Reversed string is 'tifryh'.", "target": "tifryh"}
+{"id": "synth_arith_25", "prompt": "Calculate 235 - 5.", "solution": "Step 1: Compute 235 - 5 = 230. Output: 230", "target": "230"}
+{"id": "synth_algo_26", "prompt": "Reverse the string 'gfywir'.", "solution": "Reversed string is 'riwyfg'.", "target": "riwyfg"}
+{"id": "synth_algo_27", "prompt": "Reverse the string 'xqddto'.", "solution": "Reversed string is 'otddqx'.", "target": "otddqx"}
+{"id": "synth_dna_28", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_algo_29", "prompt": "Reverse the string 'xkfznc'.", "solution": "Reversed string is 'cnzfkx'.", "target": "cnzfkx"}
+{"id": "synth_arith_30", "prompt": "Calculate 882 + 15.", "solution": "Step 1: Compute 882 + 15 = 897. Output: 897", "target": "897"}
+{"id": "synth_seq_31", "prompt": "What is the next number in sequence [39, 47, 55, 63, 71]?", "solution": "Pattern is adding 8. Next number is 79.", "target": "79"}
+{"id": "synth_arith_32", "prompt": "Calculate 395 * 49.", "solution": "Step 1: Compute 395 * 49 = 19355. Output: 19355", "target": "19355"}
+{"id": "synth_algo_33", "prompt": "Reverse the string 'nzwasr'.", "solution": "Reversed string is 'rsawzn'.", "target": "rsawzn"}
+{"id": "synth_dna_34", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_logic_35", "prompt": "If delta contains beta, and beta contains alpha, does delta contain alpha?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_algo_36", "prompt": "Reverse the string 'easszt'.", "solution": "Reversed string is 'tzssae'.", "target": "tzssae"}
+{"id": "synth_dna_37", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_arith_38", "prompt": "Calculate 892 - 81.", "solution": "Step 1: Compute 892 - 81 = 811. Output: 811", "target": "811"}
+{"id": "synth_dna_39", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_dna_40", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_seq_41", "prompt": "What is the next number in sequence [24, 28, 32, 36, 40]?", "solution": "Pattern is adding 4. Next number is 44.", "target": "44"}
+{"id": "synth_seq_42", "prompt": "What is the next number in sequence [39, 41, 43, 45, 47]?", "solution": "Pattern is adding 2. Next number is 49.", "target": "49"}
+{"id": "synth_logic_43", "prompt": "If beta contains gamma, and gamma contains alpha, does beta contain alpha?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_logic_44", "prompt": "If beta contains delta, and delta contains alpha, does beta contain alpha?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_seq_45", "prompt": "What is the next number in sequence [6, 9, 12, 15, 18]?", "solution": "Pattern is adding 3. Next number is 21.", "target": "21"}
+{"id": "synth_algo_46", "prompt": "Reverse the string 'vzndry'.", "solution": "Reversed string is 'yrdnzv'.", "target": "yrdnzv"}
+{"id": "synth_seq_47", "prompt": "What is the next number in sequence [34, 40, 46, 52, 58]?", "solution": "Pattern is adding 6. Next number is 64.", "target": "64"}
+{"id": "synth_dna_48", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_algo_49", "prompt": "Reverse the string 'zytrsk'.", "solution": "Reversed string is 'ksrtyz'.", "target": "ksrtyz"}
+{"id": "synth_logic_50", "prompt": "If alpha contains beta, and beta contains gamma, does alpha contain gamma?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_arith_51", "prompt": "Calculate 254 + 29.", "solution": "Step 1: Compute 254 + 29 = 283. Output: 283", "target": "283"}
+{"id": "synth_logic_52", "prompt": "If beta contains delta, and delta contains gamma, does beta contain gamma?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_dna_53", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_seq_54", "prompt": "What is the next number in sequence [5, 7, 9, 11, 13]?", "solution": "Pattern is adding 2. Next number is 15.", "target": "15"}
+{"id": "synth_arith_55", "prompt": "Calculate 235 + 9.", "solution": "Step 1: Compute 235 + 9 = 244. Output: 244", "target": "244"}
+{"id": "synth_logic_56", "prompt": "If beta contains delta, and delta contains gamma, does beta contain gamma?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_logic_57", "prompt": "If beta contains gamma, and gamma contains alpha, does beta contain alpha?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_dna_58", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_dna_59", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_algo_60", "prompt": "Reverse the string 'gmkcrj'.", "solution": "Reversed string is 'jrckmg'.", "target": "jrckmg"}
+{"id": "synth_algo_61", "prompt": "Reverse the string 'msrzck'.", "solution": "Reversed string is 'kczrsm'.", "target": "kczrsm"}
+{"id": "synth_logic_62", "prompt": "If beta contains gamma, and gamma contains delta, does beta contain delta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_seq_63", "prompt": "What is the next number in sequence [9, 18, 27, 36, 45]?", "solution": "Pattern is adding 9. Next number is 54.", "target": "54"}
+{"id": "synth_algo_64", "prompt": "Reverse the string 'emwbvw'.", "solution": "Reversed string is 'wvbwme'.", "target": "wvbwme"}
+{"id": "synth_arith_65", "prompt": "Calculate 52 * 84.", "solution": "Step 1: Compute 52 * 84 = 4368. Output: 4368", "target": "4368"}
+{"id": "synth_arith_66", "prompt": "Calculate 993 + 12.", "solution": "Step 1: Compute 993 + 12 = 1005. Output: 1005", "target": "1005"}
+{"id": "synth_seq_67", "prompt": "What is the next number in sequence [32, 40, 48, 56, 64]?", "solution": "Pattern is adding 8. Next number is 72.", "target": "72"}
+{"id": "synth_algo_68", "prompt": "Reverse the string 'fkbjzg'.", "solution": "Reversed string is 'gzjbkf'.", "target": "gzjbkf"}
+{"id": "synth_algo_69", "prompt": "Reverse the string 'hssurm'.", "solution": "Reversed string is 'mrussh'.", "target": "mrussh"}
+{"id": "synth_seq_70", "prompt": "What is the next number in sequence [14, 20, 26, 32, 38]?", "solution": "Pattern is adding 6. Next number is 44.", "target": "44"}
+{"id": "synth_arith_71", "prompt": "Calculate 594 * 95.", "solution": "Step 1: Compute 594 * 95 = 56430. Output: 56430", "target": "56430"}
+{"id": "synth_arith_72", "prompt": "Calculate 766 + 41.", "solution": "Step 1: Compute 766 + 41 = 807. Output: 807", "target": "807"}
+{"id": "synth_arith_73", "prompt": "Calculate 599 * 62.", "solution": "Step 1: Compute 599 * 62 = 37138. Output: 37138", "target": "37138"}
+{"id": "synth_dna_74", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_seq_75", "prompt": "What is the next number in sequence [33, 35, 37, 39, 41]?", "solution": "Pattern is adding 2. Next number is 43.", "target": "43"}
+{"id": "synth_arith_76", "prompt": "Calculate 872 + 24.", "solution": "Step 1: Compute 872 + 24 = 896. Output: 896", "target": "896"}
+{"id": "synth_dna_77", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_arith_78", "prompt": "Calculate 692 - 31.", "solution": "Step 1: Compute 692 - 31 = 661. Output: 661", "target": "661"}
+{"id": "synth_arith_79", "prompt": "Calculate 965 + 73.", "solution": "Step 1: Compute 965 + 73 = 1038. Output: 1038", "target": "1038"}
+{"id": "synth_dna_80", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_dna_81", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_arith_82", "prompt": "Calculate 635 - 11.", "solution": "Step 1: Compute 635 - 11 = 624. Output: 624", "target": "624"}
+{"id": "synth_dna_83", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_dna_84", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_dna_85", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_logic_86", "prompt": "If delta contains beta, and beta contains alpha, does delta contain alpha?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_seq_87", "prompt": "What is the next number in sequence [26, 32, 38, 44, 50]?", "solution": "Pattern is adding 6. Next number is 56.", "target": "56"}
+{"id": "synth_seq_88", "prompt": "What is the next number in sequence [30, 36, 42, 48, 54]?", "solution": "Pattern is adding 6. Next number is 60.", "target": "60"}
+{"id": "synth_logic_89", "prompt": "If gamma contains beta, and beta contains delta, does gamma contain delta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_dna_90", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_dna_91", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_arith_92", "prompt": "Calculate 76 + 69.", "solution": "Step 1: Compute 76 + 69 = 145. Output: 145", "target": "145"}
+{"id": "synth_dna_93", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_logic_94", "prompt": "If gamma contains alpha, and alpha contains delta, does gamma contain delta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_seq_95", "prompt": "What is the next number in sequence [19, 26, 33, 40, 47]?", "solution": "Pattern is adding 7. Next number is 54.", "target": "54"}
+{"id": "synth_seq_96", "prompt": "What is the next number in sequence [35, 44, 53, 62, 71]?", "solution": "Pattern is adding 9. Next number is 80.", "target": "80"}
+{"id": "synth_logic_97", "prompt": "If delta contains beta, and beta contains gamma, does delta contain gamma?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_arith_98", "prompt": "Calculate 962 - 18.", "solution": "Step 1: Compute 962 - 18 = 944. Output: 944", "target": "944"}
+{"id": "synth_arith_99", "prompt": "Calculate 912 * 14.", "solution": "Step 1: Compute 912 * 14 = 12768. Output: 12768", "target": "12768"}
+{"id": "synth_dna_100", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_seq_101", "prompt": "What is the next number in sequence [19, 25, 31, 37, 43]?", "solution": "Pattern is adding 6. Next number is 49.", "target": "49"}
+{"id": "synth_dna_102", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_seq_103", "prompt": "What is the next number in sequence [14, 21, 28, 35, 42]?", "solution": "Pattern is adding 7. Next number is 49.", "target": "49"}
+{"id": "synth_logic_104", "prompt": "If gamma contains alpha, and alpha contains beta, does gamma contain beta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_arith_105", "prompt": "Calculate 650 - 55.", "solution": "Step 1: Compute 650 - 55 = 595. Output: 595", "target": "595"}
+{"id": "synth_arith_106", "prompt": "Calculate 4 + 43.", "solution": "Step 1: Compute 4 + 43 = 47. Output: 47", "target": "47"}
+{"id": "synth_logic_107", "prompt": "If alpha contains delta, and delta contains gamma, does alpha contain gamma?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_dna_108", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_algo_109", "prompt": "Reverse the string 'ocyrda'.", "solution": "Reversed string is 'adryco'.", "target": "adryco"}
+{"id": "synth_logic_110", "prompt": "If gamma contains alpha, and alpha contains delta, does gamma contain delta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_arith_111", "prompt": "Calculate 316 + 47.", "solution": "Step 1: Compute 316 + 47 = 363. Output: 363", "target": "363"}
+{"id": "synth_logic_112", "prompt": "If delta contains alpha, and alpha contains gamma, does delta contain gamma?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_arith_113", "prompt": "Calculate 363 - 72.", "solution": "Step 1: Compute 363 - 72 = 291. Output: 291", "target": "291"}
+{"id": "synth_dna_114", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_seq_115", "prompt": "What is the next number in sequence [11, 16, 21, 26, 31]?", "solution": "Pattern is adding 5. Next number is 36.", "target": "36"}
+{"id": "synth_seq_116", "prompt": "What is the next number in sequence [2, 10, 18, 26, 34]?", "solution": "Pattern is adding 8. Next number is 42.", "target": "42"}
+{"id": "synth_seq_117", "prompt": "What is the next number in sequence [27, 34, 41, 48, 55]?", "solution": "Pattern is adding 7. Next number is 62.", "target": "62"}
+{"id": "synth_seq_118", "prompt": "What is the next number in sequence [11, 17, 23, 29, 35]?", "solution": "Pattern is adding 6. Next number is 41.", "target": "41"}
+{"id": "synth_arith_119", "prompt": "Calculate 392 - 5.", "solution": "Step 1: Compute 392 - 5 = 387. Output: 387", "target": "387"}
+{"id": "synth_seq_120", "prompt": "What is the next number in sequence [30, 35, 40, 45, 50]?", "solution": "Pattern is adding 5. Next number is 55.", "target": "55"}
+{"id": "synth_logic_121", "prompt": "If beta contains delta, and delta contains alpha, does beta contain alpha?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_arith_122", "prompt": "Calculate 676 - 25.", "solution": "Step 1: Compute 676 - 25 = 651. Output: 651", "target": "651"}
+{"id": "synth_logic_123", "prompt": "If delta contains beta, and beta contains alpha, does delta contain alpha?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_logic_124", "prompt": "If alpha contains beta, and beta contains gamma, does alpha contain gamma?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_arith_125", "prompt": "Calculate 119 + 34.", "solution": "Step 1: Compute 119 + 34 = 153. Output: 153", "target": "153"}
+{"id": "synth_dna_126", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_logic_127", "prompt": "If gamma contains beta, and beta contains delta, does gamma contain delta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_logic_128", "prompt": "If delta contains alpha, and alpha contains beta, does delta contain beta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_algo_129", "prompt": "Reverse the string 'xeblnu'.", "solution": "Reversed string is 'unlbex'.", "target": "unlbex"}
+{"id": "synth_seq_130", "prompt": "What is the next number in sequence [28, 35, 42, 49, 56]?", "solution": "Pattern is adding 7. Next number is 63.", "target": "63"}
+{"id": "synth_arith_131", "prompt": "Calculate 972 - 86.", "solution": "Step 1: Compute 972 - 86 = 886. Output: 886", "target": "886"}
+{"id": "synth_dna_132", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_logic_133", "prompt": "If delta contains beta, and beta contains gamma, does delta contain gamma?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_dna_134", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_logic_135", "prompt": "If alpha contains gamma, and gamma contains beta, does alpha contain beta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_logic_136", "prompt": "If gamma contains delta, and delta contains alpha, does gamma contain alpha?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_algo_137", "prompt": "Reverse the string 'rxqhoa'.", "solution": "Reversed string is 'aohqxr'.", "target": "aohqxr"}
+{"id": "synth_logic_138", "prompt": "If alpha contains gamma, and gamma contains delta, does alpha contain delta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_algo_139", "prompt": "Reverse the string 'lrnuyt'.", "solution": "Reversed string is 'tyunrl'.", "target": "tyunrl"}
+{"id": "synth_arith_140", "prompt": "Calculate 291 * 66.", "solution": "Step 1: Compute 291 * 66 = 19206. Output: 19206", "target": "19206"}
+{"id": "synth_dna_141", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_logic_142", "prompt": "If gamma contains beta, and beta contains delta, does gamma contain delta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_seq_143", "prompt": "What is the next number in sequence [10, 15, 20, 25, 30]?", "solution": "Pattern is adding 5. Next number is 35.", "target": "35"}
+{"id": "synth_arith_144", "prompt": "Calculate 48 - 32.", "solution": "Step 1: Compute 48 - 32 = 16. Output: 16", "target": "16"}
+{"id": "synth_dna_145", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_arith_146", "prompt": "Calculate 467 * 54.", "solution": "Step 1: Compute 467 * 54 = 25218. Output: 25218", "target": "25218"}
+{"id": "synth_dna_147", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_seq_148", "prompt": "What is the next number in sequence [32, 40, 48, 56, 64]?", "solution": "Pattern is adding 8. Next number is 72.", "target": "72"}
+{"id": "synth_algo_149", "prompt": "Reverse the string 'gratuc'.", "solution": "Reversed string is 'cutarg'.", "target": "cutarg"}
+{"id": "synth_algo_150", "prompt": "Reverse the string 'fusmox'.", "solution": "Reversed string is 'xomsuf'.", "target": "xomsuf"}
+{"id": "synth_arith_151", "prompt": "Calculate 468 - 18.", "solution": "Step 1: Compute 468 - 18 = 450. Output: 450", "target": "450"}
+{"id": "synth_dna_152", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_dna_153", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_dna_154", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_logic_155", "prompt": "If alpha contains beta, and beta contains gamma, does alpha contain gamma?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_dna_156", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_algo_157", "prompt": "Reverse the string 'xtmggq'.", "solution": "Reversed string is 'qggmtx'.", "target": "qggmtx"}
+{"id": "synth_dna_158", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_algo_159", "prompt": "Reverse the string 'qhchhi'.", "solution": "Reversed string is 'ihhchq'.", "target": "ihhchq"}
+{"id": "synth_dna_160", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_arith_161", "prompt": "Calculate 142 + 20.", "solution": "Step 1: Compute 142 + 20 = 162. Output: 162", "target": "162"}
+{"id": "synth_algo_162", "prompt": "Reverse the string 'ssbkok'.", "solution": "Reversed string is 'kokbss'.", "target": "kokbss"}
+{"id": "synth_seq_163", "prompt": "What is the next number in sequence [25, 33, 41, 49, 57]?", "solution": "Pattern is adding 8. Next number is 65.", "target": "65"}
+{"id": "synth_dna_164", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_arith_165", "prompt": "Calculate 878 * 98.", "solution": "Step 1: Compute 878 * 98 = 86044. Output: 86044", "target": "86044"}
+{"id": "synth_algo_166", "prompt": "Reverse the string 'myhkxv'.", "solution": "Reversed string is 'vxkhym'.", "target": "vxkhym"}
+{"id": "synth_dna_167", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_dna_168", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_dna_169", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_seq_170", "prompt": "What is the next number in sequence [15, 24, 33, 42, 51]?", "solution": "Pattern is adding 9. Next number is 60.", "target": "60"}
+{"id": "synth_logic_171", "prompt": "If gamma contains alpha, and alpha contains beta, does gamma contain beta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_algo_172", "prompt": "Reverse the string 'irkemd'.", "solution": "Reversed string is 'dmekri'.", "target": "dmekri"}
+{"id": "synth_dna_173", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_dna_174", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_arith_175", "prompt": "Calculate 929 * 51.", "solution": "Step 1: Compute 929 * 51 = 47379. Output: 47379", "target": "47379"}
+{"id": "synth_dna_176", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_arith_177", "prompt": "Calculate 86 - 83.", "solution": "Step 1: Compute 86 - 83 = 3. Output: 3", "target": "3"}
+{"id": "synth_seq_178", "prompt": "What is the next number in sequence [12, 21, 30, 39, 48]?", "solution": "Pattern is adding 9. Next number is 57.", "target": "57"}
+{"id": "synth_arith_179", "prompt": "Calculate 267 - 49.", "solution": "Step 1: Compute 267 - 49 = 218. Output: 218", "target": "218"}
+{"id": "synth_seq_180", "prompt": "What is the next number in sequence [21, 30, 39, 48, 57]?", "solution": "Pattern is adding 9. Next number is 66.", "target": "66"}
+{"id": "synth_logic_181", "prompt": "If alpha contains gamma, and gamma contains beta, does alpha contain beta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_logic_182", "prompt": "If gamma contains delta, and delta contains beta, does gamma contain beta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_dna_183", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_arith_184", "prompt": "Calculate 975 + 45.", "solution": "Step 1: Compute 975 + 45 = 1020. Output: 1020", "target": "1020"}
+{"id": "synth_arith_185", "prompt": "Calculate 800 + 84.", "solution": "Step 1: Compute 800 + 84 = 884. Output: 884", "target": "884"}
+{"id": "synth_arith_186", "prompt": "Calculate 973 + 32.", "solution": "Step 1: Compute 973 + 32 = 1005. Output: 1005", "target": "1005"}
+{"id": "synth_arith_187", "prompt": "Calculate 637 + 20.", "solution": "Step 1: Compute 637 + 20 = 657. Output: 657", "target": "657"}
+{"id": "synth_seq_188", "prompt": "What is the next number in sequence [43, 52, 61, 70, 79]?", "solution": "Pattern is adding 9. Next number is 88.", "target": "88"}
+{"id": "synth_arith_189", "prompt": "Calculate 578 - 28.", "solution": "Step 1: Compute 578 - 28 = 550. Output: 550", "target": "550"}
+{"id": "synth_logic_190", "prompt": "If beta contains delta, and delta contains alpha, does beta contain alpha?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_seq_191", "prompt": "What is the next number in sequence [7, 13, 19, 25, 31]?", "solution": "Pattern is adding 6. Next number is 37.", "target": "37"}
+{"id": "synth_dna_192", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_arith_193", "prompt": "Calculate 952 * 40.", "solution": "Step 1: Compute 952 * 40 = 38080. Output: 38080", "target": "38080"}
+{"id": "synth_algo_194", "prompt": "Reverse the string 'ksbrqc'.", "solution": "Reversed string is 'cqrbsk'.", "target": "cqrbsk"}
+{"id": "synth_logic_195", "prompt": "If beta contains delta, and delta contains gamma, does beta contain gamma?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_logic_196", "prompt": "If alpha contains beta, and beta contains gamma, does alpha contain gamma?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_arith_197", "prompt": "Calculate 519 - 83.", "solution": "Step 1: Compute 519 - 83 = 436. Output: 436", "target": "436"}
+{"id": "synth_arith_198", "prompt": "Calculate 870 - 54.", "solution": "Step 1: Compute 870 - 54 = 816. Output: 816", "target": "816"}
+{"id": "synth_arith_199", "prompt": "Calculate 444 * 47.", "solution": "Step 1: Compute 444 * 47 = 20868. Output: 20868", "target": "20868"}
+{"id": "synth_algo_200", "prompt": "Reverse the string 'sltzhv'.", "solution": "Reversed string is 'vhztls'.", "target": "vhztls"}
+{"id": "synth_dna_201", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_algo_202", "prompt": "Reverse the string 'mvpigy'.", "solution": "Reversed string is 'ygipvm'.", "target": "ygipvm"}
+{"id": "synth_logic_203", "prompt": "If gamma contains beta, and beta contains alpha, does gamma contain alpha?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_dna_204", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_dna_205", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_algo_206", "prompt": "Reverse the string 'imimjg'.", "solution": "Reversed string is 'gjmimi'.", "target": "gjmimi"}
+{"id": "synth_logic_207", "prompt": "If beta contains alpha, and alpha contains delta, does beta contain delta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_dna_208", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_seq_209", "prompt": "What is the next number in sequence [16, 19, 22, 25, 28]?", "solution": "Pattern is adding 3. Next number is 31.", "target": "31"}
+{"id": "synth_algo_210", "prompt": "Reverse the string 'mtrqmu'.", "solution": "Reversed string is 'umqrtm'.", "target": "umqrtm"}
+{"id": "synth_arith_211", "prompt": "Calculate 302 - 29.", "solution": "Step 1: Compute 302 - 29 = 273. Output: 273", "target": "273"}
+{"id": "synth_seq_212", "prompt": "What is the next number in sequence [43, 49, 55, 61, 67]?", "solution": "Pattern is adding 6. Next number is 73.", "target": "73"}
+{"id": "synth_dna_213", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_logic_214", "prompt": "If alpha contains beta, and beta contains gamma, does alpha contain gamma?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_algo_215", "prompt": "Reverse the string 'zojlhf'.", "solution": "Reversed string is 'fhljoz'.", "target": "fhljoz"}
+{"id": "synth_seq_216", "prompt": "What is the next number in sequence [8, 15, 22, 29, 36]?", "solution": "Pattern is adding 7. Next number is 43.", "target": "43"}
+{"id": "synth_dna_217", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_seq_218", "prompt": "What is the next number in sequence [14, 19, 24, 29, 34]?", "solution": "Pattern is adding 5. Next number is 39.", "target": "39"}
+{"id": "synth_algo_219", "prompt": "Reverse the string 'hptpzv'.", "solution": "Reversed string is 'vzptph'.", "target": "vzptph"}
+{"id": "synth_logic_220", "prompt": "If gamma contains alpha, and alpha contains delta, does gamma contain delta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_logic_221", "prompt": "If beta contains delta, and delta contains gamma, does beta contain gamma?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_logic_222", "prompt": "If gamma contains beta, and beta contains delta, does gamma contain delta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_seq_223", "prompt": "What is the next number in sequence [7, 16, 25, 34, 43]?", "solution": "Pattern is adding 9. Next number is 52.", "target": "52"}
+{"id": "synth_arith_224", "prompt": "Calculate 588 - 37.", "solution": "Step 1: Compute 588 - 37 = 551. Output: 551", "target": "551"}
+{"id": "synth_algo_225", "prompt": "Reverse the string 'lebymv'.", "solution": "Reversed string is 'vmybel'.", "target": "vmybel"}
+{"id": "synth_algo_226", "prompt": "Reverse the string 'mprdvy'.", "solution": "Reversed string is 'yvdrpm'.", "target": "yvdrpm"}
+{"id": "synth_arith_227", "prompt": "Calculate 255 * 16.", "solution": "Step 1: Compute 255 * 16 = 4080. Output: 4080", "target": "4080"}
+{"id": "synth_algo_228", "prompt": "Reverse the string 'pufnll'.", "solution": "Reversed string is 'llnfup'.", "target": "llnfup"}
+{"id": "synth_dna_229", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_algo_230", "prompt": "Reverse the string 'hqptyf'.", "solution": "Reversed string is 'fytpqh'.", "target": "fytpqh"}
+{"id": "synth_seq_231", "prompt": "What is the next number in sequence [43, 49, 55, 61, 67]?", "solution": "Pattern is adding 6. Next number is 73.", "target": "73"}
+{"id": "synth_arith_232", "prompt": "Calculate 161 + 31.", "solution": "Step 1: Compute 161 + 31 = 192. Output: 192", "target": "192"}
+{"id": "synth_dna_233", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_arith_234", "prompt": "Calculate 161 - 1.", "solution": "Step 1: Compute 161 - 1 = 160. Output: 160", "target": "160"}
+{"id": "synth_algo_235", "prompt": "Reverse the string 'rmahhw'.", "solution": "Reversed string is 'whhamr'.", "target": "whhamr"}
+{"id": "synth_arith_236", "prompt": "Calculate 704 - 30.", "solution": "Step 1: Compute 704 - 30 = 674. Output: 674", "target": "674"}
+{"id": "synth_dna_237", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_seq_238", "prompt": "What is the next number in sequence [8, 16, 24, 32, 40]?", "solution": "Pattern is adding 8. Next number is 48.", "target": "48"}
+{"id": "synth_dna_239", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_seq_240", "prompt": "What is the next number in sequence [18, 22, 26, 30, 34]?", "solution": "Pattern is adding 4. Next number is 38.", "target": "38"}
+{"id": "synth_seq_241", "prompt": "What is the next number in sequence [4, 7, 10, 13, 16]?", "solution": "Pattern is adding 3. Next number is 19.", "target": "19"}
+{"id": "synth_seq_242", "prompt": "What is the next number in sequence [39, 45, 51, 57, 63]?", "solution": "Pattern is adding 6. Next number is 69.", "target": "69"}
+{"id": "synth_dna_243", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_logic_244", "prompt": "If gamma contains beta, and beta contains alpha, does gamma contain alpha?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_logic_245", "prompt": "If alpha contains gamma, and gamma contains beta, does alpha contain beta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_algo_246", "prompt": "Reverse the string 'cbligc'.", "solution": "Reversed string is 'cgilbc'.", "target": "cgilbc"}
+{"id": "synth_dna_247", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_dna_248", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_arith_249", "prompt": "Calculate 784 - 87.", "solution": "Step 1: Compute 784 - 87 = 697. Output: 697", "target": "697"}
+{"id": "synth_dna_250", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_arith_251", "prompt": "Calculate 782 + 97.", "solution": "Step 1: Compute 782 + 97 = 879. Output: 879", "target": "879"}
+{"id": "synth_algo_252", "prompt": "Reverse the string 'nlhzlv'.", "solution": "Reversed string is 'vlzhln'.", "target": "vlzhln"}
+{"id": "synth_arith_253", "prompt": "Calculate 482 - 45.", "solution": "Step 1: Compute 482 - 45 = 437. Output: 437", "target": "437"}
+{"id": "synth_logic_254", "prompt": "If beta contains alpha, and alpha contains delta, does beta contain delta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_seq_255", "prompt": "What is the next number in sequence [27, 34, 41, 48, 55]?", "solution": "Pattern is adding 7. Next number is 62.", "target": "62"}
+{"id": "synth_algo_256", "prompt": "Reverse the string 'hyvoli'.", "solution": "Reversed string is 'ilovyh'.", "target": "ilovyh"}
+{"id": "synth_logic_257", "prompt": "If gamma contains delta, and delta contains beta, does gamma contain beta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_dna_258", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_algo_259", "prompt": "Reverse the string 'kejtqt'.", "solution": "Reversed string is 'tqtjek'.", "target": "tqtjek"}
+{"id": "synth_seq_260", "prompt": "What is the next number in sequence [36, 42, 48, 54, 60]?", "solution": "Pattern is adding 6. Next number is 66.", "target": "66"}
+{"id": "synth_seq_261", "prompt": "What is the next number in sequence [29, 35, 41, 47, 53]?", "solution": "Pattern is adding 6. Next number is 59.", "target": "59"}
+{"id": "synth_algo_262", "prompt": "Reverse the string 'dzpgeo'.", "solution": "Reversed string is 'oegpzd'.", "target": "oegpzd"}
+{"id": "synth_dna_263", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_algo_264", "prompt": "Reverse the string 'czxldv'.", "solution": "Reversed string is 'vdlxzc'.", "target": "vdlxzc"}
+{"id": "synth_algo_265", "prompt": "Reverse the string 'yhskmm'.", "solution": "Reversed string is 'mmkshy'.", "target": "mmkshy"}
+{"id": "synth_algo_266", "prompt": "Reverse the string 'ojxnww'.", "solution": "Reversed string is 'wwnxjo'.", "target": "wwnxjo"}
+{"id": "synth_logic_267", "prompt": "If alpha contains gamma, and gamma contains beta, does alpha contain beta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_arith_268", "prompt": "Calculate 290 - 93.", "solution": "Step 1: Compute 290 - 93 = 197. Output: 197", "target": "197"}
+{"id": "synth_dna_269", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_dna_270", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_algo_271", "prompt": "Reverse the string 'wlmitj'.", "solution": "Reversed string is 'jtimlw'.", "target": "jtimlw"}
+{"id": "synth_logic_272", "prompt": "If delta contains alpha, and alpha contains gamma, does delta contain gamma?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_dna_273", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_algo_274", "prompt": "Reverse the string 'gubtsv'.", "solution": "Reversed string is 'vstbug'.", "target": "vstbug"}
+{"id": "synth_algo_275", "prompt": "Reverse the string 'zuqdzd'.", "solution": "Reversed string is 'dzdquz'.", "target": "dzdquz"}
+{"id": "synth_dna_276", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_logic_277", "prompt": "If gamma contains delta, and delta contains beta, does gamma contain beta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_dna_278", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_algo_279", "prompt": "Reverse the string 'adwzbu'.", "solution": "Reversed string is 'ubzwda'.", "target": "ubzwda"}
+{"id": "synth_logic_280", "prompt": "If alpha contains beta, and beta contains delta, does alpha contain delta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_arith_281", "prompt": "Calculate 873 * 43.", "solution": "Step 1: Compute 873 * 43 = 37539. Output: 37539", "target": "37539"}
+{"id": "synth_dna_282", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_algo_283", "prompt": "Reverse the string 'yqxmoq'.", "solution": "Reversed string is 'qomxqy'.", "target": "qomxqy"}
+{"id": "synth_seq_284", "prompt": "What is the next number in sequence [15, 21, 27, 33, 39]?", "solution": "Pattern is adding 6. Next number is 45.", "target": "45"}
+{"id": "synth_arith_285", "prompt": "Calculate 445 * 13.", "solution": "Step 1: Compute 445 * 13 = 5785. Output: 5785", "target": "5785"}
+{"id": "synth_arith_286", "prompt": "Calculate 455 * 22.", "solution": "Step 1: Compute 455 * 22 = 10010. Output: 10010", "target": "10010"}
+{"id": "synth_logic_287", "prompt": "If gamma contains beta, and beta contains delta, does gamma contain delta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_arith_288", "prompt": "Calculate 301 - 46.", "solution": "Step 1: Compute 301 - 46 = 255. Output: 255", "target": "255"}
+{"id": "synth_algo_289", "prompt": "Reverse the string 'dnouec'.", "solution": "Reversed string is 'ceuond'.", "target": "ceuond"}
+{"id": "synth_algo_290", "prompt": "Reverse the string 'qgxdlg'.", "solution": "Reversed string is 'gldxgq'.", "target": "gldxgq"}
+{"id": "synth_logic_291", "prompt": "If delta contains gamma, and gamma contains beta, does delta contain beta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_dna_292", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_seq_293", "prompt": "What is the next number in sequence [29, 32, 35, 38, 41]?", "solution": "Pattern is adding 3. Next number is 44.", "target": "44"}
+{"id": "synth_logic_294", "prompt": "If alpha contains beta, and beta contains delta, does alpha contain delta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_logic_295", "prompt": "If gamma contains alpha, and alpha contains beta, does gamma contain beta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_algo_296", "prompt": "Reverse the string 'wcjjhs'.", "solution": "Reversed string is 'shjjcw'.", "target": "shjjcw"}
+{"id": "synth_arith_297", "prompt": "Calculate 850 - 85.", "solution": "Step 1: Compute 850 - 85 = 765. Output: 765", "target": "765"}
+{"id": "synth_logic_298", "prompt": "If beta contains delta, and delta contains gamma, does beta contain gamma?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_dna_299", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_algo_300", "prompt": "Reverse the string 'vxufuf'.", "solution": "Reversed string is 'fufuxv'.", "target": "fufuxv"}
+{"id": "synth_seq_301", "prompt": "What is the next number in sequence [44, 50, 56, 62, 68]?", "solution": "Pattern is adding 6. Next number is 74.", "target": "74"}
+{"id": "synth_seq_302", "prompt": "What is the next number in sequence [41, 44, 47, 50, 53]?", "solution": "Pattern is adding 3. Next number is 56.", "target": "56"}
+{"id": "synth_arith_303", "prompt": "Calculate 317 + 57.", "solution": "Step 1: Compute 317 + 57 = 374. Output: 374", "target": "374"}
+{"id": "synth_dna_304", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_logic_305", "prompt": "If gamma contains delta, and delta contains alpha, does gamma contain alpha?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_logic_306", "prompt": "If beta contains gamma, and gamma contains alpha, does beta contain alpha?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_seq_307", "prompt": "What is the next number in sequence [34, 41, 48, 55, 62]?", "solution": "Pattern is adding 7. Next number is 69.", "target": "69"}
+{"id": "synth_dna_308", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_logic_309", "prompt": "If alpha contains gamma, and gamma contains delta, does alpha contain delta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_logic_310", "prompt": "If delta contains beta, and beta contains alpha, does delta contain alpha?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_arith_311", "prompt": "Calculate 145 + 97.", "solution": "Step 1: Compute 145 + 97 = 242. Output: 242", "target": "242"}
+{"id": "synth_algo_312", "prompt": "Reverse the string 'zujuan'.", "solution": "Reversed string is 'naujuz'.", "target": "naujuz"}
+{"id": "synth_algo_313", "prompt": "Reverse the string 'jtgjqj'.", "solution": "Reversed string is 'jqjgtj'.", "target": "jqjgtj"}
+{"id": "synth_seq_314", "prompt": "What is the next number in sequence [2, 11, 20, 29, 38]?", "solution": "Pattern is adding 9. Next number is 47.", "target": "47"}
+{"id": "synth_dna_315", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_dna_316", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_logic_317", "prompt": "If delta contains alpha, and alpha contains gamma, does delta contain gamma?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_algo_318", "prompt": "Reverse the string 'xhkdyh'.", "solution": "Reversed string is 'hydkhx'.", "target": "hydkhx"}
+{"id": "synth_algo_319", "prompt": "Reverse the string 'dgnkjy'.", "solution": "Reversed string is 'yjkngd'.", "target": "yjkngd"}
+{"id": "synth_dna_320", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_algo_321", "prompt": "Reverse the string 'psxrvq'.", "solution": "Reversed string is 'qvrxsp'.", "target": "qvrxsp"}
+{"id": "synth_logic_322", "prompt": "If delta contains beta, and beta contains gamma, does delta contain gamma?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_seq_323", "prompt": "What is the next number in sequence [29, 38, 47, 56, 65]?", "solution": "Pattern is adding 9. Next number is 74.", "target": "74"}
+{"id": "synth_seq_324", "prompt": "What is the next number in sequence [7, 14, 21, 28, 35]?", "solution": "Pattern is adding 7. Next number is 42.", "target": "42"}
+{"id": "synth_logic_325", "prompt": "If delta contains beta, and beta contains alpha, does delta contain alpha?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_logic_326", "prompt": "If gamma contains delta, and delta contains alpha, does gamma contain alpha?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_arith_327", "prompt": "Calculate 679 * 28.", "solution": "Step 1: Compute 679 * 28 = 19012. Output: 19012", "target": "19012"}
+{"id": "synth_dna_328", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_arith_329", "prompt": "Calculate 52 + 43.", "solution": "Step 1: Compute 52 + 43 = 95. Output: 95", "target": "95"}
+{"id": "synth_seq_330", "prompt": "What is the next number in sequence [5, 10, 15, 20, 25]?", "solution": "Pattern is adding 5. Next number is 30.", "target": "30"}
+{"id": "synth_dna_331", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_seq_332", "prompt": "What is the next number in sequence [15, 20, 25, 30, 35]?", "solution": "Pattern is adding 5. Next number is 40.", "target": "40"}
+{"id": "synth_logic_333", "prompt": "If delta contains alpha, and alpha contains gamma, does delta contain gamma?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_logic_334", "prompt": "If gamma contains delta, and delta contains alpha, does gamma contain alpha?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_seq_335", "prompt": "What is the next number in sequence [43, 46, 49, 52, 55]?", "solution": "Pattern is adding 3. Next number is 58.", "target": "58"}
+{"id": "synth_arith_336", "prompt": "Calculate 135 - 2.", "solution": "Step 1: Compute 135 - 2 = 133. Output: 133", "target": "133"}
+{"id": "synth_seq_337", "prompt": "What is the next number in sequence [2, 9, 16, 23, 30]?", "solution": "Pattern is adding 7. Next number is 37.", "target": "37"}
+{"id": "synth_seq_338", "prompt": "What is the next number in sequence [4, 10, 16, 22, 28]?", "solution": "Pattern is adding 6. Next number is 34.", "target": "34"}
+{"id": "synth_seq_339", "prompt": "What is the next number in sequence [34, 42, 50, 58, 66]?", "solution": "Pattern is adding 8. Next number is 74.", "target": "74"}
+{"id": "synth_arith_340", "prompt": "Calculate 764 - 9.", "solution": "Step 1: Compute 764 - 9 = 755. Output: 755", "target": "755"}
+{"id": "synth_algo_341", "prompt": "Reverse the string 'uncnyb'.", "solution": "Reversed string is 'byncnu'.", "target": "byncnu"}
+{"id": "synth_dna_342", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_logic_343", "prompt": "If beta contains alpha, and alpha contains gamma, does beta contain gamma?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_arith_344", "prompt": "Calculate 491 - 52.", "solution": "Step 1: Compute 491 - 52 = 439. Output: 439", "target": "439"}
+{"id": "synth_arith_345", "prompt": "Calculate 503 - 92.", "solution": "Step 1: Compute 503 - 92 = 411. Output: 411", "target": "411"}
+{"id": "synth_arith_346", "prompt": "Calculate 921 - 11.", "solution": "Step 1: Compute 921 - 11 = 910. Output: 910", "target": "910"}
+{"id": "synth_dna_347", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_seq_348", "prompt": "What is the next number in sequence [9, 12, 15, 18, 21]?", "solution": "Pattern is adding 3. Next number is 24.", "target": "24"}
+{"id": "synth_logic_349", "prompt": "If alpha contains delta, and delta contains beta, does alpha contain beta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_algo_350", "prompt": "Reverse the string 'nlucrw'.", "solution": "Reversed string is 'wrculn'.", "target": "wrculn"}
+{"id": "synth_dna_351", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_seq_352", "prompt": "What is the next number in sequence [29, 37, 45, 53, 61]?", "solution": "Pattern is adding 8. Next number is 69.", "target": "69"}
+{"id": "synth_seq_353", "prompt": "What is the next number in sequence [22, 30, 38, 46, 54]?", "solution": "Pattern is adding 8. Next number is 62.", "target": "62"}
+{"id": "synth_algo_354", "prompt": "Reverse the string 'ksiigy'.", "solution": "Reversed string is 'ygiisk'.", "target": "ygiisk"}
+{"id": "synth_algo_355", "prompt": "Reverse the string 'bvcctv'.", "solution": "Reversed string is 'vtccvb'.", "target": "vtccvb"}
+{"id": "synth_dna_356", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_arith_357", "prompt": "Calculate 601 * 72.", "solution": "Step 1: Compute 601 * 72 = 43272. Output: 43272", "target": "43272"}
+{"id": "synth_logic_358", "prompt": "If delta contains gamma, and gamma contains beta, does delta contain beta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_algo_359", "prompt": "Reverse the string 'wszpjp'.", "solution": "Reversed string is 'pjpzsw'.", "target": "pjpzsw"}
+{"id": "synth_seq_360", "prompt": "What is the next number in sequence [43, 47, 51, 55, 59]?", "solution": "Pattern is adding 4. Next number is 63.", "target": "63"}
+{"id": "synth_algo_361", "prompt": "Reverse the string 'fcvjto'.", "solution": "Reversed string is 'otjvcf'.", "target": "otjvcf"}
+{"id": "synth_algo_362", "prompt": "Reverse the string 'vzvpqa'.", "solution": "Reversed string is 'aqpvzv'.", "target": "aqpvzv"}
+{"id": "synth_logic_363", "prompt": "If gamma contains beta, and beta contains delta, does gamma contain delta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_logic_364", "prompt": "If delta contains alpha, and alpha contains beta, does delta contain beta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_seq_365", "prompt": "What is the next number in sequence [37, 41, 45, 49, 53]?", "solution": "Pattern is adding 4. Next number is 57.", "target": "57"}
+{"id": "synth_algo_366", "prompt": "Reverse the string 'btzcnj'.", "solution": "Reversed string is 'jncztb'.", "target": "jncztb"}
+{"id": "synth_algo_367", "prompt": "Reverse the string 'ijsuoc'.", "solution": "Reversed string is 'cousji'.", "target": "cousji"}
+{"id": "synth_arith_368", "prompt": "Calculate 160 * 21.", "solution": "Step 1: Compute 160 * 21 = 3360. Output: 3360", "target": "3360"}
+{"id": "synth_arith_369", "prompt": "Calculate 691 - 11.", "solution": "Step 1: Compute 691 - 11 = 680. Output: 680", "target": "680"}
+{"id": "synth_algo_370", "prompt": "Reverse the string 'rmlhtc'.", "solution": "Reversed string is 'cthlmr'.", "target": "cthlmr"}
+{"id": "synth_algo_371", "prompt": "Reverse the string 'crpnif'.", "solution": "Reversed string is 'finprc'.", "target": "finprc"}
+{"id": "synth_dna_372", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_arith_373", "prompt": "Calculate 8 - 27.", "solution": "Step 1: Compute 8 - 27 = -19. Output: -19", "target": "-19"}
+{"id": "synth_seq_374", "prompt": "What is the next number in sequence [49, 53, 57, 61, 65]?", "solution": "Pattern is adding 4. Next number is 69.", "target": "69"}
+{"id": "synth_logic_375", "prompt": "If delta contains alpha, and alpha contains beta, does delta contain beta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_arith_376", "prompt": "Calculate 510 - 96.", "solution": "Step 1: Compute 510 - 96 = 414. Output: 414", "target": "414"}
+{"id": "synth_seq_377", "prompt": "What is the next number in sequence [25, 29, 33, 37, 41]?", "solution": "Pattern is adding 4. Next number is 45.", "target": "45"}
+{"id": "synth_dna_378", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_seq_379", "prompt": "What is the next number in sequence [5, 12, 19, 26, 33]?", "solution": "Pattern is adding 7. Next number is 40.", "target": "40"}
+{"id": "synth_algo_380", "prompt": "Reverse the string 'wbaxwo'.", "solution": "Reversed string is 'owxabw'.", "target": "owxabw"}
+{"id": "synth_dna_381", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_algo_382", "prompt": "Reverse the string 'skcaiu'.", "solution": "Reversed string is 'uiacks'.", "target": "uiacks"}
+{"id": "synth_dna_383", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_algo_384", "prompt": "Reverse the string 'vxcvgp'.", "solution": "Reversed string is 'pgvcxv'.", "target": "pgvcxv"}
+{"id": "synth_dna_385", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_arith_386", "prompt": "Calculate 406 * 40.", "solution": "Step 1: Compute 406 * 40 = 16240. Output: 16240", "target": "16240"}
+{"id": "synth_logic_387", "prompt": "If gamma contains alpha, and alpha contains delta, does gamma contain delta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_arith_388", "prompt": "Calculate 523 + 82.", "solution": "Step 1: Compute 523 + 82 = 605. Output: 605", "target": "605"}
+{"id": "synth_dna_389", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_dna_390", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_seq_391", "prompt": "What is the next number in sequence [23, 30, 37, 44, 51]?", "solution": "Pattern is adding 7. Next number is 58.", "target": "58"}
+{"id": "synth_seq_392", "prompt": "What is the next number in sequence [7, 12, 17, 22, 27]?", "solution": "Pattern is adding 5. Next number is 32.", "target": "32"}
+{"id": "synth_seq_393", "prompt": "What is the next number in sequence [13, 19, 25, 31, 37]?", "solution": "Pattern is adding 6. Next number is 43.", "target": "43"}
+{"id": "synth_seq_394", "prompt": "What is the next number in sequence [49, 53, 57, 61, 65]?", "solution": "Pattern is adding 4. Next number is 69.", "target": "69"}
+{"id": "synth_arith_395", "prompt": "Calculate 182 * 99.", "solution": "Step 1: Compute 182 * 99 = 18018. Output: 18018", "target": "18018"}
+{"id": "synth_algo_396", "prompt": "Reverse the string 'moprwq'.", "solution": "Reversed string is 'qwrpom'.", "target": "qwrpom"}
+{"id": "synth_dna_397", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_logic_398", "prompt": "If delta contains beta, and beta contains alpha, does delta contain alpha?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_arith_399", "prompt": "Calculate 481 * 57.", "solution": "Step 1: Compute 481 * 57 = 27417. Output: 27417", "target": "27417"}
+{"id": "synth_logic_400", "prompt": "If beta contains alpha, and alpha contains delta, does beta contain delta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_logic_401", "prompt": "If delta contains gamma, and gamma contains beta, does delta contain beta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_algo_402", "prompt": "Reverse the string 'ajhqzc'.", "solution": "Reversed string is 'czqhja'.", "target": "czqhja"}
+{"id": "synth_dna_403", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_dna_404", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_algo_405", "prompt": "Reverse the string 'mouxlv'.", "solution": "Reversed string is 'vlxuom'.", "target": "vlxuom"}
+{"id": "synth_seq_406", "prompt": "What is the next number in sequence [39, 46, 53, 60, 67]?", "solution": "Pattern is adding 7. Next number is 74.", "target": "74"}
+{"id": "synth_algo_407", "prompt": "Reverse the string 'nylvvz'.", "solution": "Reversed string is 'zvvlyn'.", "target": "zvvlyn"}
+{"id": "synth_arith_408", "prompt": "Calculate 517 + 83.", "solution": "Step 1: Compute 517 + 83 = 600. Output: 600", "target": "600"}
+{"id": "synth_arith_409", "prompt": "Calculate 254 - 91.", "solution": "Step 1: Compute 254 - 91 = 163. Output: 163", "target": "163"}
+{"id": "synth_algo_410", "prompt": "Reverse the string 'npjxku'.", "solution": "Reversed string is 'ukxjpn'.", "target": "ukxjpn"}
+{"id": "synth_dna_411", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_arith_412", "prompt": "Calculate 809 * 81.", "solution": "Step 1: Compute 809 * 81 = 65529. Output: 65529", "target": "65529"}
+{"id": "synth_logic_413", "prompt": "If gamma contains delta, and delta contains beta, does gamma contain beta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_dna_414", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_algo_415", "prompt": "Reverse the string 'hsrxwi'.", "solution": "Reversed string is 'iwxrsh'.", "target": "iwxrsh"}
+{"id": "synth_dna_416", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_seq_417", "prompt": "What is the next number in sequence [20, 27, 34, 41, 48]?", "solution": "Pattern is adding 7. Next number is 55.", "target": "55"}
+{"id": "synth_algo_418", "prompt": "Reverse the string 'dscoqi'.", "solution": "Reversed string is 'iqocsd'.", "target": "iqocsd"}
+{"id": "synth_seq_419", "prompt": "What is the next number in sequence [42, 45, 48, 51, 54]?", "solution": "Pattern is adding 3. Next number is 57.", "target": "57"}
+{"id": "synth_algo_420", "prompt": "Reverse the string 'naiyit'.", "solution": "Reversed string is 'tiyian'.", "target": "tiyian"}
+{"id": "synth_seq_421", "prompt": "What is the next number in sequence [9, 14, 19, 24, 29]?", "solution": "Pattern is adding 5. Next number is 34.", "target": "34"}
+{"id": "synth_seq_422", "prompt": "What is the next number in sequence [19, 22, 25, 28, 31]?", "solution": "Pattern is adding 3. Next number is 34.", "target": "34"}
+{"id": "synth_arith_423", "prompt": "Calculate 520 * 99.", "solution": "Step 1: Compute 520 * 99 = 51480. Output: 51480", "target": "51480"}
+{"id": "synth_dna_424", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_arith_425", "prompt": "Calculate 678 * 44.", "solution": "Step 1: Compute 678 * 44 = 29832. Output: 29832", "target": "29832"}
+{"id": "synth_seq_426", "prompt": "What is the next number in sequence [10, 18, 26, 34, 42]?", "solution": "Pattern is adding 8. Next number is 50.", "target": "50"}
+{"id": "synth_seq_427", "prompt": "What is the next number in sequence [45, 49, 53, 57, 61]?", "solution": "Pattern is adding 4. Next number is 65.", "target": "65"}
+{"id": "synth_dna_428", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_seq_429", "prompt": "What is the next number in sequence [3, 12, 21, 30, 39]?", "solution": "Pattern is adding 9. Next number is 48.", "target": "48"}
+{"id": "synth_algo_430", "prompt": "Reverse the string 'jszptu'.", "solution": "Reversed string is 'utpzsj'.", "target": "utpzsj"}
+{"id": "synth_seq_431", "prompt": "What is the next number in sequence [20, 25, 30, 35, 40]?", "solution": "Pattern is adding 5. Next number is 45.", "target": "45"}
+{"id": "synth_algo_432", "prompt": "Reverse the string 'xfrolu'.", "solution": "Reversed string is 'ulorfx'.", "target": "ulorfx"}
+{"id": "synth_algo_433", "prompt": "Reverse the string 'nkefpw'.", "solution": "Reversed string is 'wpfekn'.", "target": "wpfekn"}
+{"id": "synth_arith_434", "prompt": "Calculate 657 - 62.", "solution": "Step 1: Compute 657 - 62 = 595. Output: 595", "target": "595"}
+{"id": "synth_dna_435", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_arith_436", "prompt": "Calculate 729 + 67.", "solution": "Step 1: Compute 729 + 67 = 796. Output: 796", "target": "796"}
+{"id": "synth_logic_437", "prompt": "If gamma contains beta, and beta contains delta, does gamma contain delta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_algo_438", "prompt": "Reverse the string 'xdlyfl'.", "solution": "Reversed string is 'lfyldx'.", "target": "lfyldx"}
+{"id": "synth_logic_439", "prompt": "If gamma contains delta, and delta contains beta, does gamma contain beta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_algo_440", "prompt": "Reverse the string 'ngzjay'.", "solution": "Reversed string is 'yajzgn'.", "target": "yajzgn"}
+{"id": "synth_logic_441", "prompt": "If delta contains gamma, and gamma contains alpha, does delta contain alpha?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_logic_442", "prompt": "If beta contains alpha, and alpha contains gamma, does beta contain gamma?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_algo_443", "prompt": "Reverse the string 'lacgvo'.", "solution": "Reversed string is 'ovgcal'.", "target": "ovgcal"}
+{"id": "synth_dna_444", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_dna_445", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_algo_446", "prompt": "Reverse the string 'chhbku'.", "solution": "Reversed string is 'ukbhhc'.", "target": "ukbhhc"}
+{"id": "synth_algo_447", "prompt": "Reverse the string 'bvmnqo'.", "solution": "Reversed string is 'oqnmvb'.", "target": "oqnmvb"}
+{"id": "synth_seq_448", "prompt": "What is the next number in sequence [28, 34, 40, 46, 52]?", "solution": "Pattern is adding 6. Next number is 58.", "target": "58"}
+{"id": "synth_arith_449", "prompt": "Calculate 630 + 46.", "solution": "Step 1: Compute 630 + 46 = 676. Output: 676", "target": "676"}
+{"id": "synth_dna_450", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_algo_451", "prompt": "Reverse the string 'ernjyo'.", "solution": "Reversed string is 'oyjnre'.", "target": "oyjnre"}
+{"id": "synth_dna_452", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_dna_453", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_arith_454", "prompt": "Calculate 400 + 61.", "solution": "Step 1: Compute 400 + 61 = 461. Output: 461", "target": "461"}
+{"id": "synth_algo_455", "prompt": "Reverse the string 'zgauit'.", "solution": "Reversed string is 'tiuagz'.", "target": "tiuagz"}
+{"id": "synth_arith_456", "prompt": "Calculate 791 * 75.", "solution": "Step 1: Compute 791 * 75 = 59325. Output: 59325", "target": "59325"}
+{"id": "synth_logic_457", "prompt": "If gamma contains delta, and delta contains alpha, does gamma contain alpha?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_dna_458", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_logic_459", "prompt": "If alpha contains delta, and delta contains gamma, does alpha contain gamma?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_algo_460", "prompt": "Reverse the string 'qvbulh'.", "solution": "Reversed string is 'hlubvq'.", "target": "hlubvq"}
+{"id": "synth_arith_461", "prompt": "Calculate 811 + 26.", "solution": "Step 1: Compute 811 + 26 = 837. Output: 837", "target": "837"}
+{"id": "synth_logic_462", "prompt": "If alpha contains beta, and beta contains delta, does alpha contain delta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_dna_463", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_algo_464", "prompt": "Reverse the string 'gtejuw'.", "solution": "Reversed string is 'wujetg'.", "target": "wujetg"}
+{"id": "synth_logic_465", "prompt": "If delta contains beta, and beta contains alpha, does delta contain alpha?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_algo_466", "prompt": "Reverse the string 'xtxkzm'.", "solution": "Reversed string is 'mzkxtx'.", "target": "mzkxtx"}
+{"id": "synth_algo_467", "prompt": "Reverse the string 'jugcll'.", "solution": "Reversed string is 'llcguj'.", "target": "llcguj"}
+{"id": "synth_seq_468", "prompt": "What is the next number in sequence [21, 27, 33, 39, 45]?", "solution": "Pattern is adding 6. Next number is 51.", "target": "51"}
+{"id": "synth_arith_469", "prompt": "Calculate 82 * 42.", "solution": "Step 1: Compute 82 * 42 = 3444. Output: 3444", "target": "3444"}
+{"id": "synth_logic_470", "prompt": "If alpha contains delta, and delta contains beta, does alpha contain beta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_seq_471", "prompt": "What is the next number in sequence [23, 32, 41, 50, 59]?", "solution": "Pattern is adding 9. Next number is 68.", "target": "68"}
+{"id": "synth_algo_472", "prompt": "Reverse the string 'bwjzhz'.", "solution": "Reversed string is 'zhzjwb'.", "target": "zhzjwb"}
+{"id": "synth_arith_473", "prompt": "Calculate 77 * 86.", "solution": "Step 1: Compute 77 * 86 = 6622. Output: 6622", "target": "6622"}
+{"id": "synth_algo_474", "prompt": "Reverse the string 'jurydp'.", "solution": "Reversed string is 'pdyruj'.", "target": "pdyruj"}
+{"id": "synth_algo_475", "prompt": "Reverse the string 'abujjo'.", "solution": "Reversed string is 'ojjuba'.", "target": "ojjuba"}
+{"id": "synth_dna_476", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_seq_477", "prompt": "What is the next number in sequence [24, 33, 42, 51, 60]?", "solution": "Pattern is adding 9. Next number is 69.", "target": "69"}
+{"id": "synth_logic_478", "prompt": "If beta contains gamma, and gamma contains alpha, does beta contain alpha?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_dna_479", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_logic_480", "prompt": "If alpha contains gamma, and gamma contains beta, does alpha contain beta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_seq_481", "prompt": "What is the next number in sequence [2, 5, 8, 11, 14]?", "solution": "Pattern is adding 3. Next number is 17.", "target": "17"}
+{"id": "synth_seq_482", "prompt": "What is the next number in sequence [34, 43, 52, 61, 70]?", "solution": "Pattern is adding 9. Next number is 79.", "target": "79"}
+{"id": "synth_algo_483", "prompt": "Reverse the string 'xdusfp'.", "solution": "Reversed string is 'pfsudx'.", "target": "pfsudx"}
+{"id": "synth_algo_484", "prompt": "Reverse the string 'fdbesz'.", "solution": "Reversed string is 'zsebdf'.", "target": "zsebdf"}
+{"id": "synth_logic_485", "prompt": "If beta contains alpha, and alpha contains delta, does beta contain delta?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_dna_486", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_dna_487", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_logic_488", "prompt": "If beta contains delta, and delta contains alpha, does beta contain alpha?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_logic_489", "prompt": "If delta contains gamma, and gamma contains alpha, does delta contain alpha?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_seq_490", "prompt": "What is the next number in sequence [32, 37, 42, 47, 52]?", "solution": "Pattern is adding 5. Next number is 57.", "target": "57"}
+{"id": "synth_arith_491", "prompt": "Calculate 370 * 71.", "solution": "Step 1: Compute 370 * 71 = 26270. Output: 26270", "target": "26270"}
+{"id": "synth_logic_492", "prompt": "If beta contains alpha, and alpha contains gamma, does beta contain gamma?", "solution": "Yes, by transitive containment.", "target": "Yes"}
+{"id": "synth_dna_493", "prompt": "Explain the AI DNA developmental lifecycle.", "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.", "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype"}
+{"id": "synth_arith_494", "prompt": "Calculate 68 - 40.", "solution": "Step 1: Compute 68 - 40 = 28. Output: 28", "target": "28"}
+{"id": "synth_algo_495", "prompt": "Reverse the string 'ntvbzq'.", "solution": "Reversed string is 'qzbvtn'.", "target": "qzbvtn"}
+{"id": "synth_algo_496", "prompt": "Reverse the string 'mndvop'.", "solution": "Reversed string is 'povdnm'.", "target": "povdnm"}
+{"id": "synth_seq_497", "prompt": "What is the next number in sequence [33, 41, 49, 57, 65]?", "solution": "Pattern is adding 8. Next number is 73.", "target": "73"}
+{"id": "synth_arith_498", "prompt": "Calculate 852 * 16.", "solution": "Step 1: Compute 852 * 16 = 13632. Output: 13632", "target": "13632"}
+{"id": "synth_seq_499", "prompt": "What is the next number in sequence [11, 17, 23, 29, 35]?", "solution": "Pattern is adding 6. Next number is 41.", "target": "41"}

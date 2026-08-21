@@ -1,0 +1,604 @@
+{
+  "metadata": {
+    "num_generations": 4,
+    "d_model": 64,
+    "num_layers": 3,
+    "num_experts": 4,
+    "device": "cuda"
+  },
+  "generations": [
+    {
+      "generation": "D_0",
+      "genotype_id": "gen_0",
+      "pre_adapt_public_eval": {
+        "gsm8k": {
+          "loss": 4.2736,
+          "token_acc": 17.61,
+          "exact_match": 0.0
+        },
+        "math": {
+          "loss": 4.4378,
+          "token_acc": 15.95,
+          "exact_match": 0.0
+        },
+        "mbpp": {
+          "loss": 4.2047,
+          "token_acc": 18.79,
+          "exact_match": 0.0
+        },
+        "arc": {
+          "loss": 4.8257,
+          "token_acc": 15.49,
+          "exact_match": 0.0
+        },
+        "proofnet": {
+          "loss": 4.5859,
+          "token_acc": 5.74,
+          "exact_match": 0.0
+        },
+        "minif2f": {
+          "loss": 4.7095,
+          "token_acc": 20.9,
+          "exact_match": 0.0
+        }
+      },
+      "pre_adapt_private_heldout": {
+        "gsm8k": {
+          "loss": 4.273,
+          "token_acc": 17.57,
+          "exact_match": 0.0
+        },
+        "math": {
+          "loss": 4.4346,
+          "token_acc": 16.21,
+          "exact_match": 0.0
+        },
+        "mbpp": {
+          "loss": 4.2153,
+          "token_acc": 18.97,
+          "exact_match": 0.0
+        },
+        "arc": {
+          "loss": 4.8308,
+          "token_acc": 15.37,
+          "exact_match": 0.0
+        },
+        "proofnet": {
+          "loss": 4.5854,
+          "token_acc": 5.85,
+          "exact_match": 0.0
+        },
+        "minif2f": {
+          "loss": 4.7259,
+          "token_acc": 21.24,
+          "exact_match": 0.0
+        }
+      },
+      "pre_adapt_humaneval_clean": {
+        "loss": 4.3935,
+        "token_acc": 18.61,
+        "exact_match": 0.0
+      },
+      "post_adapt_public_eval": {
+        "gsm8k": {
+          "loss": 3.3516,
+          "token_acc": 17.61,
+          "exact_match": 0.0
+        },
+        "math": {
+          "loss": 3.6257,
+          "token_acc": 15.95,
+          "exact_match": 0.0
+        },
+        "mbpp": {
+          "loss": 3.1453,
+          "token_acc": 18.79,
+          "exact_match": 0.0
+        },
+        "arc": {
+          "loss": 4.7036,
+          "token_acc": 15.49,
+          "exact_match": 0.0
+        },
+        "proofnet": {
+          "loss": 4.1672,
+          "token_acc": 5.74,
+          "exact_match": 0.0
+        },
+        "minif2f": {
+          "loss": 4.3803,
+          "token_acc": 20.9,
+          "exact_match": 0.0
+        }
+      },
+      "post_adapt_private_heldout": {
+        "gsm8k": {
+          "loss": 3.3573,
+          "token_acc": 17.57,
+          "exact_match": 0.0
+        },
+        "math": {
+          "loss": 3.6258,
+          "token_acc": 16.21,
+          "exact_match": 0.0
+        },
+        "mbpp": {
+          "loss": 3.1628,
+          "token_acc": 18.97,
+          "exact_match": 0.0
+        },
+        "arc": {
+          "loss": 4.7059,
+          "token_acc": 15.37,
+          "exact_match": 0.0
+        },
+        "proofnet": {
+          "loss": 4.165,
+          "token_acc": 5.85,
+          "exact_match": 0.0
+        },
+        "minif2f": {
+          "loss": 4.4104,
+          "token_acc": 21.24,
+          "exact_match": 0.0
+        }
+      },
+      "post_adapt_humaneval_clean": {
+        "loss": 3.6947,
+        "token_acc": 18.61,
+        "exact_match": 0.0
+      },
+      "adaptation_losses": {
+        "gsm8k": 3.8972,
+        "math": 3.8112,
+        "mbpp": 3.2255
+      },
+      "generation_time_sec": 13.27
+    },
+    {
+      "generation": "D_1",
+      "genotype_id": "gen_1",
+      "pre_adapt_public_eval": {
+        "gsm8k": {
+          "loss": 4.2912,
+          "token_acc": 17.61,
+          "exact_match": 0.0
+        },
+        "math": {
+          "loss": 4.4689,
+          "token_acc": 15.95,
+          "exact_match": 0.0
+        },
+        "mbpp": {
+          "loss": 4.2206,
+          "token_acc": 18.79,
+          "exact_match": 0.0
+        },
+        "arc": {
+          "loss": 4.8812,
+          "token_acc": 15.49,
+          "exact_match": 0.0
+        },
+        "proofnet": {
+          "loss": 4.6182,
+          "token_acc": 5.74,
+          "exact_match": 0.0
+        },
+        "minif2f": {
+          "loss": 4.7627,
+          "token_acc": 20.9,
+          "exact_match": 0.0
+        }
+      },
+      "pre_adapt_private_heldout": {
+        "gsm8k": {
+          "loss": 4.2902,
+          "token_acc": 17.57,
+          "exact_match": 0.0
+        },
+        "math": {
+          "loss": 4.4663,
+          "token_acc": 16.21,
+          "exact_match": 0.0
+        },
+        "mbpp": {
+          "loss": 4.2322,
+          "token_acc": 18.97,
+          "exact_match": 0.0
+        },
+        "arc": {
+          "loss": 4.8863,
+          "token_acc": 15.37,
+          "exact_match": 0.0
+        },
+        "proofnet": {
+          "loss": 4.6179,
+          "token_acc": 5.85,
+          "exact_match": 0.0
+        },
+        "minif2f": {
+          "loss": 4.7804,
+          "token_acc": 21.24,
+          "exact_match": 0.0
+        }
+      },
+      "pre_adapt_humaneval_clean": {
+        "loss": 4.4308,
+        "token_acc": 18.61,
+        "exact_match": 0.0
+      },
+      "post_adapt_public_eval": {
+        "gsm8k": {
+          "loss": 3.3458,
+          "token_acc": 17.61,
+          "exact_match": 0.0
+        },
+        "math": {
+          "loss": 3.6112,
+          "token_acc": 15.95,
+          "exact_match": 0.0
+        },
+        "mbpp": {
+          "loss": 3.1289,
+          "token_acc": 18.79,
+          "exact_match": 0.0
+        },
+        "arc": {
+          "loss": 4.6347,
+          "token_acc": 15.49,
+          "exact_match": 0.0
+        },
+        "proofnet": {
+          "loss": 4.1767,
+          "token_acc": 5.74,
+          "exact_match": 0.0
+        },
+        "minif2f": {
+          "loss": 4.4012,
+          "token_acc": 20.9,
+          "exact_match": 0.0
+        }
+      },
+      "post_adapt_private_heldout": {
+        "gsm8k": {
+          "loss": 3.3518,
+          "token_acc": 17.57,
+          "exact_match": 0.0
+        },
+        "math": {
+          "loss": 3.6107,
+          "token_acc": 16.21,
+          "exact_match": 0.0
+        },
+        "mbpp": {
+          "loss": 3.1477,
+          "token_acc": 18.97,
+          "exact_match": 0.0
+        },
+        "arc": {
+          "loss": 4.6332,
+          "token_acc": 15.37,
+          "exact_match": 0.0
+        },
+        "proofnet": {
+          "loss": 4.1748,
+          "token_acc": 5.85,
+          "exact_match": 0.0
+        },
+        "minif2f": {
+          "loss": 4.4293,
+          "token_acc": 21.24,
+          "exact_match": 0.0
+        }
+      },
+      "post_adapt_humaneval_clean": {
+        "loss": 3.7114,
+        "token_acc": 18.61,
+        "exact_match": 0.0
+      },
+      "adaptation_losses": {
+        "gsm8k": 3.9183,
+        "math": 3.7727,
+        "mbpp": 3.2165
+      },
+      "generation_time_sec": 11.68
+    },
+    {
+      "generation": "D_2",
+      "genotype_id": "gen_2",
+      "pre_adapt_public_eval": {
+        "gsm8k": {
+          "loss": 4.2807,
+          "token_acc": 17.61,
+          "exact_match": 0.0
+        },
+        "math": {
+          "loss": 4.4653,
+          "token_acc": 15.95,
+          "exact_match": 0.0
+        },
+        "mbpp": {
+          "loss": 4.207,
+          "token_acc": 18.79,
+          "exact_match": 0.0
+        },
+        "arc": {
+          "loss": 4.8954,
+          "token_acc": 15.49,
+          "exact_match": 0.0
+        },
+        "proofnet": {
+          "loss": 4.6188,
+          "token_acc": 5.74,
+          "exact_match": 0.0
+        },
+        "minif2f": {
+          "loss": 4.7643,
+          "token_acc": 20.9,
+          "exact_match": 0.0
+        }
+      },
+      "pre_adapt_private_heldout": {
+        "gsm8k": {
+          "loss": 4.2796,
+          "token_acc": 17.57,
+          "exact_match": 0.0
+        },
+        "math": {
+          "loss": 4.4624,
+          "token_acc": 16.21,
+          "exact_match": 0.0
+        },
+        "mbpp": {
+          "loss": 4.2188,
+          "token_acc": 18.97,
+          "exact_match": 0.0
+        },
+        "arc": {
+          "loss": 4.9019,
+          "token_acc": 15.37,
+          "exact_match": 0.0
+        },
+        "proofnet": {
+          "loss": 4.6184,
+          "token_acc": 5.85,
+          "exact_match": 0.0
+        },
+        "minif2f": {
+          "loss": 4.7828,
+          "token_acc": 21.24,
+          "exact_match": 0.0
+        }
+      },
+      "pre_adapt_humaneval_clean": {
+        "loss": 4.4264,
+        "token_acc": 18.61,
+        "exact_match": 0.0
+      },
+      "post_adapt_public_eval": {
+        "gsm8k": {
+          "loss": 3.3247,
+          "token_acc": 17.61,
+          "exact_match": 0.0
+        },
+        "math": {
+          "loss": 3.5541,
+          "token_acc": 15.95,
+          "exact_match": 0.0
+        },
+        "mbpp": {
+          "loss": 3.1161,
+          "token_acc": 18.79,
+          "exact_match": 0.0
+        },
+        "arc": {
+          "loss": 4.5787,
+          "token_acc": 15.49,
+          "exact_match": 0.0
+        },
+        "proofnet": {
+          "loss": 4.108,
+          "token_acc": 5.74,
+          "exact_match": 0.0
+        },
+        "minif2f": {
+          "loss": 4.3602,
+          "token_acc": 20.9,
+          "exact_match": 0.0
+        }
+      },
+      "post_adapt_private_heldout": {
+        "gsm8k": {
+          "loss": 3.332,
+          "token_acc": 17.57,
+          "exact_match": 0.0
+        },
+        "math": {
+          "loss": 3.5589,
+          "token_acc": 16.21,
+          "exact_match": 0.0
+        },
+        "mbpp": {
+          "loss": 3.1332,
+          "token_acc": 18.97,
+          "exact_match": 0.0
+        },
+        "arc": {
+          "loss": 4.5777,
+          "token_acc": 15.37,
+          "exact_match": 0.0
+        },
+        "proofnet": {
+          "loss": 4.108,
+          "token_acc": 5.85,
+          "exact_match": 0.0
+        },
+        "minif2f": {
+          "loss": 4.3928,
+          "token_acc": 21.24,
+          "exact_match": 0.0
+        }
+      },
+      "post_adapt_humaneval_clean": {
+        "loss": 3.7397,
+        "token_acc": 18.61,
+        "exact_match": 0.0
+      },
+      "adaptation_losses": {
+        "gsm8k": 3.9005,
+        "math": 3.7403,
+        "mbpp": 3.2019
+      },
+      "generation_time_sec": 11.47
+    },
+    {
+      "generation": "D_3",
+      "genotype_id": "gen_3",
+      "pre_adapt_public_eval": {
+        "gsm8k": {
+          "loss": 4.2666,
+          "token_acc": 17.61,
+          "exact_match": 0.0
+        },
+        "math": {
+          "loss": 4.4569,
+          "token_acc": 15.95,
+          "exact_match": 0.0
+        },
+        "mbpp": {
+          "loss": 4.1843,
+          "token_acc": 18.79,
+          "exact_match": 0.0
+        },
+        "arc": {
+          "loss": 4.9298,
+          "token_acc": 15.49,
+          "exact_match": 0.0
+        },
+        "proofnet": {
+          "loss": 4.6097,
+          "token_acc": 5.74,
+          "exact_match": 0.0
+        },
+        "minif2f": {
+          "loss": 4.7592,
+          "token_acc": 20.9,
+          "exact_match": 0.0
+        }
+      },
+      "pre_adapt_private_heldout": {
+        "gsm8k": {
+          "loss": 4.2663,
+          "token_acc": 17.57,
+          "exact_match": 0.0
+        },
+        "math": {
+          "loss": 4.4533,
+          "token_acc": 16.21,
+          "exact_match": 0.0
+        },
+        "mbpp": {
+          "loss": 4.1966,
+          "token_acc": 18.97,
+          "exact_match": 0.0
+        },
+        "arc": {
+          "loss": 4.9351,
+          "token_acc": 15.37,
+          "exact_match": 0.0
+        },
+        "proofnet": {
+          "loss": 4.6099,
+          "token_acc": 5.85,
+          "exact_match": 0.0
+        },
+        "minif2f": {
+          "loss": 4.779,
+          "token_acc": 21.24,
+          "exact_match": 0.0
+        }
+      },
+      "pre_adapt_humaneval_clean": {
+        "loss": 4.4081,
+        "token_acc": 18.61,
+        "exact_match": 0.0
+      },
+      "post_adapt_public_eval": {
+        "gsm8k": {
+          "loss": 3.3351,
+          "token_acc": 17.61,
+          "exact_match": 0.0
+        },
+        "math": {
+          "loss": 3.5717,
+          "token_acc": 15.95,
+          "exact_match": 0.0
+        },
+        "mbpp": {
+          "loss": 3.1336,
+          "token_acc": 18.79,
+          "exact_match": 0.0
+        },
+        "arc": {
+          "loss": 4.6234,
+          "token_acc": 15.49,
+          "exact_match": 0.0
+        },
+        "proofnet": {
+          "loss": 4.1324,
+          "token_acc": 5.74,
+          "exact_match": 0.0
+        },
+        "minif2f": {
+          "loss": 4.3888,
+          "token_acc": 20.9,
+          "exact_match": 0.0
+        }
+      },
+      "post_adapt_private_heldout": {
+        "gsm8k": {
+          "loss": 3.3422,
+          "token_acc": 17.57,
+          "exact_match": 0.0
+        },
+        "math": {
+          "loss": 3.5746,
+          "token_acc": 16.21,
+          "exact_match": 0.0
+        },
+        "mbpp": {
+          "loss": 3.1518,
+          "token_acc": 18.97,
+          "exact_match": 0.0
+        },
+        "arc": {
+          "loss": 4.623,
+          "token_acc": 15.37,
+          "exact_match": 0.0
+        },
+        "proofnet": {
+          "loss": 4.1318,
+          "token_acc": 5.85,
+          "exact_match": 0.0
+        },
+        "minif2f": {
+          "loss": 4.4196,
+          "token_acc": 21.24,
+          "exact_match": 0.0
+        }
+      },
+      "post_adapt_humaneval_clean": {
+        "loss": 3.7428,
+        "token_acc": 18.61,
+        "exact_match": 0.0
+      },
+      "adaptation_losses": {
+        "gsm8k": 3.9132,
+        "math": 3.7485,
+        "mbpp": 3.2185
+      },
+      "generation_time_sec": 11.89
+    }
+  ],
+  "total_elapsed_sec": 90.14
+}

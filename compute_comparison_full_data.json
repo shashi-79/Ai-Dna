@@ -1,0 +1,37 @@
+{
+  "dataset_stats": {
+    "total_samples": 15493,
+    "total_tokens": 991552,
+    "batch_size": 32,
+    "seq_len": 64
+  },
+  "normal_training": {
+    "train_time_sec": 5.5,
+    "fwd_time_sec": 3.554,
+    "bwd_time_sec": 1.698,
+    "opt_time_sec": 0.187,
+    "samples_per_sec": 581.8,
+    "tokens_per_sec": 37236.1,
+    "peak_vram_mb": 119.11,
+    "checkpoint_size_kb": 1510.42,
+    "checkpoint_save_time_ms": 14.1,
+    "final_train_loss": 4.0161,
+    "parameter_count": 373139
+  },
+  "aidna_training": {
+    "fast_clock_train_time_sec": 4.939,
+    "growth_engine_time_ms": 67.47,
+    "slow_clock_svd_time_ms": 8251.97,
+    "total_lifecycle_time_sec": 13.258,
+    "fwd_time_sec": 3.165,
+    "bwd_time_sec": 1.587,
+    "opt_time_sec": 0.144,
+    "samples_per_sec": 648.0,
+    "tokens_per_sec": 41469.8,
+    "peak_vram_mb": 176.88,
+    "genotype_dna_size_kb": 14.32,
+    "genotype_save_time_ms": 1.35,
+    "final_train_loss": 4.0991,
+    "compression_vs_standard": 105.5
+  }
+}

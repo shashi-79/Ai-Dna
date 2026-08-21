@@ -57,7 +57,7 @@ class TopKNoisyGate(nn.Module):
         top_gates = F.softmax(top_logits, dim=1) # [B*S, K]
         
         # Reconstruct sparse full gates for the output
-        gates = torch.zeros_like(logits).scatter_(1, top_indices, top_gates) # [B*S, E]
+        gates = torch.zeros_like(logits).scatter_(1, top_indices, top_gates.to(dtype=logits.dtype)) # [B*S, E]
         gates = gates.view(B, S, self.num_experts)
         top_indices = top_indices.view(B, S, self.top_k)
         
