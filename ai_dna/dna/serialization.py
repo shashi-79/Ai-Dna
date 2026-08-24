@@ -28,6 +28,15 @@ def genotype_to_dict(genotype: Genotype) -> Dict[str, Any]:
             "values": tensor.detach().cpu().flatten().tolist(),
         }
 
+    # Convert calibration anchors to list format
+    calibration_anchors_meta = {}
+    for modality, tensor in genotype.calibration_anchors.items():
+        calibration_anchors_meta[modality] = {
+            "shape": list(tensor.shape),
+            "dtype": str(tensor.dtype),
+            "values": tensor.detach().cpu().flatten().tolist(),
+        }
+
     return {
         "genotype_id": genotype.genotype_id,
         "generation": genotype.generation,
@@ -35,6 +44,7 @@ def genotype_to_dict(genotype: Genotype) -> Dict[str, Any]:
         "lineage_notes": genotype.lineage_notes,
         "fitness_history": genotype.fitness_history,
         "node_innovation_map": genotype.node_innovation_map,
+        "calibration_anchors": calibration_anchors_meta,
         "dna_architecture": {
             "num_layers": genotype.dna_architecture.num_layers,
             "d_model": genotype.dna_architecture.d_model,
@@ -161,6 +171,15 @@ def dict_to_genotype(data: Dict[str, Any]) -> Genotype:
         innovation_id=evolution_data.get("innovation_id", 6),
     )
 
+    # Rebuild calibration anchors
+    calibration_anchors = {}
+    if "calibration_anchors" in data:
+        for modality, meta in data["calibration_anchors"].items():
+            shape = meta["shape"]
+            values = meta["values"]
+            t = torch.tensor(values, dtype=torch.float32).reshape(shape)
+            calibration_anchors[modality] = t
+
     return Genotype(
         dna_architecture=arch,
         dna_instinct=instinct,
@@ -174,6 +193,7 @@ def dict_to_genotype(data: Dict[str, Any]) -> Genotype:
         lineage_notes=data.get("lineage_notes", ""),
         fitness_history=data.get("fitness_history", {}),
         node_innovation_map=data.get("node_innovation_map", {}),
+        calibration_anchors=calibration_anchors,
     )
 
 

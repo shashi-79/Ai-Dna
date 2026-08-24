@@ -7,7 +7,7 @@ while tracking retention R_old.
 
 import torch
 from typing import Dict, Any, List, Optional
-from .exp1_svd_hypothesis import (
+from .exp1_lora_hypothesis import (
     generate_synthetic_task,
     train_to_target_accuracy,
 )

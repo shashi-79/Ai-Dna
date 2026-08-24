@@ -19,6 +19,7 @@ def run_all():
     import tests.test_lifecycle as test_lifecycle
     import tests.test_data_pipeline as test_data_pipeline
     import tests.test_inference_io as test_inference_io
+    import tests.test_lora_cppn as test_lora_cppn
 
     modules = [
         test_dna,
@@ -31,6 +32,7 @@ def run_all():
         test_lifecycle,
         test_data_pipeline,
         test_inference_io,
+        test_lora_cppn,
     ]
 
     total_passed = 0

@@ -1,9 +1,9 @@
 """
 Slow Clock Genotypic Encoding Pipeline (Consolidated).
 Executes the complete phenotype-to-genotype lifecycle:
-W* -> SVD Structural Extraction -> Complete DNA Objective -> E(W*) -> D_{t+1}
+W* -> CPPN Structural Encoding -> Complete DNA Objective -> E(W*) -> D_{t+1}
 
-Implements idea.md Sections 13, 14, 15 (complete objective), and 17 (EWC retention).
+Implements idea.md Sections 13, 15 (complete objective), 17 (EWC retention), and 43 (CL-DNA).
 """
 
 import torch
@@ -11,7 +11,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 from typing import Dict, Any, Tuple, Optional, Callable
 from ..dna.structure import Genotype
-from .svd_filter import SVDInstinctFilter
 from .cppn_encoder import InverseCPPNEncoder
 from .ewc import EWCConsolidator
 
@@ -36,7 +35,6 @@ class SlowClockEncoder:
     ):
         self.rank_ratio = rank_ratio
         self.device = device or torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.svd_filter = SVDInstinctFilter()
         self.cppn_encoder = InverseCPPNEncoder(
             learning_rate=encoder_lr,
             max_steps=encoder_steps,
@@ -112,7 +110,7 @@ class SlowClockEncoder:
         future_task_fn: Optional[Callable] = None,
     ) -> Tuple[Genotype, Dict[str, Any]]:
         """
-        Executes Slow Clock transition: W_t* -> SVD Filtering -> Complete DNA Objective -> D_{t+1}.
+        Executes Slow Clock transition: W_t* -> SVD Filtering / LoRA Extraction -> Genotypic Encoding -> D_{t+1}.
 
         Args:
             genotype_t: Current generation genotype.
@@ -123,61 +121,257 @@ class SlowClockEncoder:
             validation_data: Optional validation tokens for behavioral divergence measurement.
             future_task_fn: Optional callable(growth_engine, genotype) -> float for L_future (Section 15.3).
         """
-        # 1. Truncated SVD structural instinct extraction (Section 14)
-        filtered_weights, energies = self.svd_filter.filter_state_dict(
-            learned_state_dict, rank_ratio=self.rank_ratio
-        )
+        lora_rank = getattr(genotype_t.dna_architecture, "lora_rank", 0)
 
-        mean_energy = sum(energies.values()) / max(1, len(energies))
-
-        # 2. Register ancestral genotype for EWC protection (Section 17.1)
-        ewc = None
-        if protect_ancestral and genotype_t.dna_instinct.genetic_parameters:
-            from ..growth.cppn import CPPNNetwork
-            arch = genotype_t.dna_architecture
-            instinct = genotype_t.dna_instinct
-            old_cppn = CPPNNetwork(
-                in_features=arch.coord_dim,
-                hidden_dim=instinct.cppn_hidden_dim,
-                num_layers=instinct.cppn_layers,
-                out_features=1,
-            ).to(self.device)
-            try:
-                old_cppn.load_parameter_dict(instinct.genetic_parameters)
-                self.ewc.register_ancestral_genotype(old_cppn)
-                ewc = self.ewc
-            except Exception:
-                ewc = None
-
-        # 3. Build behavioral loss function (Section 15.2)
+        # 1. Build behavioral loss function (Section 15.2)
         behavior_fn = self._make_behavior_fn(
             phenotype_model, growth_engine, genotype_t, validation_data
         )
 
-        # 4. Encode extracted structures into new Genotype via Complete DNA Objective (Section 15.5)
-        new_genotype, recon_loss, breakdown = self.cppn_encoder.encode_genotype(
-            genotype=genotype_t,
-            target_weights=filtered_weights,
-            ewc=ewc,
-            behavior_fn=behavior_fn,
-        )
+        if lora_rank > 0:
+            # LoRA + CPPN Mode: Extract active adapter weights directly
+            if phenotype_model is not None:
+                from ..models.lora import extract_lora_parameters
+                target_weights = extract_lora_parameters(phenotype_model)
+            else:
+                target_weights = {k: v for k, v in learned_state_dict.items() if "lora_" in k}
+            
+            mean_energy = 1.0  # SVD is bypassed
+
+            # Extract previous adapter CPPN parameters if they exist
+            prev_adapter_params = {}
+            if genotype_t.dna_instinct.genetic_parameters:
+                for k, v in genotype_t.dna_instinct.genetic_parameters.items():
+                    if k.startswith("adapter."):
+                        prev_adapter_params[k[len("adapter."):]] = v
+            
+            # Register ancestral genotype for EWC protection
+            ewc = None
+            if protect_ancestral and prev_adapter_params:
+                from ..growth.cppn import CPPNNetwork
+                arch = genotype_t.dna_architecture
+                instinct = genotype_t.dna_instinct
+                old_cppn = CPPNNetwork(
+                    in_features=arch.coord_dim,
+                    hidden_dim=instinct.cppn_hidden_dim,
+                    num_layers=instinct.cppn_layers,
+                    out_features=1,
+                ).to(self.device)
+                try:
+                    old_cppn.load_parameter_dict(prev_adapter_params)
+                    self.ewc.register_ancestral_genotype(old_cppn)
+                    ewc = self.ewc
+                except Exception:
+                    ewc = None
+
+            # Optimize the adapter CPPN (temporary container)
+            from ..growth.cppn import CPPNNetwork
+            arch = genotype_t.dna_architecture
+            instinct = genotype_t.dna_instinct
+            cppn = CPPNNetwork(
+                in_features=arch.coord_dim,
+                hidden_dim=instinct.cppn_hidden_dim,
+                num_layers=instinct.cppn_layers,
+                out_features=1,
+                ).to(self.device)
+            if prev_adapter_params:
+                cppn.load_parameter_dict(prev_adapter_params)
+
+            best_params, recon_loss, breakdown = self.cppn_encoder.encode_weight_into_cppn(
+                cppn=cppn,
+                target_weights=target_weights,
+                num_layers=arch.num_layers,
+                num_experts=arch.num_experts,
+                ewc=ewc,
+                behavior_fn=behavior_fn,
+            )
+
+            # Build final new_genotype
+            new_genotype = genotype_t.clone(new_id=f"{genotype_t.genotype_id}_enc")
+            new_genotype.generation = genotype_t.generation + 1
+            
+            # Combine unchanged base CPPN parameters with prefixed new adapter CPPN parameters
+            combined_params = {}
+            if genotype_t.dna_instinct.genetic_parameters:
+                for k, v in genotype_t.dna_instinct.genetic_parameters.items():
+                    if not k.startswith("adapter."):
+                        combined_params[k] = v.clone()
+            
+            for k, v in best_params.items():
+                combined_params[f"adapter.{k}"] = v
+                
+            new_genotype.dna_instinct.genetic_parameters = combined_params
+        else:
+            # Standard CPPN path (direct weight fitting, bypassing SVD)
+            target_weights = {k: v for k, v in learned_state_dict.items() if "weight" in k or "bias" in k}
+            mean_energy = 1.0  # SVD is bypassed
+
+            # Register ancestral genotype for EWC protection
+            ewc = None
+            if protect_ancestral and genotype_t.dna_instinct.genetic_parameters:
+                from ..growth.cppn import CPPNNetwork
+                arch = genotype_t.dna_architecture
+                instinct = genotype_t.dna_instinct
+                old_cppn = CPPNNetwork(
+                    in_features=arch.coord_dim,
+                    hidden_dim=instinct.cppn_hidden_dim,
+                    num_layers=instinct.cppn_layers,
+                    out_features=1,
+                ).to(self.device)
+                try:
+                    old_cppn.load_parameter_dict(instinct.genetic_parameters)
+                    self.ewc.register_ancestral_genotype(old_cppn)
+                    ewc = self.ewc
+                except Exception:
+                    ewc = None
+
+            # Encode extracted structures into new Genotype via Complete DNA Objective (Section 15.5)
+            new_genotype, recon_loss, breakdown = self.cppn_encoder.encode_genotype(
+                genotype=genotype_t,
+                target_weights=target_weights,
+                ewc=ewc,
+                behavior_fn=behavior_fn,
+            )
+
+            # Dynamic CPPN Capacity Expansion (DCE) if reconstruction limit is hit
+            if recon_loss > 0.04 and new_genotype.dna_instinct.cppn_hidden_dim < 128:
+                old_dim = new_genotype.dna_instinct.cppn_hidden_dim
+                new_dim = old_dim + 16
+                print(f"[Slow Clock DCE]: Saturation detected (recon_loss={recon_loss:.4f} > 0.04). Expanding CPPN hidden_dim {old_dim} -> {new_dim}...")
+                
+                # Net2Net expand the genotype parameter state
+                self._expand_cppn_genotype(new_genotype, delta_dim=16)
+                
+                # Re-run encoder to optimize the new dimensions
+                new_genotype, recon_loss, breakdown = self.cppn_encoder.encode_genotype(
+                    genotype=new_genotype,
+                    target_weights=target_weights,
+                    ewc=ewc,
+                    behavior_fn=behavior_fn,
+                )
+                # Correct generation count (prevent double increment)
+                new_genotype.generation = genotype_t.generation + 1
+                print(f"[Slow Clock DCE]: Re-encoding complete. New recon_loss={recon_loss:.4f}")
 
         # 5. Compute future learning loss if available (Section 15.3)
         future_loss = self._compute_future_learning_loss(
             growth_engine, new_genotype, future_task_fn
         )
 
+        # 5.5 Extract Genotypically Embedded Calibration Anchors (GECA)
+        if phenotype_model is not None:
+            try:
+                new_genotype.calibration_anchors = self.extract_calibration_anchors(phenotype_model)
+            except Exception as e:
+                print(f"[Slow Clock Warning]: Failed to extract GECA: {e}")
+
         new_genotype.fitness_history["mean_retained_energy"] = mean_energy
         new_genotype.fitness_history["reconstruction_loss"] = recon_loss
         new_genotype.fitness_history["future_learning_loss"] = future_loss
+
+        num_filtered = len(target_weights)
 
         summary = {
             "mean_retained_energy": mean_energy,
             "reconstruction_loss": recon_loss,
             "future_learning_loss": future_loss,
-            "num_filtered_matrices": len(energies),
+            "num_filtered_matrices": num_filtered,
             "generation": new_genotype.generation,
             **breakdown,
         }
 
         return new_genotype, summary
+
+    def extract_calibration_anchors(self, phenotype_model: nn.Module, K: int = 8) -> Dict[str, torch.Tensor]:
+        """
+        Extracts high-density calibration anchors for Text, Vision, and Audio modalities
+        directly from the trained phenotype model using SVD decomposition of projection layers.
+        """
+        anchors = {}
+        with torch.no_grad():
+            # Get output head weights for target logit mapping
+            ar_head = phenotype_model.ar_head.proj if hasattr(phenotype_model.ar_head, "proj") else phenotype_model.ar_head
+            w_out = ar_head.weight # [vocab_size, d_model]
+
+            # 1. Text Modality Anchors (from Token Embedding)
+            if hasattr(phenotype_model, "text_encoder") and hasattr(phenotype_model.text_encoder, "token_emb"):
+                w_text = phenotype_model.text_encoder.token_emb.weight # [vocab_size, d_model]
+                # SVD of embedding space to get principal components
+                U, S, V = torch.svd(w_text)
+                a_text = V[:, :K].t() * S[:K].unsqueeze(-1) # [K, d_model]
+                y_text = F.softmax(a_text @ w_out.t(), dim=-1) # [K, vocab_size]
+                anchors["text"] = torch.cat([a_text, y_text], dim=-1) # Pack keys and targets together
+
+            # 2. Vision Modality Anchors (from Patch Projection)
+            if hasattr(phenotype_model, "vision_encoder") and hasattr(phenotype_model.vision_encoder, "patch_proj"):
+                w_vis = phenotype_model.vision_encoder.patch_proj.weight # [d_model, patch_dim]
+                U, S, V = torch.svd(w_vis.t())
+                a_vis = V[:, :K].t() * S[:K].unsqueeze(-1)
+                y_vis = F.softmax(a_vis @ w_out.t(), dim=-1)
+                anchors["vision"] = torch.cat([a_vis, y_vis], dim=-1)
+
+            # 3. Audio Modality Anchors (from Audio Projection)
+            if hasattr(phenotype_model, "audio_encoder") and hasattr(phenotype_model.audio_encoder, "proj"):
+                w_aud = phenotype_model.audio_encoder.proj.weight # [d_model, in_dim]
+                U, S, V = torch.svd(w_aud.t())
+                a_aud = V[:, :K].t() * S[:K].unsqueeze(-1)
+                y_aud = F.softmax(a_aud @ w_out.t(), dim=-1)
+                anchors["audio"] = torch.cat([a_aud, y_aud], dim=-1)
+
+        return anchors
+
+    def _expand_cppn_genotype(self, genotype: Genotype, delta_dim: int):
+        """
+        Dynamically expands the hidden dimension of the CPPN parameters inside the Genotype
+        using Net2Net function-preserving network expansion.
+        """
+        instinct = genotype.dna_instinct
+        old_dim = instinct.cppn_hidden_dim
+        new_dim = old_dim + delta_dim
+        
+        # Update metadata field
+        instinct.cppn_hidden_dim = new_dim
+        
+        # Expand actual parameters in the genetic_parameters dictionary
+        params = instinct.genetic_parameters
+        if not params:
+            return
+            
+        def pad_zeros(tensor: torch.Tensor, dim_idx: int, size: int) -> torch.Tensor:
+            sizes = list(tensor.shape)
+            sizes[dim_idx] = size
+            zeros = torch.zeros(sizes, dtype=tensor.dtype, device=tensor.device)
+            return torch.cat([tensor, zeros], dim=dim_idx)
+            
+        new_params = {}
+        for name, p in params.items():
+            # 1. Input layer (backbone.0)
+            if name == "backbone.0.weight":
+                # shape: [hidden_dim, in_features] -> expand output dimension (add rows)
+                new_params[name] = pad_zeros(p, 0, delta_dim)
+            elif name == "backbone.0.bias":
+                # shape: [hidden_dim] -> expand output dimension
+                new_params[name] = pad_zeros(p, 0, delta_dim)
+                
+            # 2. Hidden layers (backbone.2, backbone.4, ...)
+            elif name.startswith("backbone.") and name.endswith(".weight") and name != "backbone.0.weight":
+                # shape: [hidden_dim, hidden_dim] -> expand both input and output dimensions
+                # Expand output first (add rows)
+                temp = pad_zeros(p, 0, delta_dim)
+                # Expand input next (add columns)
+                new_params[name] = pad_zeros(temp, 1, delta_dim)
+            elif name.startswith("backbone.") and name.endswith(".bias") and name != "backbone.0.bias":
+                # shape: [hidden_dim] -> expand output dimension
+                new_params[name] = pad_zeros(p, 0, delta_dim)
+                
+            # 3. Output layer (out_proj)
+            elif name == "out_proj.weight":
+                # shape: [out_features, hidden_dim] -> expand input dimension (columns)
+                new_params[name] = pad_zeros(p, 1, delta_dim)
+            elif name == "out_proj.bias":
+                # shape: [out_features] -> remains unchanged
+                new_params[name] = p.clone()
+            else:
+                new_params[name] = p.clone()
+                
+        instinct.genetic_parameters = new_params

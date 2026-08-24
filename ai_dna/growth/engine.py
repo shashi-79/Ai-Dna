@@ -6,6 +6,7 @@ Supports Multi-Head Latent Attention (MLA), Top-K Sparsely-Gated MoE, and Contra
 
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 from typing import Dict, Optional, Tuple, Any, TYPE_CHECKING
 from ..dna.structure import Genotype
 from .cppn import CPPNNetwork
@@ -63,7 +64,8 @@ class GrowthEngine:
         coord_dim: int = 5,
     ) -> torch.Tensor:
         """
-        Grows a 2D weight matrix W_ij = G(D, C_ij) of shape (out_features, in_features).
+        Grows a 2D weight matrix W_ij = G(D, C_ij) of shape (out_features, in_features)
+        using the CPPN genotype decoder.
         """
         coords = SubstrateCoordinateGenerator.get_2d_weight_coordinates(
             out_features=out_features,
@@ -104,68 +106,69 @@ class GrowthEngine:
 
     def grow_phenotype_weights(self, genotype: Genotype) -> Dict[str, torch.Tensor]:
         """
-        Eager growth: Generates all weight and bias tensors for the target model architecture.
-        Aligned with MLA, Top-K MoE, and Contrastive Encoders.
+        Eager growth: Generates all weight and bias tensors for the target model architecture
+        using the CPPN genotype decoder.
         """
-        cppn = self.instantiate_cppn(genotype)
         arch = genotype.dna_architecture
-        weights = {}
+        coord_dim = arch.coord_dim
+        cppn = self.instantiate_cppn(genotype)
 
+        weights = {}
         d_model = arch.d_model
         num_layers = arch.num_layers
         num_experts = arch.num_experts
         d_expert_hidden = arch.d_expert_hidden
         d_kv_latent = getattr(arch, "kv_latent_dim", max(8, d_model // 4))
-        coord_dim = arch.coord_dim
+
+        kwargs = {"coord_dim": coord_dim}
 
         # 1. Text & Multimodal Encoders
         weights["text_encoder.token_emb.weight"] = self.grow_weight_matrix(
-            cppn, arch.vocab_size, d_model, layer_idx=0, num_layers=num_layers + 2, coord_dim=coord_dim
+            cppn, arch.vocab_size, d_model, layer_idx=0, num_layers=num_layers + 2, **kwargs
         )
         weights["vision_encoder.patch_proj.weight"] = self.grow_weight_matrix(
-            cppn, d_model, 3 * 4 * 4, layer_idx=0, num_layers=num_layers + 2, coord_dim=coord_dim
+            cppn, d_model, 3 * 4 * 4, layer_idx=0, num_layers=num_layers + 2, **kwargs
         )
         weights["audio_encoder.proj.weight"] = self.grow_weight_matrix(
-            cppn, d_model, 80, layer_idx=0, num_layers=num_layers + 2, coord_dim=coord_dim
+            cppn, d_model, 80, layer_idx=0, num_layers=num_layers + 2, **kwargs
         )
         weights["contrastive_head.proj.weight"] = self.grow_weight_matrix(
-            cppn, d_model, d_model, layer_idx=0, num_layers=num_layers + 2, coord_dim=coord_dim
+            cppn, d_model, d_model, layer_idx=0, num_layers=num_layers + 2, **kwargs
         )
 
         # 2. Layer Blocks (MLA Attention Projections & MoE Experts)
         for l in range(num_layers):
-            # MLA Projections: w_q, w_dkv (down), w_uk (up), w_uv (up), o_proj
             weights[f"blocks.{l}.attn.w_q.weight"] = self.grow_weight_matrix(
-                cppn, d_model, d_model, layer_idx=l, num_layers=num_layers, coord_dim=coord_dim
+                cppn, d_model, d_model, layer_idx=l, num_layers=num_layers, **kwargs
             )
             weights[f"blocks.{l}.attn.w_dkv.weight"] = self.grow_weight_matrix(
-                cppn, d_kv_latent, d_model, layer_idx=l, num_layers=num_layers, coord_dim=coord_dim
+                cppn, d_kv_latent, d_model, layer_idx=l, num_layers=num_layers, **kwargs
             )
             weights[f"blocks.{l}.attn.w_uk.weight"] = self.grow_weight_matrix(
-                cppn, d_model, d_kv_latent, layer_idx=l, num_layers=num_layers, coord_dim=coord_dim
+                cppn, d_model, d_kv_latent, layer_idx=l, num_layers=num_layers, **kwargs
             )
             weights[f"blocks.{l}.attn.w_uv.weight"] = self.grow_weight_matrix(
-                cppn, d_model, d_kv_latent, layer_idx=l, num_layers=num_layers, coord_dim=coord_dim
+                cppn, d_model, d_kv_latent, layer_idx=l, num_layers=num_layers, **kwargs
             )
             weights[f"blocks.{l}.attn.o_proj.weight"] = self.grow_weight_matrix(
-                cppn, d_model, d_model, layer_idx=l, num_layers=num_layers, coord_dim=coord_dim
+                cppn, d_model, d_model, layer_idx=l, num_layers=num_layers, **kwargs
             )
 
-            # MoE Experts: Gate Up & Down projections
+            # MoE Experts
             for e in range(num_experts):
                 weights[f"blocks.{l}.moe.experts.{e}.up_proj.weight"] = self.grow_weight_matrix(
-                    cppn, d_expert_hidden, d_model, layer_idx=l, num_layers=num_layers, expert_idx=e, num_experts=num_experts, coord_dim=coord_dim
+                    cppn, d_expert_hidden, d_model, layer_idx=l, num_layers=num_layers, expert_idx=e, num_experts=num_experts, **kwargs
                 )
                 weights[f"blocks.{l}.moe.experts.{e}.down_proj.weight"] = self.grow_weight_matrix(
-                    cppn, d_model, d_expert_hidden, layer_idx=l, num_layers=num_layers, expert_idx=e, num_experts=num_experts, coord_dim=coord_dim
+                    cppn, d_model, d_expert_hidden, layer_idx=l, num_layers=num_layers, expert_idx=e, num_experts=num_experts, **kwargs
                 )
 
         # 3. Output Head
         weights["ar_head.proj.weight"] = self.grow_weight_matrix(
-            cppn, arch.vocab_size, d_model, layer_idx=num_layers + 1, num_layers=num_layers + 2, coord_dim=coord_dim
+            cppn, arch.vocab_size, d_model, layer_idx=num_layers + 1, num_layers=num_layers + 2, **kwargs
         )
         weights["ar_head.proj.bias"] = self.grow_bias_vector(
-            cppn, arch.vocab_size, layer_idx=num_layers + 1, num_layers=num_layers + 2, coord_dim=coord_dim
+            cppn, arch.vocab_size, layer_idx=num_layers + 1, num_layers=num_layers + 2, **kwargs
         )
 
         return weights
@@ -183,10 +186,117 @@ class GrowthEngine:
             dna_memory=genotype.dna_memory,
         ).to(self.device)
 
-        # 2. Grow weights from CPPN
+        # 2. Grow weights from CPPN or Hypernet
         grown_weights = self.grow_phenotype_weights(genotype)
 
         # 3. Load weights into the model
         model.load_state_dict(grown_weights, strict=False)
 
+        # 3.5 Check for LoRA Rank in architecture and inject LoRA parameters
+        lora_rank = getattr(genotype.dna_architecture, "lora_rank", 0)
+        if lora_rank > 0:
+            from ..models.lora import replace_linear_with_lora, load_lora_parameters
+            replace_linear_with_lora(model, rank=lora_rank)
+
+            # Check if adapter CPPN parameters exist (keys starting with "adapter.")
+            adapter_params = {}
+            if genotype.dna_instinct.genetic_parameters:
+                for k, v in genotype.dna_instinct.genetic_parameters.items():
+                    if k.startswith("adapter."):
+                        adapter_params[k[len("adapter."):]] = v
+
+            if adapter_params:
+                from .cppn import CPPNNetwork
+                arch = genotype.dna_architecture
+                instinct = genotype.dna_instinct
+                
+                # Instantiate adapter CPPN
+                cppn = CPPNNetwork(
+                    in_features=arch.coord_dim,
+                    hidden_dim=instinct.cppn_hidden_dim,
+                    num_layers=instinct.cppn_layers,
+                    out_features=1,
+                ).to(self.device)
+                cppn.load_parameter_dict(adapter_params)
+                cppn.eval()
+
+                with torch.no_grad():
+                    for name, module in model.named_modules():
+                        from ..models.lora import LoRALinear
+                        if isinstance(module, LoRALinear):
+                            parts = name.split(".")
+                            layer_idx = 0
+                            expert_idx = 0
+                            for idx, part in enumerate(parts):
+                                if part == "blocks":
+                                    layer_idx = int(parts[idx + 1])
+                                elif part == "experts":
+                                    expert_idx = int(parts[idx + 1])
+
+                            # Grow lora_A
+                            lora_A_weight = self.grow_weight_matrix(
+                                cppn=cppn,
+                                out_features=module.lora_A.shape[0],
+                                in_features=module.lora_A.shape[1],
+                                layer_idx=layer_idx,
+                                num_layers=arch.num_layers,
+                                expert_idx=expert_idx,
+                                num_experts=arch.num_experts,
+                                coord_dim=arch.coord_dim,
+                            )
+                            module.lora_A.copy_(lora_A_weight)
+
+                            # Grow lora_B
+                            lora_B_weight = self.grow_weight_matrix(
+                                cppn=cppn,
+                                out_features=module.lora_B.shape[0],
+                                in_features=module.lora_B.shape[1],
+                                layer_idx=layer_idx,
+                                num_layers=arch.num_layers,
+                                expert_idx=expert_idx,
+                                num_experts=arch.num_experts,
+                                coord_dim=arch.coord_dim,
+                            )
+                            module.lora_B.copy_(lora_B_weight)
+            else:
+                # Load stored lora weights if present as fallback
+                lora_params = {k: v.to(self.device) for k, v in genotype.dna_instinct.genetic_parameters.items() if "lora_" in k}
+                if lora_params:
+                    load_lora_parameters(model, lora_params)
+
+        # 4. Auto-Calibrate model using genotypically embedded anchors (GECA) if available
+        if hasattr(genotype, "calibration_anchors") and genotype.calibration_anchors:
+            try:
+                self.auto_calibrate_model(model, genotype.calibration_anchors)
+            except Exception as e:
+                print(f"[Growth Engine Warning]: GECA Auto-calibration failed: {e}")
+
         return model
+
+    def auto_calibrate_model(self, model: "PhenotypeNeuralNetwork", calibration_anchors: Dict[str, torch.Tensor], steps: int = 15):
+        """
+        Executes a rapid, dataset-free, zero-shot calibration phase using the
+        anchors embedded inside the Genotype.
+        """
+        d_model = model.d_model
+        # Optimize output head and routing gate parameters for vocabulary logit matching
+        opt_params = list(model.ar_head.parameters()) + list(model.shared_router.parameters())
+        optimizer = torch.optim.AdamW(opt_params, lr=5e-3, weight_decay=1e-4)
+        
+        model.train()
+        for _ in range(steps):
+            loss = 0.0
+            for modality, anchor_data in calibration_anchors.items():
+                anchor_data = anchor_data.to(self.device)
+                if anchor_data.size(0) > 0:
+                    a_M = anchor_data[:, :d_model] # Anchor key in latent d_model space
+                    y_M = anchor_data[:, d_model:] # Aligned output targets
+                    
+                    logits = model.ar_head(a_M)
+                    loss += F.kl_div(F.log_softmax(logits, dim=-1), y_M, reduction="batchmean")
+                    
+            if loss > 0:
+                optimizer.zero_grad()
+                loss.backward()
+                optimizer.step()
+        model.eval()

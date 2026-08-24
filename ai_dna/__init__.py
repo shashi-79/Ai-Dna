@@ -47,7 +47,6 @@ from .inference.sparse_executor import SparseHardwareExecutor
 from .inference.tokenizer import TextTokenizer
 from .inference.pipeline import InferencePipeline
 
-from .encoding.svd_filter import SVDInstinctFilter
 from .encoding.cppn_encoder import InverseCPPNEncoder
 from .encoding.ewc import EWCConsolidator
 from .encoding.slow_clock import SlowClockEncoder
@@ -102,7 +101,6 @@ __all__ = [
     "SparseHardwareExecutor",
     "TextTokenizer",
     "InferencePipeline",
-    "SVDInstinctFilter",
     "InverseCPPNEncoder",
     "EWCConsolidator",
     "SlowClockEncoder",

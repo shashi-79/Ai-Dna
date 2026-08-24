@@ -79,6 +79,7 @@ class InverseCPPNEncoder:
         cppn: CPPNNetwork,
         target_weights: Dict[str, torch.Tensor],
         num_layers: int = 4,
+        num_experts: int = 1,
         ewc: Optional[EWCConsolidator] = None,
         behavior_fn: Optional[Callable[[], Tuple[torch.Tensor, torch.Tensor]]] = None,
     ) -> Tuple[Dict[str, torch.Tensor], float, Dict[str, float]]:
@@ -90,6 +91,7 @@ class InverseCPPNEncoder:
             cppn: The CPPN network to optimize.
             target_weights: Dict of target weight matrices W_k from SVD filtering.
             num_layers: Number of layers for coordinate generation.
+            num_experts: Number of MoE experts for coordinate generation.
             ewc: Optional EWC consolidator for ancestral genotype protection (Section 17.1).
             behavior_fn: Optional callable returning (logits_original, logits_regenerated) for L_behavior.
 
@@ -107,11 +109,24 @@ class InverseCPPNEncoder:
             if w.ndim >= 2:
                 w_2d = w.reshape(w.shape[0], -1)
                 out_f, in_f = w_2d.shape[0], w_2d.shape[1]
+                
+                # Parse layer and expert indices from name
+                parts = name.split(".")
+                layer_idx = 0
+                expert_idx = 0
+                for idx, part in enumerate(parts):
+                    if part == "blocks":
+                        layer_idx = int(parts[idx + 1])
+                    elif part == "experts":
+                        expert_idx = int(parts[idx + 1])
+
                 coords = SubstrateCoordinateGenerator.get_2d_weight_coordinates(
                     out_features=out_f,
                     in_features=in_f,
-                    layer_idx=0,
+                    layer_idx=layer_idx,
                     num_layers=num_layers,
+                    expert_idx=expert_idx,
+                    num_experts=num_experts,
                     device=self.device,
                     coord_dim=cppn.in_features,
                 )
@@ -207,6 +222,7 @@ class InverseCPPNEncoder:
         best_params, loss_val, breakdown = self.encode_weight_into_cppn(
             cppn, target_weights,
             num_layers=arch.num_layers,
+            num_experts=arch.num_experts,
             ewc=ewc,
             behavior_fn=behavior_fn,
         )

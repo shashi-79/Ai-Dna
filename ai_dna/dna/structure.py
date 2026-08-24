@@ -111,6 +111,9 @@ class Genotype:
     
     # Persistent Innovation IDs map for fine-grained node tracking
     node_innovation_map: Dict[str, int] = field(default_factory=dict)
+    
+    # Genotypically Embedded Calibration Anchors (GECA) for zero-dataset calibration
+    calibration_anchors: Dict[str, torch.Tensor] = field(default_factory=dict)
 
     @classmethod
     def create_default(cls, tracker: Optional[InnovationTracker] = None, genotype_id: str = "gen_0") -> "Genotype":

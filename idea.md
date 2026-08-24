@@ -764,29 +764,101 @@ $$\boxed{\mathbf{C}_k = [x, y, z, \; t, \Delta t, \; m_T, m_V, m_A, m_S, \; e_c,
 
 ### 11.3 Growth Engine Decoupling
 
-Collectively:
+For any parameter matrix mapping from layer input size $d_{in}$ to layer output size $d_{out}$ (e.g. attention weight matrices, feedforward weights, and routing projections), the 32D coordinate grid is constructed as the concatenation of source and target neuron coordinates:
 
-$$\boxed{W_0 = G\left(D, \mathcal{C}_{32\text{D}}\right).}$$
+$$\boxed{\mathcal{C}_{32\text{D}, ij} = [\mathbf{C}_{source, i} \parallel \mathbf{C}_{target, j}] \in \mathbb{R}^{32}}$$
+
+The initial phenotype weights $W_{0, ij}$ are generated using the CPPN function scaled by a hardware-aligned Xavier/Glorot normal initialization factor to stabilize forward activation variance:
+
+$$\boxed{W_{0, ij} = \text{CPPN}_{32\text{D}}\left(\mathcal{C}_{32\text{D}, ij}\right) \cdot \sqrt{\frac{2}{d_{in} + d_{out}}}}$$
+
+Similarly, the initial expert routing biases $B_{gate}^{(e)}$ are mapped from the coordinate subset:
+
+$$\boxed{B_{gate}^{(e)} = \text{CPPN}_{32\text{D}}\left(\mathcal{C}_{32\text{D}, e}\right) \cdot \lambda_{bias}}$$
 
 The Growth Engine and Fast Clock are strictly decoupled: the Genotype auto-generates the initial Base Model ($W_0$) in milliseconds on-device without data (taking $\approx 0.067\text{s}$ on GPU tensor cores), after which the Fast Clock takes that Base Model and trains it on domain datasets.
+
+### 11.4 Dynamic CPPN Capacity Expansion (DCE) via Net2Net
+
+During long-horizon evolution (e.g. $N \ge 100$ generations), packing complex multi-domain reasoning, spelling formats, and cross-modal maps into a static coordinate generator causes genotypic parameter saturation. To prevent representation collapse, the **Slow Clock** monitors the reconstruction loss. If it exceeds a saturation threshold:
+$$\boxed{\mathcal{L}_{recon} = \frac{1}{|W|} \sum_{w \in W} \|W_{target} - \text{CPPN}(\mathcal{C}_{32\text{D}})\|^2 > \epsilon_{limit}}$$
+
+the genotype triggers **Dynamic CPPN Capacity Expansion (DCE)**. We apply a function-preserving Net2Net network transformation to add $\Delta d$ hidden nodes (typically $+16$) to layer $l$ and $l+1$:
+
+1. **Output Mapping Expansion (Layer $l$)**:
+   $$\boxed{W^{(l)}_{expanded} = \begin{bmatrix} W^{(l)} \\ \mathbf{0} \end{bmatrix} \in \mathbb{R}^{(d_{out} + \Delta d) \times d_{in}}}$$
+   $$\boxed{b^{(l)}_{expanded} = \begin{bmatrix} b^{(l)} \\ \mathbf{0} \end{bmatrix} \in \mathbb{R}^{d_{out} + \Delta d}}$$
+
+2. **Input Mapping Expansion (Layer $l+1$)**:
+   $$\boxed{W^{(l+1)}_{expanded} = \begin{bmatrix} W^{(l+1)} & \mathbf{0} \end{bmatrix} \in \mathbb{R}^{d_{out2} \times (d_{in2} + \Delta d)}}$$
+
+3. **Index-Invariant Activation Splits**:
+   To prevent activation splits from shifting when $d_{out}$ changes, the multi-functional activation splits channels using a fixed base chunk size $k = 8$:
+   $$\boxed{\text{CPPNActivation}(x) = [c_1(x_{:k}) \parallel c_2(x_{k:2k}) \parallel c_3(x_{2k:3k}) \parallel c_4(x_{3k:})]}$$
+
+This mathematical alignment guarantees that the expanded network has identical output features:
+$$\text{CPPN}_{expanded}(\mathbf{C}_{32\text{D}}) \equiv \text{CPPN}_{original}(\mathbf{C}_{32\text{D}})$$
+The grown phenotype weights are identical at birth, but the genotype gains new zero-initialized parameters to absorb the residual reconstruction error.
 
 ---
 
 ## 12. Fast Clock: Parametric Learning
 
-During the Fast Clock:
+During the Fast Clock, the genotypic parameters are frozen:
 
 $$\boxed{\theta_D = \text{frozen}.}$$
 
-The phenotype learns through gradient-based optimization:
+The phenotype learns through gradient-based optimization of its weights:
 
 $$W_{t+1} = \operatorname{Optimizer}\left(W_t, \nabla_W \mathcal{L}_{total}\right).$$
 
 The DNA does not change during this phase.
 
+### 12.1 The Dual Operational Modes of the Fast Clock
+
+The Fast Clock operates in two distinct modes depending on the system phase:
+
+#### Mode 1: Online Calibration Mode (Inference Time)
+- **Purpose**: Calibrates the newborn grown brain immediately after generation, aligning the continuous output projection layer (`ar_head`) and MoE routers to human text/math/code vocabulary tokens.
+- **Scale & Latency**: Extremely lightweight ($10–15$ quick steps, taking $<0.2$ seconds).
+- **Data**: **Genotypically Embedded Calibration Anchors (GECA)** $\mathcal{D}_{anchors} = \{(\mathbf{A}_M, \mathbf{Y}_M)\}$, which are extracted during the Slow Clock and saved in the DNA seed. **No external dataset files are required.**
+- **Outcome**: Resolves initial token noise/chaos without deep training.
+
+**Mathematical Formulation:**
+In this mode, only the vocabulary projection head parameters $\theta_{head} \subset W$ and routing gating matrices $\theta_{gate} \subset W$ are updated, while the core attention layers and MoE experts ($W \setminus \{\theta_{head}, \theta_{gate}\}$) are frozen to prevent structural drift. The loss is computed via KL-Divergence over the embedded anchors:
+
+$$\boxed{\mathcal{L}_{calib} = \sum_{M} \mathcal{D}_{KL}\left(\mathbf{Y}_M \;\parallel\; \operatorname{Softmax}\left(\frac{\mathbf{A}_M \cdot W_{out}}{\tau}\right)\right)}$$
+
+$$\boxed{\theta_{head, t+1} = \theta_{head, t} - \eta_c \nabla_{\theta_{head}} \mathcal{L}_{calib}}$$
+
+$$\boxed{\theta_{gate, t+1} = \theta_{gate, t} - \eta_c \nabla_{\theta_{gate}} \mathcal{L}_{calib}}$$
+
+where:
+- $\mathbf{A}_M \in \mathbb{R}^{K \times d_{model}}$ represents the anchor latent keys for modality $M \in \{T, V, A\}$.
+- $\mathbf{Y}_M \in \mathbb{R}^{K \times V}$ represents the target aligned output logit distributions.
+- $\eta_c$ is the calibration learning rate ($\eta_c \gg \eta_d$).
+
 ---
 
-### 12.1 Joint Training Objective
+#### Mode 2: Deep Task-Learning Mode (Evolutionary/Generational Time)
+- **Purpose**: Trains the phenotype to master complex reasoning domains (e.g. geometry, python coding, visual grid transformations).
+- **Scale & Latency**: Thorough ($40+$ epochs of backpropagation).
+- **Data**: Complete domain adaptation datasets (e.g. GSM8K, MATH, MBPP).
+- **Outcome**: Generates fully adapted parameters $W^*$ containing new conceptual skills, ready to be distilled into next-generation DNA ($D_{t+1}$) via the Slow Clock.
+
+**Mathematical Formulation:**
+All active phenotype parameters $W$ are updated simultaneously on a large adaptation corpus:
+
+$$\boxed{W_{t+1} = W_t - \eta_d \nabla_W \mathcal{L}_{total}\left(\mathcal{D}_{train}\right)}$$
+
+where:
+- $\mathcal{D}_{train} = \{(X_i, Y_i)\}_{i=1}^{M_{train}}$ is the full training dataset with $M_{train} \gg 10^3$.
+- $\eta_d$ is the task adaptation learning rate.
+- $\mathcal{L}_{total}$ is the joint training objective defined below.
+
+---
+
+### 12.2 Joint Training Objective
 
 The total loss is:
 
@@ -952,11 +1024,19 @@ $$\boxed{\mathcal{L}_{size} = |D|.}$$
 
 ### 15.5 Complete DNA Objective
 
-Therefore:
+To prevent catastrophic forgetting of ancestral skills during genotypic updates, the optimization includes an Elastic Weight Consolidation (EWC) constraint penalty (Kirkpatrick et al., 2017) on the CPPN parameters:
 
-$$\boxed{\mathcal{L}_{DNA} = \lambda_1 \mathcal{L}_{reconstruction} + \lambda_2 \mathcal{L}_{behavior} + \lambda_3 \mathcal{L}_{future} + \lambda_4 |D|.}$$
+$$\boxed{\mathcal{L}_{EWC} = \frac{1}{2} \sum_{i} F_i \left(\theta_i - \theta_{i, \text{old}}\right)^2}$$
 
-This transforms DNA encoding from ordinary compression into transfer-oriented developmental encoding.
+where:
+- $F_i$ represents the diagonal Fisher Information matrix of the genotypic parameters evaluated on the ancestral dataset.
+- $\theta_i$ is the active CPPN parameters, and $\theta_{i, \text{old}}$ is the parent genotype parameters.
+
+Collectively, the Complete DNA Objective is formulated as:
+
+$$\boxed{\mathcal{L}_{DNA} = \lambda_1 \mathcal{L}_{reconstruction} + \lambda_2 \mathcal{L}_{behavior} + \lambda_3 \mathcal{L}_{future} + \lambda_4 |D| + \lambda_5 \mathcal{L}_{EWC}}$$
+
+This transforms DNA encoding from ordinary compression into transfer-oriented, consolidated developmental encoding.
 
 ---
 
@@ -1274,9 +1354,27 @@ This forms the three-stage execution process:
 
 $$\boxed{\text{Permute} \rightarrow \text{Grouped GEMM} \rightarrow \text{Unpermute}.}$$
 
-For distributed execution, expert parallelism can additionally use collective communication mechanisms to dispatch tokens to devices containing the required experts.
+**Edge Inference & On-Demand Phenotype Growth:** For production deployment and inference, client devices and edge nodes receive only the ultra-compact Genotype DNA packet ($>100\times$ bandwidth compression). The local device executes a two-stage live inference protocol:
 
-**Edge Inference & On-Demand Phenotype Growth:** For production deployment and inference, client devices and edge nodes receive only the ultra-compact Genotype DNA packet ($>100\times$ bandwidth compression). The local device's Growth Engine expands the Genotype into the full executable Phenotype neural network in under $0.07$ seconds on GPU/NPU VRAM, executing high-throughput token generation locally without requiring massive weight file downloads.
+1. **On-Demand Phenotype Growth**: The local Growth Engine expands the Genotype $D$ into the full base parameter tensors $W_0$ in under $0.07$ seconds on GPU/NPU VRAM:
+   $$\boxed{W_0 = G\left(D, \mathcal{C}_{32\text{D}}\right)}$$
+2. **On-Device Online Calibration**: Immediately following growth, the device executes a lightweight Online Calibration phase (Fast Clock Mode 1, $10-15$ steps) using the genotypically embedded anchors $\mathcal{D}_{anchors}$ directly:
+   $$\boxed{\mathcal{L}_{calib} = \sum_{M} \mathcal{D}_{KL}\left(\mathbf{Y}_M \;\parallel\; \operatorname{Softmax}\left(\frac{\mathbf{A}_M \cdot W_{out}}{\tau}\right)\right)}$$
+   $$\boxed{\theta_{head, t+1} = \theta_{head, t} - \eta_c \nabla_{\theta_{head}} \mathcal{L}_{calib}}$$
+
+This two-stage pipeline allows the model to immediately perform high-throughput autoregressive token generation locally without requiring massive weight file downloads.
+
+### 29.4 Fast Clock Operational Modes Summary
+
+| Dimension | 🎙️ Mode 1: Online Calibration Mode | 🧠 Mode 2: Deep Task-Learning Mode |
+| :--- | :--- | :--- |
+| **System Phase** | **Inference / Deployment Time** | **Generational Evolution / Training Time** |
+| **Primary Goal** | Align vocabulary projections and MoE routing gates to remove logit noise. | Absorb complex domain-specific tasks and structural representations. |
+| **Target Parameters** | Output head $\theta_{head}$ and gates $\theta_{gate}$ ($W \setminus \{\theta_{head}, \theta_{gate}\}$ are **frozen**). | All active Phenotype parameters $W$ (attention, FFN, and MoE experts). |
+| **Dataset Scale** | **Zero-dataset** ($K=8$ embedded calibration anchor vectors per modality). | $M_{train} \gg 10^3$ (complete domain reasoning datasets). |
+| **Steps / Epochs** | $10 - 15$ steps total. | $40+$ epochs. |
+| **Learning Rate** | High calibration learning rate $\eta_c$. | Lower task adaptation learning rate $\eta_d$. |
+| **Operational Latency** | $<0.200$ seconds (instantaneous on-device). | Minutes to hours (background GPU compute). |
 
 ---
 
@@ -1680,9 +1778,54 @@ The ultimate hypothesis of AI DNA is therefore not that a tiny mathematical geno
 
 That hypothesis is experimentally falsifiable, and its validity must be determined by controlled measurements rather than assumed from the biological analogy.
 
+
 ---
 
-## 43. Architectural Upgrades Summary
+## 43. Cumulative Layered DNA (CL-DNA) (LoRA + CPPN) Hybrid Paradigm
+
+To scale the genotypic lifecycle to billion- or trillion-parameter foundation models (1–8 TB), the SVD Instinct-Filter and unified CPPN optimization are replaced by a modular **Cumulative Layered DNA (CL-DNA)** hybrid paradigm.
+
+### 43.1 Mathematical Formulation of Parameter Partitioning
+At trillion-parameter scale, full parameter updates and SVD are computationally intractable. We partition the phenotype model parameters at generation $t$ into a stable, frozen base and active task-specific adapters:
+
+$$W_t = W_{\text{base}} + \Delta W_t$$
+
+where $W_{\text{base}}$ represents the high-capacity base model grown once from a stable core genotype $D_{\text{base}}$:
+
+$$W_{\text{base}} = G(D_{\text{base}})$$
+
+and $\Delta W_t$ is a low-rank task-specific adaptation space modeled as a Low-Rank Adapter (LoRA) of rank $r$:
+
+$$\Delta W_t = \mathbf{A}_t \mathbf{B}_t$$
+
+### 43.2 Genotypic Stacking
+Rather than forcing a single CPPN to represent the entire growing footprint of all generational knowledge (which leads to capacity saturation), the genotype $D_t$ at generation $t$ is formulated as an additive list of discrete, independent sub-CPPN DNA blocks:
+
+$$D_t = \left\{ D_{\text{base}}, D_1^{\text{adapter}}, D_2^{\text{adapter}}, \dots, D_t^{\text{adapter}} \right\}$$
+
+where:
+*   $D_{\text{base}}$ represents the core base structure of the model.
+*   $D_k^{\text{adapter}}$ is a tiny sub-CPPN that generates the specific $k$-th generation low-rank adapter weights $(\mathbf{A}_k, \mathbf{B}_k)$ over the spatial coordinates grid.
+
+### 43.3 Genotypic Adaptation (Slow Clock)
+During the Slow Clock of generation $t$, we bypass full-weight SVD extraction. We extract only the active trained low-rank adapter matrices $(\mathbf{A}_t, \mathbf{B}_t)$. A separate, fresh sub-CPPN $D_t^{\text{adapter}}$ is optimized from scratch to reconstruct only these adapter matrices:
+
+$$D_t^{\text{adapter}} = \arg\min_{\theta} \mathcal{L}_{\text{recon}}(\text{CPPN}_{\theta}, \mathbf{A}_t, \mathbf{B}_t)$$
+
+This new sub-CPPN is then appended to the genotype stack:
+
+$$D_t \leftarrow D_{t-1} \cup \{ D_t^{\text{adapter}} \}$$
+
+### 43.4 Zero-Forgetting Guarantee
+Because $D_k^{\text{adapter}}$ and $D_m^{\text{adapter}}$ ($k \ne m$) are represented by separate, isolated parameters in the genotype stack, parameter interference is mathematically eliminated:
+
+$$\mathcal{L}_{\text{forgetting}} \equiv 0$$
+
+This allows the model to learn new tasks indefinitely over 300+ generations without catastrophic forgetting, while keeping the incremental growth per generation extremely small ($\approx 5$ MB).
+
+---
+
+## 44. Architectural Upgrades Summary
 
 | Component | Previous Design | Upgraded Mechanism | Primary Advantage |
 | :--- | :--- | :--- | :--- |
@@ -1696,10 +1839,11 @@ That hypothesis is experimentally falsifiable, and its validity must be determin
 | **Archive Memory** | Unbounded `torch.cat` | PagedAttention Archive | Zero virtual fragmentation with LRU eviction |
 | **External Retrieval** | Flat vector ($K_{external}$) | GraphRAG (Hierarchical) | Context-aware semantic clustering |
 | **Instinct Filter** | Direct SVD on $W^*$ | Walsh-Hadamard + Cross-Modal SVD | Robust to outliers, extracts universal cross-sensory bases |
+| **Scalable Genotype** | Monolithic SVD + CPPN | **Cumulative Layered DNA (CL-DNA)** | Bypasses 1-8 TB SVD complexity, zero catastrophic forgetting |
 
 ---
 
-## 44. References
+## 45. References
 
 *   **Dao, T. et al. (2022).** *FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness.* NeurIPS.
 *   **DeepSeek-AI. (2024).** *DeepSeek-V2: A Strong, Economical, and Efficient Mixture-of-Experts Language Model.* arXiv:2405.04434.

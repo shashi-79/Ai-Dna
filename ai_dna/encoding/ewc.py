@@ -46,6 +46,14 @@ class EWCConsolidator:
             if name in self.old_parameters and name in self.fisher_diag:
                 old_p = self.old_parameters[name].to(param.device)
                 f_diag = self.fisher_diag[name].to(param.device)
-                loss = loss + (f_diag * (param - old_p) ** 2).sum()
+                
+                # Dynamic shape handling for Net2Net CPPN expansions
+                if param.shape != old_p.shape:
+                    slices = tuple(slice(0, min(s_curr, s_old)) for s_curr, s_old in zip(param.shape, old_p.shape))
+                    curr_p = param[slices]
+                else:
+                    curr_p = param
+                    
+                loss = loss + (f_diag * (curr_p - old_p) ** 2).sum()
 
         return 0.5 * self.lambda_ewc * loss

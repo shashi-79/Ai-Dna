@@ -15,18 +15,17 @@ class CPPNActivation(nn.Module):
     Multi-functional activation function combining Sinusoidal, Gaussian, Tanh, Linear, and ReLU
     to generate rich periodic, symmetric, and localized weight patterns.
     """
-    def __init__(self):
+    def __init__(self, chunk_size: int = 8):
         super().__init__()
+        self.chunk_size = chunk_size
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         # Split channels or apply mixed non-linearities
         # 1st quarter: sin(pi * x), 2nd: exp(-x^2), 3rd: tanh(x), 4th: relu(x)
-        d = x.shape[-1]
-        chunk_size = max(1, d // 4)
-        c1 = torch.sin(math.pi * x[..., :chunk_size])
-        c2 = torch.exp(-torch.clamp(x[..., chunk_size:2*chunk_size]**2, max=20.0))
-        c3 = torch.tanh(x[..., 2*chunk_size:3*chunk_size])
-        c4 = F.silu(x[..., 3*chunk_size:])
+        c1 = torch.sin(math.pi * x[..., :self.chunk_size])
+        c2 = torch.exp(-torch.clamp(x[..., self.chunk_size:2*self.chunk_size]**2, max=20.0))
+        c3 = torch.tanh(x[..., 2*self.chunk_size:3*self.chunk_size])
+        c4 = F.silu(x[..., 3*self.chunk_size:])
         return torch.cat([c1, c2, c3, c4], dim=-1)
 
 
