@@ -399,7 +399,7 @@ def generate_training_corpora(base_dir: str, sample_count: int = 500) -> None:
                 "id": f"synth_dna_{i}",
                 "prompt": "Explain the AI DNA developmental lifecycle.",
                 "solution": "Genotype D_t generates phenotype W_t via Growth Engine; Fast Clock trains W_t into W_t*; Slow Clock encodes structural instincts into D_t+1.",
-                "target": "Genotype -> Phenotype -> Adaptation -> SVD Instinct Encoding -> Next Genotype",
+                "target": "Genotype -> Phenotype -> Adaptation -> LoRA Instinct Encoding -> Next Genotype",
             })
 
     save_jsonl(synthetic_tasks, os.path.join(base_dir, "training", "synthetic", "synthetic_developmental.jsonl"))
@@ -414,8 +414,8 @@ def generate_training_corpora(base_dir: str, sample_count: int = 500) -> None:
             "text": "Compositional Pattern Producing Networks (CPPN) generate complex functional patterns using coordinate transformations. In HyperNEAT, CPPNs act as developmental genotypes that parameterize large-scale neural network phenotypes."
         },
         {
-            "title": "Singular Value Decomposition",
-            "text": "Singular Value Decomposition (SVD) factors a matrix into singular vectors and singular values. Truncated SVD retains the principal energy and dominant geometric invariants while filtering high-frequency noise."
+            "title": "Low-Rank Adaptation",
+            "text": "Low-Rank Adaptation (LoRA) freezes pre-trained model weights and injects trainable rank decomposition matrices into each layer, capturing task-specific parameter updates efficiently."
         },
         {
             "title": "Mixture of Experts",

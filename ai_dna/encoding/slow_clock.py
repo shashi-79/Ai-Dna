@@ -110,7 +110,7 @@ class SlowClockEncoder:
         future_task_fn: Optional[Callable] = None,
     ) -> Tuple[Genotype, Dict[str, Any]]:
         """
-        Executes Slow Clock transition: W_t* -> SVD Filtering / LoRA Extraction -> Genotypic Encoding -> D_{t+1}.
+        Executes Slow Clock transition: W_t* -> LoRA Extraction -> Genotypic Encoding -> D_{t+1}.
 
         Args:
             genotype_t: Current generation genotype.
@@ -202,7 +202,7 @@ class SlowClockEncoder:
                 
             new_genotype.dna_instinct.genetic_parameters = combined_params
         else:
-            # Standard CPPN path (direct weight fitting, bypassing SVD)
+            # Standard CPPN path (direct weight fitting)
             target_weights = {k: v for k, v in learned_state_dict.items() if "weight" in k or "bias" in k}
             mean_energy = 1.0  # SVD is bypassed
 

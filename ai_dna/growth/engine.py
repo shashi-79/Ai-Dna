@@ -186,7 +186,7 @@ class GrowthEngine:
             dna_memory=genotype.dna_memory,
         ).to(self.device)
 
-        # 2. Grow weights from CPPN or Hypernet
+        # 2. Grow weights from CPPN
         grown_weights = self.grow_phenotype_weights(genotype)
 
         # 3. Load weights into the model

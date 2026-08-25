@@ -21,7 +21,7 @@ class MultiHeadLatentAttention(nn.Module):
         self.w_q = nn.Linear(d_model, d_model, bias=False)
         
         # KV compression down-projection
-        # This is the primary target for DNA SVD extraction since it's the bottleneck
+        # This is the primary target for DNA encoding since it's the bottleneck
         self.w_dkv = nn.Linear(d_model, d_kv_latent, bias=False)
         
         # Up-projections for K and V from the latent

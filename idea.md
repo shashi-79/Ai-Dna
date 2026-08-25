@@ -6,11 +6,11 @@ Modern multimodal foundation models rely predominantly on large collections of l
 
 The architecture explicitly separates three forms of information: **Genotypic Instinct**, representing transferable structural and developmental information; **Parametric Knowledge**, representing knowledge acquired by the generated phenotype during learning; and **External Knowledge**, representing large, exact, or dynamically changing information maintained through hierarchical memory and retrieval systems. This separation avoids requiring a compact genotype to losslessly encode arbitrary high-entropy factual knowledge. The underlying architecture is based on a bidirectional genotype–phenotype lifecycle in which DNA generates an initial phenotype, the phenotype learns through a Fast Clock, and a Slow Clock attempts to encode transferable information back into a new genotype. 
 
-Truncated Singular Value Decomposition (SVD) is introduced as an Instinct-Filter Hypothesis: dominant singular components may contain structural information that improves future learning. This hypothesis is not assumed to be mathematically proven. An Inverse HyperNEAT-style encoder is proposed to transform transferable structural information into compact DNA. The architecture additionally incorporates sparse generative routing, hierarchical long-context memory, evolutionary mutation, multi-parent fusion, behavioral retention, and hardware-aware execution.
+Low-Rank Adaptation (LoRA) is utilized to isolate task-specific knowledge without disturbing generalized knowledge. A Cumulative Layered DNA (CL-DNA) architecture and an Inverse CPPN encoder are proposed to transform transferable structural information into compact DNA. The architecture additionally incorporates sparse generative routing, hierarchical long-context memory, evolutionary mutation, multi-parent fusion, behavioral retention, and hardware-aware execution.
 
 The principal empirical prediction is that a phenotype generated from an evolved DNA representation will learn previously unseen tasks more efficiently than an equivalent randomly initialized model. The architecture therefore treats sample efficiency, behavioral retention, representation compactness, and generational improvement as primary evaluation criteria. The proposed system is presented as a testable architecture rather than an experimentally established replacement for conventional foundation models.
 
-**Keywords:** AI DNA, genotype, phenotype, developmental encoding, CPPN, HyperNEAT, neuroevolution, sample efficiency, continual learning, multimodal AI, sparse routing, long-context memory, model evolution.
+**Keywords:** AI DNA, genotype, phenotype, developmental encoding, CPPN, CL-DNA, LoRA, neuroevolution, sample efficiency, continual learning, multimodal AI, sparse routing, long-context memory, model evolution.
 
 ---
 
@@ -542,7 +542,7 @@ $$\boxed{\operatorname{Attn}(Q, K, V) = \operatorname{Softmax}\left(\frac{R_{\Th
 
 This uses $F.scaled\_dot\_product\_attention$ for FlashAttention-style IO-aware tiling (Dao et al., 2022), keeping the computation within GPU SRAM boundaries.
 
-**DNA Encoding Advantage:** The genotype only needs to encode the down-projection matrix $W^{DKV}$ and latent coordinates, drastically reducing the reconstruction target size for the CPPN/Inverse-HyperNEAT encoder:
+**DNA Encoding Advantage:** The genotype only needs to encode the down-projection matrix $W^{DKV}$ and latent coordinates, drastically reducing the reconstruction target size for the CPPN/Inverse CPPN encoder:
 
 $$\boxed{|W^{DKV}| = d_{kv} \times D_{model} \ll |W^K| + |W^V| = 2 \times D_{model}^2}$$
 
@@ -700,7 +700,7 @@ This means the DNA is optimized toward resource-efficient memory behavior rather
 
 The complete lifecycle is:
 
-$$\boxed{D_t \xrightarrow[\text{0.06s, Zero Data}]{\text{Growth Engine } G} W_0^{(t)} \xrightarrow[\text{Actual Data}]{\text{Fast Clock}} W_t^* \xrightarrow[\text{SVD + EWC}]{\text{Slow Clock } E} D_{t+1}.}$$
+$$\boxed{D_t \xrightarrow[\text{0.06s, Zero Data}]{\text{Growth Engine } G} W_0^{(t)} \xrightarrow[\text{Actual Data}]{\text{Fast Clock}} W_t^* \xrightarrow[\text{LoRA Extraction + EWC}]{\text{Slow Clock } E} D_{t+1}.}$$
 
 The genotype-to-phenotype direction is:
 
@@ -892,83 +892,53 @@ $$\boxed{W^* \rightarrow \text{Structural Extraction} \rightarrow E \rightarrow 
 
 ---
 
-## 14. SVD Instinct-Filter Hypothesis
+## 14. LoRA Instinct-Filter Hypothesis
 
-The proposed structural extraction mechanism isolates transferable structural weight patterns ("instinct") from noise and factual memorization. The architecture introduces Walsh-Hadamard Rotation pre-processing (Zandieh et al., 2025) and MLA-aware targeting.
+The proposed structural extraction mechanism isolates transferable structural weight patterns ("instinct") from noise and factual memorization. Instead of processing the entire model or applying SVD to dense weight matrices, the architecture leverages task-specific Low-Rank Adaptation (LoRA) (Hu et al., 2021) as an inherent information bottleneck.
 
-**Target Selection:** SVD is not performed on the entire phenotype. For the attention layers, only the MLA down-projection matrices $W^{DKV}$ are extracted. Because these matrices are already low-rank bottlenecks ($D_{model} \rightarrow d_{kv}$), SVD extracts their dominant structural features with extreme efficiency.
+**Target Selection:**
+During the Fast Clock learning phase, the base model weights are frozen, and only low-rank adapter matrices $A$ and $B$ are trained for each task or modality:
 
-**Rotational Pre-processing:** Before SVD, the target weight matrix $W^*$ is randomized using an orthogonal Fast Walsh-Hadamard Transform $\mathbf{\Pi}$:
+$$\boxed{\Delta W = B \cdot A}$$
 
-$$\boxed{\tilde{W}^* = \mathbf{\Pi} \cdot W^*}$$
+where $B \in \mathbb{R}^{d_{out} \times r}$ and $A \in \mathbb{R}^{r \times d_{in}}$ with rank $r \ll \min(d_{in}, d_{out})$. Because these matrices are explicitly constrained to a low rank (typically $r \le 16$), they act as a severe informational filter.
 
-This rotation smooths out outliers and produces a more separable singular structure between structural instinct and noise.
+**LoRA Extraction:**
+After learning, the Slow Clock extracts the trained adapter weights:
 
-**SVD Decomposition:**
+$$\boxed{W_{\text{adapter}} = \{A, B\}}$$
 
-$$\boxed{\tilde{W}^* = U\Sigma V^T.}$$
+The architectural contribution is the following hypothesis:
 
-Let:
+$$\boxed{\text{LoRA Instinct-Filter Hypothesis}}$$
 
-$$\Sigma = \operatorname{diag}(\sigma_1, \sigma_2, \ldots, \sigma_r).$$
-
-The Frobenius energy satisfies:
-
-$$\boxed{\|\tilde{W}^*\|_F^2 = \sum_{i=1}^{\operatorname{rank}(\tilde{W}^*)} \sigma_i^2.}$$
-
-A rank-$k$ approximation is:
-
-$$\boxed{W_k = \mathbf{\Pi}^T \cdot (U_k\Sigma_k V_k^T).}$$
-
-The retained singular energy is:
-
-$$\boxed{E_k = \frac{\sum_{i=1}^{k}\sigma_i^2}{\|W^*\|_F^2}.}$$
-
-A candidate $k$ may be selected using:
-
-$$\boxed{E_k \ge \tau_{threshold}.}$$
-
-These are established properties of SVD.
-
-However, the following implication is not mathematically established:
-
-$$\boxed{E_k\text{ dominant} \implies \text{transferable instinct}.}$$
-
-Therefore the architecture explicitly defines the:
-
-$$\boxed{\text{SVD Instinct-Filter Hypothesis}}$$
-
-as a testable hypothesis.
-
-The experiment must determine whether retained singular structure actually improves learning on previously unseen tasks.
+*The low-rank adapter matrices trained on a specific task or modality, when encoded as structural priors in a subsequent generation, provide a phenotypic advantage (sample efficiency, zero-shot transfer) without requiring the storage or genetic encoding of the entire dense foundation model. The low-rank constraint naturally discards high-entropy factual memorization while preserving the underlying structural instinct.*
 
 ---
 
-### 14.5 TurboQuant-Enhanced Instinct Extraction
+### 14.5 Solving the Parameter Capacity Paradox
 
-Applying the TurboQuant random rotation ($\mathbf{\Pi}$) prior to SVD solves a critical failure mode of standard SVD instinct extraction: large outlier activations in dense transformer weights. SVD heavily prioritizes minimizing MSE, which causes the largest singular values to over-fit to a small number of massive outliers rather than capturing global structural representation.
-
-By applying Walsh-Hadamard rotation first, the outlier magnitude is distributed across all coordinates, creating a Beta-distributed weight spectrum. SVD applied to this smoothed space accurately captures the dominant topological structure (the true "instinct") without being hijacked by single-parameter outliers.
+By exclusively targeting LoRA adapters, the DNA encoding engine avoids the catastrophic Capacity Paradox (where a small 50MB genotype attempts to losslessly compress a 5GB dense model). The adapter weights are inherently small enough to be effectively modeled by a compact CPPN.
 
 ---
 
-### 14.6 Cross-Modal SVD Translation Extraction
+### 14.6 Cross-Modal Adapter Extraction
 
-To extract transferable cross-sensory reasoning instincts without memorizing specific images, sounds, or words, the Slow Clock applies Truncated SVD across learned cross-modal projection matrices:
+To extract transferable cross-sensory reasoning instincts without memorizing specific images, sounds, or words, the Slow Clock trains and extracts LoRA adapters across the cross-modal projection pathways:
 
-$$\boxed{\Delta W_{\text{VisionToText}} = U_V \Sigma_V V_V^T, \qquad \Delta W_{\text{AudioToText}} = U_A \Sigma_A V_A^T}$$
+$$\boxed{\Delta W_{\text{VisionToText}} = B_V A_V, \qquad \Delta W_{\text{AudioToText}} = B_A A_A}$$
 
-The Instinct-Filter hypothesis discards high-rank components ($k > 16$) that represent specific memorized objects, faces, or audio signatures, preserving only the low-rank singular vectors ($k \le 16$). These dominant singular bases represent the fundamental mathematical translation operators required to project 2D spatial topological structures and 1D continuous audio frequencies into the linguistic causal embedding space.
+The Instinct-Filter hypothesis discards high-rank components that represent specific memorized objects, faces, or audio signatures. The low-rank adapter matrices represent the fundamental mathematical translation operators required to project 2D spatial topological structures and 1D continuous audio frequencies into the linguistic causal embedding space.
 
 This universal translation operator is encoded back into the CPPN parameters for generation $D_{t+1}$, giving the child phenotype immediate zero-shot cross-sensory alignment out of the box.
 
 ---
 
-## 15. Inverse HyperNEAT Encoding
+## 15. Inverse CPPN Encoding of LoRA Adapters
 
 The selected structural representation is encoded into DNA:
 
-$$\boxed{D = E(W_k).}$$
+$$\boxed{D = E(W_{\text{adapter}}).}$$
 
 The Growth Engine should then regenerate a phenotype:
 
@@ -980,7 +950,7 @@ The objective is not simply numerical reconstruction. It has four components:
 
 ### 15.1 Reconstruction Loss
 
-$$\boxed{\mathcal{L}_{reconstruction} = \frac{\|W_k - G(D)\|_F^2}{\|W_k\|_F^2 + \epsilon}.}$$
+$$\boxed{\mathcal{L}_{reconstruction} = \frac{\|W_{\text{adapter}} - G(D)\|_F^2}{\|W_{\text{adapter}}\|_F^2 + \epsilon}.}$$
 
 ---
 
@@ -1038,6 +1008,45 @@ $$\boxed{\mathcal{L}_{DNA} = \lambda_1 \mathcal{L}_{reconstruction} + \lambda_2 
 
 This transforms DNA encoding from ordinary compression into transfer-oriented, consolidated developmental encoding.
 
+### 15.6 Discarded Alternative: Coordinate Hypernetworks
+
+During the architecture's design phase, replacing the **Inverse CPPN** genotypic encoding with a **shared Hypernetwork** and a **latent vector genotype** was evaluated and ultimately discarded. This section documents the definitions, trade-offs, and reasons for maintaining the CPPN genotype.
+
+#### 15.6.1 Paradigm Definitions
+
+*   **CPPN-as-Genotype (Active):**
+    *   **Genotype ($D$):** The weights and biases of the CPPN network itself: $D = \theta_{\text{CPPN}}$.
+    *   **Growth Engine ($G(D, C)$):** The CPPN is instantiated with $\theta_{\text{CPPN}}$ and queried over coordinate substrate $C_{ij}$:
+        $$W_{0, ij} = \text{CPPN}(C_{ij}; \theta_{\text{CPPN}})$$
+    *   **Slow Clock ($E(W^*)$):** Optimizes the network parameters $\theta_{\text{CPPN}}$ to reconstruct target weights:
+        $$\min_{\theta_{\text{CPPN}}} \lambda_1 \mathcal{L}_{\text{recon}}(W_{\text{adapter}}, G(\theta_{\text{CPPN}}, C)) + \lambda_5 \mathcal{L}_{\text{EWC}}$$
+
+*   **Hypernetwork-as-Engine (Discarded):**
+    *   **Genotype ($D$):** A low-dimensional, dense latent embedding vector: $D = \mathbf{z} \in \mathbb{R}^{d_z}$ (e.g., $d_z = 128$).
+    *   **Growth Engine ($G(\theta_H, \mathbf{z}, C)$):** A shared, static neural network with parameters $\theta_H$ (the Hypernetwork) that maps coordinate addresses $C_{ij}$ and the latent genotype $\mathbf{z}$ to weights:
+        $$W_{0, ij} = \text{HyperNet}(C_{ij}, \mathbf{z}; \theta_H)$$
+    *   **Slow Clock ($E(W^*)$):** The shared parameters $\theta_H$ are frozen. To find the child genotype $\mathbf{z}_{t+1}$, we optimize only the low-dimensional vector $\mathbf{z}$:
+        $$\min_{\mathbf{z}} \lambda_1 \mathcal{L}_{\text{recon}}(W_{\text{adapter}}, \text{HyperNet}(C, \mathbf{z}; \theta_H)) + \lambda_4 \|\mathbf{z}\|_2^2$$
+
+#### 15.6.2 Trade-Off Analysis
+
+| Evaluation Dimension | 🧬 CPPN-as-Genotype (Active) | 🧠 Hypernetwork-as-Engine (Discarded) |
+| :--- | :--- | :--- |
+| **Genotype Size ($|D|$)** | Larger (\approx 3.2\text{ KB}$ for 3K parameters). | Extremely Compact (fixed latent vector $\mathbf{z}$, e.g. 128 floats $\approx 512\text{ bytes}$). |
+| **Growth Engine Size ($|\theta_G|$)** | Zero parameters ($\theta_G = \emptyset$). Functional wrapper. | Large. $\theta_H$ contains the shared prior mapping latent space to weights. |
+| **Slow Clock Latency** | **High.** Optimizing $\approx 3,000$ non-linear parameters requires 150+ backpropagation steps. | **Low.** Optimizing a 128D vector $\mathbf{z}$ converges rapidly (e.g., 20-30 steps of L-BFGS). |
+| **Multi-Parent Fusion** | **Extremely Complex.** Requires checking innovation IDs or computing functional node similarities. | **Trivially Simple.** Done via linear interpolation (LERP) or spherical interpolation (SLERP) of vectors: $\mathbf{z}_{child} = \operatorname{SLERP}(\mathbf{z}_1, \mathbf{z}_2)$. |
+| **Mutation Operator** | Complex. Requires structural mutations or adding noise to network weights. | Simple. $\mathbf{z}_{mutated} = \mathbf{z} + \epsilon, \; \epsilon \sim \mathcal{N}(0, \sigma^2)$. |
+| **Generalization & Expressivity** | Higher generalizability. Can fit arbitrary spatial distributions without training priors. | Dependent on the Hypernet prior. Struggles to generate weights outside the pre-trained manifold. |
+
+#### 15.6.3 Rationale for Rejection
+
+1.  **The True Compression Ratio ($C_R$) Paradox:**
+    If the Hypernetwork directly projects the latent vector $\mathbf{z}$ to target weights without coordinates ($W = \text{MLP}(\mathbf{z}; \theta_H)$), the final layer requires $d_z \times |\theta_{\text{phenotype}}|$ parameters (e.g., $128 \times 10^7 = 1.28$ billion parameters). This destroys the compression benefits. Even with coordinate conditioning, the static Growth Engine requires significant parameter serving overhead.
+
+2.  **Manifold Generalization Bottleneck:**
+    Because the shared Hypernetwork parameters $	heta_H$ must be frozen during the Slow Clock, the generated weight configurations are strictly bounded by the prior manifold learned by $	heta_H$ during its pre-training phase. If the phenotype adapts to a highly unique task requiring out-of-distribution weights, the Hypernetwork fails to reconstruct them, leading to performance collapse. The CPPN, by being optimized dynamically from scratch at each generation, retains absolute expressivity.
+
 ---
 
 ## 16. Behavioral Equivalence
@@ -1074,7 +1083,7 @@ This permits different genotypes to represent approximately equivalent behaviors
 
 ### 17.1 EWC and Ancestral Instinct Protection
 
-During DNA encoding, established genetic information is protected against catastrophic forgetting using Elastic Weight Consolidation (EWC) combined with orthogonal SVD subspace projection.
+During DNA encoding, established genetic information is protected against catastrophic forgetting using Elastic Weight Consolidation (EWC) combined with LoRA adapter encapsulation.
 
 Let:
 
@@ -1219,9 +1228,11 @@ $$N_{disjoint} = N_A \mathbin{\Delta} N_B.$$
 
 A first implementation may inherit the specialized structure from the parent with greater measured structural fitness.
 
-The previous singular-energy rule can be represented as:
+The genotypic parameter energy rule can be represented as:
 
-$$\boxed{\theta_{disjoint} = \begin{cases} \theta_A, & \Sigma_A > \Sigma_B, \\ \theta_B, & \Sigma_B \ge \Sigma_A. \end{cases}}$$
+$$\boxed{\theta_{disjoint} = \begin{cases} \theta_A, & \Sigma(\theta_A) > \Sigma(\theta_B), \\ \theta_B, & \Sigma(\theta_B) \ge \Sigma(\theta_A). \end{cases}}$$
+
+where $\Sigma(\theta)$ represents the total singular energy of the genotypic parameters computed via SVD.
 
 However, this remains an experimental fusion heuristic, not a mathematical guarantee.
 
@@ -1288,7 +1299,7 @@ This is not a derived theorem.
 
 It is a proposed empirical model for investigating whether evolutionary generations progressively improve learning efficiency.
 
-Define retained SVD energy:
+Define adapter rank ratio:
 
 $$E_k = \frac{\sum_{i=1}^{k}\sigma_i^2}{\|W\|_F^2}.$$
 
@@ -1386,14 +1397,12 @@ The experiments should isolate each hypothesis.
 
 ---
 
-### 30.1 Experiment 1 — SVD Instinct-Filter Hypothesis
+### 30.1 Experiment 1 — LoRA Instinct-Filter Hypothesis
 
-1. Train a small neural model on $\mathcal{T}_A$.
-2. Obtain $W^*$.
-3. Compute $W^* = U\Sigma V^T$.
-4. Construct $W_k = U_k\Sigma_k V_k^T$ for multiple $k$:
-   $$k \in \{1\%, 5\%, 10\%, 25\%, 50\%, 75\%, 100\%\}.$$
-5. Then train each initialization on an unseen task $\mathcal{T}_B$.
+1. Train a base model on task $T_A$ and freeze it.
+2. Replace projection layers with LoRA adapters and train them on $T_A$ to obtain $W_{adapter} = \{A, B\}$.
+3. Initialize a target model for task $T_B$ with the learned adapter weights $W_{adapter}$, and fine-tune.
+4. Compare downstream sample efficiency against baselines (random initialization $W_R$, full transfer $W^*$, and random LoRA $W_{random_lora}$).
 
 ---
 
@@ -1418,42 +1427,38 @@ To force the DNA to discover genuine cross-sensory logic and evaluate multi-gene
 At minimum:
 - **Baseline 1 (Random)**: $W_R$
 - **Baseline 2 (Full trained model)**: $W^*$
-- **Baseline 3 (SVD reconstruction)**: $W_k^{SVD}$
-- **Baseline 4 (Random low-rank)**: $W_k^{random}$
+- **Baseline 3 (LoRA reconstruction)**: $W_{adapter}$
+- **Baseline 4 (Random low-rank)**: $W_{\text{random\_lora}}$
 
 The fourth baseline is particularly important.
 
-If $W_k^{SVD}$ outperforms $W_k^{random}$, the result provides stronger evidence that the advantage comes from the learned SVD structure rather than merely from low-rank initialization.
+If $W_{adapter}$ outperforms $W_{\text{random\_lora}}$, the result provides stronger evidence that the advantage comes from the learned adapter structure rather than merely from low-rank initialization.
 
 ---
 
 ## 32. Experiment 2 — Transferability Curve
 
-For each $k$, measure:
+For each adapter rank $r$, measure the sample efficiency $S_E(r)$ obtained by transferring LoRA adapters of rank $r$ to the target task:
 
-$$E_k = \frac{\sum_{i=1}^{k}\sigma_i^2}{\|W\|_F^2} \quad \text{and} \quad S_E(k).$$
-
-Then evaluate:
-
-$$\boxed{S_E = f(E_k).}$$
+$$\boxed{S_E = f(r).}$$
 
 No functional relationship should be assumed beforehand.
 
-The experiment determines whether retained singular energy correlates with future learning efficiency.
+The experiment determines whether increasing adapter rank correlates with downstream learning efficiency.
 
 ---
 
 ## 33. Experiment 3 — CPPN Encoding
 
-After SVD demonstrates measurable transferability, introduce the DNA encoder:
+After LoRA extraction demonstrates measurable transferability, introduce the DNA encoder:
 
-$$W_k \rightarrow \text{CPPN} \rightarrow D.$$
+$$W_{\text{adapter}} \rightarrow \text{CPPN} \rightarrow D.$$
 
 Generate:
 
 $$W_D = G(D).$$
 
-Then compare $W_D$ against $W_k^{SVD}$.
+Then compare $W_D$ against $W_{adapter}$.
 
 The important questions are:
 1. Does DNA preserve transferability?
@@ -1570,7 +1575,7 @@ The architecture should be considered unsuccessful with respect to its central h
 
 - **Failure A**: $S_E \le 1$ for DNA-generated models on unseen tasks.
 - **Failure B**: No meaningful relationship exists between $E_k$ and $S_E$.
-- **Failure C**: CPPN encoding destroys the transfer advantage found in the SVD representation.
+- **Failure C**: CPPN encoding destroys the transfer advantage found in the adapter representation.
 - **Failure D**: Repeated generations fail to improve transferability.
 - **Failure E**: Fusion consistently destroys parent capabilities.
 - **Failure F**: The Growth Engine and residual parameters eliminate the expected compression advantage ($C_R \approx 1$ or lower).
@@ -1581,13 +1586,13 @@ These conditions prevent the architecture from being validated merely by favorab
 
 ## 39. Limitations
 
-### 39.1 SVD Does Not Guarantee Semantic Decomposition
+### 39.1 LoRA Does Not Guarantee Semantic Decomposition
 
-SVD provides optimal low-rank approximation under a specified matrix norm, but it does not establish that dominant singular components correspond to transferable "instinct."
+LoRA forces gradient updates into a low-rank subspace, but it does not mathematically guarantee that this subspace corresponds to a purely structural, transferable "instinct."
 
 Therefore:
 
-$$\boxed{\text{SVD instinct extraction remains an empirical hypothesis.}}$$
+$$\boxed{\text{LoRA instinct extraction remains an empirical hypothesis.}}$$
 
 ---
 
@@ -1643,12 +1648,12 @@ Large-scale claims must therefore remain future hypotheses until experimentally 
 
 The recommended implementation sequence is:
 
-- **Phase 1 — SVD Validation**:
-  $$W^* \rightarrow \text{SVD} \rightarrow W_k \rightarrow \text{New Task}$$
-  Determine whether SVD-derived structure improves sample efficiency.
+- **Phase 1 — LoRA Validation**:
+  $$W^* \rightarrow \text{LoRA Extraction} \rightarrow W_{adapter} \rightarrow \text{New Task}$$
+  Determine whether LoRA-derived structure improves sample efficiency.
 
 - **Phase 2 — CPPN Encoding**:
-  $$W_k \rightarrow \text{CPPN} \rightarrow D$$
+  $$W_{adapter} \rightarrow \text{CPPN} \rightarrow D$$
   Measure compactness and transferability.
 
 - **Phase 3 — Growth Engine**:
@@ -1742,9 +1747,9 @@ The architecture further introduces sparse generative routing, hierarchical long
 
 However, the architecture deliberately distinguishes mechanisms from hypotheses.
 
-SVD is mathematically established as a low-rank approximation mechanism, but its proposed role as an "Instinct Filter" remains unverified:
+LoRA is mathematically established as an efficient fine-tuning mechanism, but its proposed role as an "Instinct Filter" remains unverified:
 
-$$\boxed{\text{dominant singular structure} \stackrel{?}{\longrightarrow} \text{transferable developmental information}.}$$
+$$\boxed{\text{low-rank adapter structure} \stackrel{?}{\longrightarrow} \text{transferable developmental information}.}$$
 
 Likewise, the proposed exponential generational scaling:
 
@@ -1754,7 +1759,7 @@ is an empirical hypothesis rather than a derived law.
 
 The decisive first experiment is therefore deliberately small:
 
-$$\boxed{W^* \rightarrow \text{SVD} \rightarrow W_k \rightarrow \mathcal{T}_{future}}$$
+$$\boxed{W^* \rightarrow \text{LoRA Extraction} \rightarrow W_{adapter} \rightarrow \mathcal{T}_{future}}$$
 
 compared against random initialization and appropriate low-rank controls.
 
@@ -1770,7 +1775,7 @@ on previously unseen tasks, this would provide evidence that learned models cont
 
 Only then should the architecture progress from:
 
-$$\text{SVD} \rightarrow \text{CPPN} \rightarrow \text{DNA} \rightarrow \text{Growth} \rightarrow \text{Evolution}$$
+$$\text{LoRA} \rightarrow \text{CPPN} \rightarrow \text{DNA} \rightarrow \text{Growth} \rightarrow \text{Evolution}$$
 
 and eventually toward multimodal and foundation-model-scale systems.
 
@@ -1783,7 +1788,7 @@ That hypothesis is experimentally falsifiable, and its validity must be determin
 
 ## 43. Cumulative Layered DNA (CL-DNA) (LoRA + CPPN) Hybrid Paradigm
 
-To scale the genotypic lifecycle to billion- or trillion-parameter foundation models (1–8 TB), the SVD Instinct-Filter and unified CPPN optimization are replaced by a modular **Cumulative Layered DNA (CL-DNA)** hybrid paradigm.
+To scale the genotypic lifecycle to billion- or trillion-parameter foundation models (1–8 TB), the monolithic SVD Instinct-Filter and unified CPPN optimization are replaced by a modular **Cumulative Layered DNA (CL-DNA)** hybrid paradigm.
 
 ### 43.1 Mathematical Formulation of Parameter Partitioning
 At trillion-parameter scale, full parameter updates and SVD are computationally intractable. We partition the phenotype model parameters at generation $t$ into a stable, frozen base and active task-specific adapters:
@@ -1838,7 +1843,7 @@ This allows the model to learn new tasks indefinitely over 300+ generations with
 | **Working Memory** | Full-precision caching | TurboQuant (3-bit) KV Cache | 5.3x memory reduction with near-optimal distortion |
 | **Archive Memory** | Unbounded `torch.cat` | PagedAttention Archive | Zero virtual fragmentation with LRU eviction |
 | **External Retrieval** | Flat vector ($K_{external}$) | GraphRAG (Hierarchical) | Context-aware semantic clustering |
-| **Instinct Filter** | Direct SVD on $W^*$ | Walsh-Hadamard + Cross-Modal SVD | Robust to outliers, extracts universal cross-sensory bases |
+| **Instinct Filter** | Direct SVD on $W^*$ | LoRA Instinct-Filter | Robust to outliers, extracts universal cross-sensory adapter bases |
 | **Scalable Genotype** | Monolithic SVD + CPPN | **Cumulative Layered DNA (CL-DNA)** | Bypasses 1-8 TB SVD complexity, zero catastrophic forgetting |
 
 ---

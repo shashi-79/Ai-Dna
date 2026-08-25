@@ -89,7 +89,7 @@ class InverseCPPNEncoder:
 
         Args:
             cppn: The CPPN network to optimize.
-            target_weights: Dict of target weight matrices W_k from SVD filtering.
+            target_weights: Dict of target weight matrices from adapter extraction.
             num_layers: Number of layers for coordinate generation.
             num_experts: Number of MoE experts for coordinate generation.
             ewc: Optional EWC consolidator for ancestral genotype protection (Section 17.1).

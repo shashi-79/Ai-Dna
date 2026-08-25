@@ -185,8 +185,8 @@ def run_experiment_7_official_benchmarks(
             except Exception as e:
                 print(f"    [WARN] Adaptation on {task}: {e}")
 
-        # 4. Slow Clock: Distill Learned Instinct back into Genotype D_{g+1} via SVD
-        print(f"  > Slow Clock: Encoding learned instinct via Truncated SVD into D_{g+1}...")
+        # 4. Slow Clock: Distill Learned Instinct back into Genotype D_{g+1}
+        print(f"  > Slow Clock: Encoding learned instinct into D_{g+1}...")
         learned_state = {k: v.clone() for k, v in phenotype.state_dict().items()}
         next_genotype, _ = slow_clock.step(current_genotype, learned_state)
         next_genotype = mutator.mutate(next_genotype)

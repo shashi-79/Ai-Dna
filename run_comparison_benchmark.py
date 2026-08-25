@@ -1,6 +1,6 @@
 """
 AI-DNA Head-to-Head Benchmark Runner.
-Compares SVD + CPPN vs. LoRA + Hypernetwork over 20 generations.
+Compares Direct CPPN vs. LoRA + CPPN over 20 generations.
 """
 
 import os
@@ -99,7 +99,7 @@ def evaluate_on_suite(pipeline, tokenizer, test_suite, device):
 def run_benchmark(num_generations=20):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print("=" * 110)
-    print(f" Running Comparative Benchmark: SVD + CPPN vs. LoRA + Hypernetwork ({num_generations} Generations)")
+    print(f" Running Comparative Benchmark: Direct CPPN vs. LoRA + CPPN ({num_generations} Generations)")
     print(f" Hardware Device: {device}")
     print("=" * 110, flush=True)
 
@@ -129,9 +129,9 @@ def run_benchmark(num_generations=20):
     genotype_ref.dna_architecture.coord_dim = 32
 
     # -----------------------------------------------------------------
-    # CONFIGURATION 1: SVD + CPPN
+    # CONFIGURATION 1: Direct CPPN
     # -----------------------------------------------------------------
-    print("\n>>> Run 1: Evolving SVD + CPPN Baseline...", flush=True)
+    print("\n>>> Run 1: Evolving Direct CPPN Baseline...", flush=True)
     slow_clock_cppn = SlowClockEncoder(rank_ratio=0.5, encoder_steps=20, device=device)
     current_genotype_cppn = genotype_ref.clone("cppn_gen0")
 
@@ -199,9 +199,9 @@ def run_benchmark(num_generations=20):
         })
 
     # -----------------------------------------------------------------
-    # CONFIGURATION 2: LoRA + Hypernetwork
+    # CONFIGURATION 2: LoRA + CPPN
     # -----------------------------------------------------------------
-    print("\n>>> Run 2: Evolving LoRA + Hypernetwork Alternative...", flush=True)
+    print("\n>>> Run 2: Evolving LoRA + CPPN Alternative...", flush=True)
     slow_clock_lora = SlowClockEncoder(rank_ratio=0.5, encoder_steps=20, device=device)
 
     current_genotype_lora = genotype_ref.clone("lora_gen0")
@@ -248,7 +248,7 @@ def run_benchmark(num_generations=20):
         pipeline = InferencePipeline(phenotype=model, tokenizer=tokenizer, device=device)
         test_acc = evaluate_on_suite(pipeline, tokenizer, test_suite, device)
 
-        # Slow Clock Encoding (routes to InverseHypernetworkEncoder automatically)
+        # Slow Clock Encoding
         t_slow_start = time.time()
         next_genotype, slow_summary = slow_clock_lora.step(
             current_genotype_lora,
@@ -282,7 +282,7 @@ def run_benchmark(num_generations=20):
     print(" COMPARISON SUMMARY TABLE")
     print("=" * 120, flush=True)
 
-    print(f"{'Metric':<25} | {'SVD + CPPN (Baseline)':<30} | {'LoRA + Hypernetwork':<30}")
+    print(f"{'Metric':<25} | {'Direct CPPN (Baseline)':<30} | {'LoRA + CPPN':<30}")
     print("-" * 95, flush=True)
 
     avg_cppn_slow_time = sum(h["slow_clock_time_sec"] for h in cppn_history) / num_generations

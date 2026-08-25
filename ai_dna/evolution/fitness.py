@@ -87,7 +87,7 @@ class GenerationalScalingTracker:
             generation: Generation number n.
             steps_to_target: N_D(n) — steps needed to reach target performance.
             sample_efficiency: S_E = N_R / N_D(n).
-            retained_energy: E_k — mean SVD singular energy retained.
+            retained_energy: E_k — mean energy retained.
             compression_ratio: C_R — true compression ratio.
         """
         self.generation_data.append({

@@ -172,41 +172,41 @@ class FalsificationChecker:
         )
 
     @staticmethod
-    def check_energy_transfer_correlation(
-        e_k_values: List[float],
+    def check_rank_transfer_correlation(
+        rank_values: List[float],
         s_e_values: List[float],
         min_correlation: float = 0.3,
     ) -> FalsificationResult:
-        """Failure B: No meaningful relationship between E_k and S_E."""
-        if len(e_k_values) < 3 or len(s_e_values) < 3:
+        """Failure B: No meaningful relationship between LoRA Rank r and S_E."""
+        if len(rank_values) < 3 or len(s_e_values) < 3:
             return FalsificationResult("B", False, 0.0, min_correlation, "Insufficient data points")
 
-        n = min(len(e_k_values), len(s_e_values))
-        e_vals = e_k_values[:n]
+        n = min(len(rank_values), len(s_e_values))
+        r_vals = rank_values[:n]
         s_vals = s_e_values[:n]
 
         # Pearson correlation
-        mean_e = sum(e_vals) / n
+        mean_r = sum(r_vals) / n
         mean_s = sum(s_vals) / n
-        cov = sum((e - mean_e) * (s - mean_s) for e, s in zip(e_vals, s_vals)) / n
-        std_e = math.sqrt(sum((e - mean_e) ** 2 for e in e_vals) / n) + 1e-9
+        cov = sum((r - mean_r) * (s - mean_s) for r, s in zip(r_vals, s_vals)) / n
+        std_r = math.sqrt(sum((r - mean_r) ** 2 for r in r_vals) / n) + 1e-9
         std_s = math.sqrt(sum((s - mean_s) ** 2 for s in s_vals) / n) + 1e-9
-        corr = cov / (std_e * std_s)
+        corr = cov / (std_r * std_s)
 
         passed = abs(corr) >= min_correlation
         return FalsificationResult(
             "B", passed, corr, min_correlation,
-            f"Correlation(E_k, S_E)={corr:.3f}, |corr| {'≥' if passed else '<'} {min_correlation}"
+            f"Correlation(Rank, S_E)={corr:.3f}, |corr| {'≥' if passed else '<'} {min_correlation}"
         )
 
     @staticmethod
     def check_cppn_preserves_transfer(
-        s_e_svd: float,
+        s_e_lora: float,
         s_e_cppn: float,
         max_degradation: float = 0.2,
     ) -> FalsificationResult:
-        """Failure C: CPPN encoding destroys the transfer advantage found in SVD."""
-        degradation = max(0.0, s_e_svd - s_e_cppn) / max(s_e_svd, 1e-9)
+        """Failure C: CPPN encoding destroys the transfer advantage found in LoRA."""
+        degradation = max(0.0, s_e_lora - s_e_cppn) / max(s_e_lora, 1e-9)
         passed = degradation <= max_degradation
         return FalsificationResult(
             "C", passed, degradation, max_degradation,
@@ -259,8 +259,8 @@ class FalsificationChecker:
     def run_all_checks(
         cls,
         s_e_values: Optional[List[float]] = None,
-        e_k_values: Optional[List[float]] = None,
-        s_e_svd: Optional[float] = None,
+        rank_values: Optional[List[float]] = None,
+        s_e_lora: Optional[float] = None,
         s_e_cppn: Optional[float] = None,
         s_e_per_generation: Optional[List[float]] = None,
         r_old_values: Optional[List[float]] = None,
@@ -270,10 +270,10 @@ class FalsificationChecker:
         results = []
         if s_e_values is not None:
             results.append(cls.check_sample_efficiency(s_e_values))
-        if e_k_values is not None and s_e_values is not None:
-            results.append(cls.check_energy_transfer_correlation(e_k_values, s_e_values))
-        if s_e_svd is not None and s_e_cppn is not None:
-            results.append(cls.check_cppn_preserves_transfer(s_e_svd, s_e_cppn))
+        if rank_values is not None and s_e_values is not None:
+            results.append(cls.check_rank_transfer_correlation(rank_values, s_e_values))
+        if s_e_lora is not None and s_e_cppn is not None:
+            results.append(cls.check_cppn_preserves_transfer(s_e_lora, s_e_cppn))
         if s_e_per_generation is not None:
             results.append(cls.check_generational_improvement(s_e_per_generation))
         if r_old_values is not None:
