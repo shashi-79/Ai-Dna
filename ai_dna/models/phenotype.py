@@ -108,8 +108,9 @@ class PhenotypeTransformerBlock(nn.Module):
         x: torch.Tensor,
         modality_emb: Optional[torch.Tensor] = None,
         mask: Optional[torch.Tensor] = None,
+        is_causal: bool = False,
     ) -> Tuple[torch.Tensor, torch.Tensor]:
-        x = x + self.attn(self.ln1(x), mask=mask)
+        x = x + self.attn(self.ln1(x), mask=mask, is_causal=is_causal)
         moe_out, aux_loss = self.moe(self.ln2(x), modality_emb=modality_emb)
         x = x + moe_out
         return x, aux_loss
@@ -237,7 +238,7 @@ class PhenotypeNeuralNetwork(nn.Module):
         # 4. Backbone Blocks
         total_aux_loss = torch.tensor(0.0, device=h.device)
         for block in self.blocks:
-            h, aux_loss = block(h, mask=mask)
+            h, aux_loss = block(h, mask=mask, is_causal=is_causal)
             total_aux_loss = total_aux_loss + aux_loss
 
         h = self.ln_final(h)
@@ -283,7 +284,7 @@ class PhenotypeNeuralNetwork(nn.Module):
 
         total_aux_loss = torch.tensor(0.0, device=h.device)
         for block in self.blocks:
-            h, aux_loss = block(h, mask=mask)
+            h, aux_loss = block(h, mask=mask, is_causal=is_causal)
             total_aux_loss = total_aux_loss + aux_loss
 
         h = self.ln_final(h)

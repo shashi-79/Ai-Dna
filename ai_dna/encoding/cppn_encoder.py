@@ -49,8 +49,8 @@ class InverseCPPNEncoder:
         (Section 15.1)
         """
         total_loss = torch.tensor(0.0, device=self.device)
-        for coords, w_target, norm_sq in coord_targets:
-            generated = cppn(coords).squeeze(-1)
+        for coords, w_target, norm_sq, std in coord_targets:
+            generated = cppn(coords).squeeze(-1) * std
             recon_loss = ((w_target - generated) ** 2).sum() / norm_sq
             total_loss = total_loss + recon_loss
         return total_loss
@@ -120,6 +120,7 @@ class InverseCPPNEncoder:
                     elif part == "experts":
                         expert_idx = int(parts[idx + 1])
 
+                matrix_idx = SubstrateCoordinateGenerator.get_matrix_idx_from_name(name)
                 coords = SubstrateCoordinateGenerator.get_2d_weight_coordinates(
                     out_features=out_f,
                     in_features=in_f,
@@ -127,12 +128,14 @@ class InverseCPPNEncoder:
                     num_layers=num_layers,
                     expert_idx=expert_idx,
                     num_experts=num_experts,
+                    matrix_idx=matrix_idx,
                     device=self.device,
                     coord_dim=cppn.in_features,
                 )
+                std = (2.0 / (in_f + out_f)) ** 0.5
                 w_target = w_2d.to(self.device)
                 norm_sq = (w_target ** 2).sum() + 1e-8
-                coord_targets.append((coords, w_target, norm_sq))
+                coord_targets.append((coords, w_target, norm_sq, std))
 
         if not coord_targets:
             return cppn.get_parameter_dict(), 0.0, {}
@@ -141,7 +144,11 @@ class InverseCPPNEncoder:
         best_params = cppn.get_parameter_dict()
         final_breakdown = {}
 
-        for step in range(self.max_steps):
+        # Dynamic step scaling based on target weight complexity
+        total_steps = max(self.max_steps, min(100, len(coord_targets)))
+        scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=total_steps, eta_min=1e-4)
+
+        for step in range(total_steps):
             optimizer.zero_grad()
 
             # 1. Reconstruction Loss (Section 15.1)
@@ -174,6 +181,7 @@ class InverseCPPNEncoder:
 
             loss.backward()
             optimizer.step()
+            scheduler.step()
 
             loss_val = l_recon.item()
             if loss_val < best_loss:

@@ -24,14 +24,23 @@ class GrowthEngine:
         self.device = device or torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     def instantiate_cppn(self, genotype: Genotype) -> CPPNNetwork:
-        """Instantiates and loads the CPPN from genotype's genetic parameters."""
+        """Instantiates and loads the CPPN from genotype's genetic parameters with dynamic dimensions."""
         arch = genotype.dna_architecture
         instinct = genotype.dna_instinct
 
+        hidden_dim = instinct.cppn_hidden_dim
+        num_layers = instinct.cppn_layers
+
+        # Dynamically detect hidden_dim and num_layers from stored parameters
+        if instinct.genetic_parameters:
+            if "backbone.0.weight" in instinct.genetic_parameters:
+                hidden_dim = instinct.genetic_parameters["backbone.0.weight"].shape[0]
+                num_layers = len([k for k in instinct.genetic_parameters.keys() if k.endswith(".weight") and k.startswith("backbone.")])
+
         cppn = CPPNNetwork(
             in_features=arch.coord_dim,
-            hidden_dim=instinct.cppn_hidden_dim,
-            num_layers=instinct.cppn_layers,
+            hidden_dim=hidden_dim,
+            num_layers=num_layers,
             out_features=1,
         ).to(self.device)
 
@@ -61,11 +70,12 @@ class GrowthEngine:
         num_layers: int = 4,
         expert_idx: int = 0,
         num_experts: int = 1,
-        coord_dim: int = 5,
+        matrix_idx: int = 0,
+        coord_dim: int = 32,
     ) -> torch.Tensor:
         """
         Grows a 2D weight matrix W_ij = G(D, C_ij) of shape (out_features, in_features)
-        using the CPPN genotype decoder.
+        using the CPPN genotype decoder with unique matrix coordinate index.
         """
         coords = SubstrateCoordinateGenerator.get_2d_weight_coordinates(
             out_features=out_features,
@@ -74,6 +84,7 @@ class GrowthEngine:
             num_layers=num_layers,
             expert_idx=expert_idx,
             num_experts=num_experts,
+            matrix_idx=matrix_idx,
             device=self.device,
             coord_dim=coord_dim,
         )
@@ -139,33 +150,33 @@ class GrowthEngine:
         # 2. Layer Blocks (MLA Attention Projections & MoE Experts)
         for l in range(num_layers):
             weights[f"blocks.{l}.attn.w_q.weight"] = self.grow_weight_matrix(
-                cppn, d_model, d_model, layer_idx=l, num_layers=num_layers, **kwargs
+                cppn, d_model, d_model, layer_idx=l, num_layers=num_layers, matrix_idx=0, **kwargs
             )
             weights[f"blocks.{l}.attn.w_dkv.weight"] = self.grow_weight_matrix(
-                cppn, d_kv_latent, d_model, layer_idx=l, num_layers=num_layers, **kwargs
+                cppn, d_kv_latent, d_model, layer_idx=l, num_layers=num_layers, matrix_idx=2, **kwargs
             )
             weights[f"blocks.{l}.attn.w_uk.weight"] = self.grow_weight_matrix(
-                cppn, d_model, d_kv_latent, layer_idx=l, num_layers=num_layers, **kwargs
+                cppn, d_model, d_kv_latent, layer_idx=l, num_layers=num_layers, matrix_idx=4, **kwargs
             )
             weights[f"blocks.{l}.attn.w_uv.weight"] = self.grow_weight_matrix(
-                cppn, d_model, d_kv_latent, layer_idx=l, num_layers=num_layers, **kwargs
+                cppn, d_model, d_kv_latent, layer_idx=l, num_layers=num_layers, matrix_idx=6, **kwargs
             )
             weights[f"blocks.{l}.attn.o_proj.weight"] = self.grow_weight_matrix(
-                cppn, d_model, d_model, layer_idx=l, num_layers=num_layers, **kwargs
+                cppn, d_model, d_model, layer_idx=l, num_layers=num_layers, matrix_idx=8, **kwargs
             )
 
             # MoE Experts
             for e in range(num_experts):
                 weights[f"blocks.{l}.moe.experts.{e}.up_proj.weight"] = self.grow_weight_matrix(
-                    cppn, d_expert_hidden, d_model, layer_idx=l, num_layers=num_layers, expert_idx=e, num_experts=num_experts, **kwargs
+                    cppn, d_expert_hidden, d_model, layer_idx=l, num_layers=num_layers, expert_idx=e, num_experts=num_experts, matrix_idx=10, **kwargs
                 )
                 weights[f"blocks.{l}.moe.experts.{e}.down_proj.weight"] = self.grow_weight_matrix(
-                    cppn, d_model, d_expert_hidden, layer_idx=l, num_layers=num_layers, expert_idx=e, num_experts=num_experts, **kwargs
+                    cppn, d_model, d_expert_hidden, layer_idx=l, num_layers=num_layers, expert_idx=e, num_experts=num_experts, matrix_idx=12, **kwargs
                 )
 
         # 3. Output Head
         weights["ar_head.proj.weight"] = self.grow_weight_matrix(
-            cppn, arch.vocab_size, d_model, layer_idx=num_layers + 1, num_layers=num_layers + 2, **kwargs
+            cppn, arch.vocab_size, d_model, layer_idx=num_layers + 1, num_layers=num_layers + 2, matrix_idx=14, **kwargs
         )
         weights["ar_head.proj.bias"] = self.grow_bias_vector(
             cppn, arch.vocab_size, layer_idx=num_layers + 1, num_layers=num_layers + 2, **kwargs
@@ -192,6 +203,15 @@ class GrowthEngine:
         # 3. Load weights into the model
         model.load_state_dict(grown_weights, strict=False)
 
+        # 3.2 Load preserved modal parameters (token embeddings, AR head) if present in genotype
+        if genotype.dna_instinct.genetic_parameters:
+            modal_dict = {}
+            for k, v in genotype.dna_instinct.genetic_parameters.items():
+                if k.startswith("modal."):
+                    modal_dict[k[len("modal."):]] = v.to(self.device)
+            if modal_dict:
+                model.load_state_dict(modal_dict, strict=False)
+
         # 3.5 Check for LoRA Rank in architecture and inject LoRA parameters
         lora_rank = getattr(genotype.dna_architecture, "lora_rank", 0)
         if lora_rank > 0:
@@ -210,11 +230,17 @@ class GrowthEngine:
                 arch = genotype.dna_architecture
                 instinct = genotype.dna_instinct
                 
-                # Instantiate adapter CPPN
+                hidden_dim = getattr(instinct, "adapter_cppn_hidden_dim", instinct.cppn_hidden_dim)
+                num_layers = getattr(instinct, "adapter_cppn_layers", instinct.cppn_layers)
+                if "backbone.0.weight" in adapter_params:
+                    hidden_dim = adapter_params["backbone.0.weight"].shape[0]
+                    num_layers = len([k for k in adapter_params.keys() if k.endswith(".weight") and k.startswith("backbone.")])
+
+                # Instantiate adapter CPPN with dynamic dimensions
                 cppn = CPPNNetwork(
                     in_features=arch.coord_dim,
-                    hidden_dim=instinct.cppn_hidden_dim,
-                    num_layers=instinct.cppn_layers,
+                    hidden_dim=hidden_dim,
+                    num_layers=num_layers,
                     out_features=1,
                 ).to(self.device)
                 cppn.load_parameter_dict(adapter_params)
@@ -233,6 +259,9 @@ class GrowthEngine:
                                 elif part == "experts":
                                     expert_idx = int(parts[idx + 1])
 
+                            matrix_idx_A = SubstrateCoordinateGenerator.get_matrix_idx_from_name(f"{name}.lora_A")
+                            matrix_idx_B = SubstrateCoordinateGenerator.get_matrix_idx_from_name(f"{name}.lora_B")
+
                             # Grow lora_A
                             lora_A_weight = self.grow_weight_matrix(
                                 cppn=cppn,
@@ -242,6 +271,7 @@ class GrowthEngine:
                                 num_layers=arch.num_layers,
                                 expert_idx=expert_idx,
                                 num_experts=arch.num_experts,
+                                matrix_idx=matrix_idx_A,
                                 coord_dim=arch.coord_dim,
                             )
                             module.lora_A.copy_(lora_A_weight)
@@ -255,9 +285,19 @@ class GrowthEngine:
                                 num_layers=arch.num_layers,
                                 expert_idx=expert_idx,
                                 num_experts=arch.num_experts,
+                                matrix_idx=matrix_idx_B,
                                 coord_dim=arch.coord_dim,
                             )
                             module.lora_B.copy_(lora_B_weight)
+
+            # 3.6 Load exact LoRA parameters if present (Hybrid DNA mode)
+            if genotype.dna_instinct.genetic_parameters:
+                exact_lora = {}
+                for k, v in genotype.dna_instinct.genetic_parameters.items():
+                    if k.startswith("exact_lora."):
+                        exact_lora[k[len("exact_lora."):]] = v.to(self.device)
+                if exact_lora:
+                    load_lora_parameters(model, exact_lora)
             else:
                 # Load stored lora weights if present as fallback
                 lora_params = {k: v.to(self.device) for k, v in genotype.dna_instinct.genetic_parameters.items() if "lora_" in k}

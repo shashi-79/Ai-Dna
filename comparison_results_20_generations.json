@@ -1,0 +1,341 @@
+{
+  "num_generations": 20,
+  "cppn_history": [
+    {
+      "generation": 1,
+      "train_loss": 3.8678746934522663,
+      "test_acc": 0.0,
+      "slow_clock_time_sec": 5.703542709350586,
+      "genotype_size_params": 6337,
+      "reconstruction_loss": 43.851219177246094
+    },
+    {
+      "generation": 2,
+      "train_loss": 3.8527550111737168,
+      "test_acc": 0.0,
+      "slow_clock_time_sec": 5.899534463882446,
+      "genotype_size_params": 10497,
+      "reconstruction_loss": 221.49591064453125
+    },
+    {
+      "generation": 3,
+      "train_loss": 3.378328009655601,
+      "test_acc": 0.0,
+      "slow_clock_time_sec": 5.950789213180542,
+      "genotype_size_params": 15681,
+      "reconstruction_loss": 213.30091857910156
+    },
+    {
+      "generation": 4,
+      "train_loss": 3.3292098547282976,
+      "test_acc": 0.0,
+      "slow_clock_time_sec": 5.845275163650513,
+      "genotype_size_params": 21889,
+      "reconstruction_loss": 42.51875686645508
+    },
+    {
+      "generation": 5,
+      "train_loss": 3.7481972794783744,
+      "test_acc": 0.0,
+      "slow_clock_time_sec": 5.893951177597046,
+      "genotype_size_params": 29121,
+      "reconstruction_loss": 227.7257080078125
+    },
+    {
+      "generation": 6,
+      "train_loss": 3.291874090830485,
+      "test_acc": 0.0,
+      "slow_clock_time_sec": 5.7997658252716064,
+      "genotype_size_params": 37377,
+      "reconstruction_loss": 249.13880920410156
+    },
+    {
+      "generation": 7,
+      "train_loss": 3.2311669943625465,
+      "test_acc": 0.0,
+      "slow_clock_time_sec": 2.9355363845825195,
+      "genotype_size_params": 37377,
+      "reconstruction_loss": 136.73187255859375
+    },
+    {
+      "generation": 8,
+      "train_loss": 3.2861711100528113,
+      "test_acc": 0.0,
+      "slow_clock_time_sec": 2.9759771823883057,
+      "genotype_size_params": 37377,
+      "reconstruction_loss": 128.62454223632812
+    },
+    {
+      "generation": 9,
+      "train_loss": 3.2915103393688536,
+      "test_acc": 0.0,
+      "slow_clock_time_sec": 2.9021008014678955,
+      "genotype_size_params": 37377,
+      "reconstruction_loss": 44.050025939941406
+    },
+    {
+      "generation": 10,
+      "train_loss": 3.3877400013438446,
+      "test_acc": 0.0,
+      "slow_clock_time_sec": 2.947596311569214,
+      "genotype_size_params": 37377,
+      "reconstruction_loss": 81.25747680664062
+    },
+    {
+      "generation": 11,
+      "train_loss": 3.2971444422738596,
+      "test_acc": 0.0,
+      "slow_clock_time_sec": 2.9488258361816406,
+      "genotype_size_params": 37377,
+      "reconstruction_loss": 52.4521484375
+    },
+    {
+      "generation": 12,
+      "train_loss": 3.349122540992603,
+      "test_acc": 0.0,
+      "slow_clock_time_sec": 2.967881679534912,
+      "genotype_size_params": 37377,
+      "reconstruction_loss": 90.54032135009766
+    },
+    {
+      "generation": 13,
+      "train_loss": 3.3266636948836474,
+      "test_acc": 0.0,
+      "slow_clock_time_sec": 2.932771921157837,
+      "genotype_size_params": 37377,
+      "reconstruction_loss": 82.55774688720703
+    },
+    {
+      "generation": 14,
+      "train_loss": 3.5099793484336455,
+      "test_acc": 0.0,
+      "slow_clock_time_sec": 2.9948854446411133,
+      "genotype_size_params": 37377,
+      "reconstruction_loss": 40.907432556152344
+    },
+    {
+      "generation": 15,
+      "train_loss": 3.578461019616378,
+      "test_acc": 0.0,
+      "slow_clock_time_sec": 2.9286229610443115,
+      "genotype_size_params": 37377,
+      "reconstruction_loss": 167.62481689453125
+    },
+    {
+      "generation": 16,
+      "train_loss": 3.417227414616367,
+      "test_acc": 0.0,
+      "slow_clock_time_sec": 3.1883912086486816,
+      "genotype_size_params": 37377,
+      "reconstruction_loss": 140.8712158203125
+    },
+    {
+      "generation": 17,
+      "train_loss": 3.1659167607625327,
+      "test_acc": 0.0,
+      "slow_clock_time_sec": 2.6608901023864746,
+      "genotype_size_params": 37377,
+      "reconstruction_loss": 105.70685577392578
+    },
+    {
+      "generation": 18,
+      "train_loss": 3.1636763079124584,
+      "test_acc": 0.0,
+      "slow_clock_time_sec": 2.6341636180877686,
+      "genotype_size_params": 37377,
+      "reconstruction_loss": 82.0025634765625
+    },
+    {
+      "generation": 19,
+      "train_loss": 3.461310813301488,
+      "test_acc": 0.0,
+      "slow_clock_time_sec": 2.6467292308807373,
+      "genotype_size_params": 37377,
+      "reconstruction_loss": 76.56190490722656
+    },
+    {
+      "generation": 20,
+      "train_loss": 3.494521132686682,
+      "test_acc": 0.0,
+      "slow_clock_time_sec": 2.6262340545654297,
+      "genotype_size_params": 37377,
+      "reconstruction_loss": 87.79683685302734
+    }
+  ],
+  "lora_history": [
+    {
+      "generation": 1,
+      "train_loss": 5.536876260188588,
+      "test_acc": 0.0,
+      "slow_clock_time_sec": 2.8378827571868896,
+      "genotype_size_params": 3329,
+      "reconstruction_loss": 879426.3125
+    },
+    {
+      "generation": 2,
+      "train_loss": 5.529275894165039,
+      "test_acc": 0.0,
+      "slow_clock_time_sec": 2.9086966514587402,
+      "genotype_size_params": 3329,
+      "reconstruction_loss": 58.960723876953125
+    },
+    {
+      "generation": 3,
+      "train_loss": 5.52775464141578,
+      "test_acc": 0.0,
+      "slow_clock_time_sec": 3.068836212158203,
+      "genotype_size_params": 3329,
+      "reconstruction_loss": 177.54937744140625
+    },
+    {
+      "generation": 4,
+      "train_loss": 5.538592773571349,
+      "test_acc": 0.0,
+      "slow_clock_time_sec": 2.9004011154174805,
+      "genotype_size_params": 3329,
+      "reconstruction_loss": 10.117989540100098
+    },
+    {
+      "generation": 5,
+      "train_loss": 5.536711558961032,
+      "test_acc": 0.0,
+      "slow_clock_time_sec": 2.92474627494812,
+      "genotype_size_params": 3329,
+      "reconstruction_loss": 229.8870849609375
+    },
+    {
+      "generation": 6,
+      "train_loss": 5.5096368204083355,
+      "test_acc": 0.0,
+      "slow_clock_time_sec": 2.9497900009155273,
+      "genotype_size_params": 3329,
+      "reconstruction_loss": 253.59671020507812
+    },
+    {
+      "generation": 7,
+      "train_loss": 5.4871206952814475,
+      "test_acc": 0.0,
+      "slow_clock_time_sec": 2.873663902282715,
+      "genotype_size_params": 3329,
+      "reconstruction_loss": 131.21755981445312
+    },
+    {
+      "generation": 8,
+      "train_loss": 5.53380516955727,
+      "test_acc": 0.0,
+      "slow_clock_time_sec": 2.8557472229003906,
+      "genotype_size_params": 3329,
+      "reconstruction_loss": 144.5222625732422
+    },
+    {
+      "generation": 9,
+      "train_loss": 5.5419354020503535,
+      "test_acc": 0.0,
+      "slow_clock_time_sec": 2.93013596534729,
+      "genotype_size_params": 3329,
+      "reconstruction_loss": 234.39964294433594
+    },
+    {
+      "generation": 10,
+      "train_loss": 5.538669034054405,
+      "test_acc": 0.0,
+      "slow_clock_time_sec": 2.962728261947632,
+      "genotype_size_params": 3329,
+      "reconstruction_loss": 10.686488151550293
+    },
+    {
+      "generation": 11,
+      "train_loss": 5.527746108540318,
+      "test_acc": 0.0,
+      "slow_clock_time_sec": 2.927215814590454,
+      "genotype_size_params": 3329,
+      "reconstruction_loss": 96.56464385986328
+    },
+    {
+      "generation": 12,
+      "train_loss": 5.536037453433924,
+      "test_acc": 0.0,
+      "slow_clock_time_sec": 3.0080771446228027,
+      "genotype_size_params": 3329,
+      "reconstruction_loss": 235.22789001464844
+    },
+    {
+      "generation": 13,
+      "train_loss": 5.5417224147863555,
+      "test_acc": 0.0,
+      "slow_clock_time_sec": 3.111375570297241,
+      "genotype_size_params": 3329,
+      "reconstruction_loss": 7.278438091278076
+    },
+    {
+      "generation": 14,
+      "train_loss": 5.532172529320968,
+      "test_acc": 0.0,
+      "slow_clock_time_sec": 2.933457612991333,
+      "genotype_size_params": 3329,
+      "reconstruction_loss": 106.2418212890625
+    },
+    {
+      "generation": 15,
+      "train_loss": 5.515188518323396,
+      "test_acc": 0.0,
+      "slow_clock_time_sec": 2.909320116043091,
+      "genotype_size_params": 3329,
+      "reconstruction_loss": 128.5474090576172
+    },
+    {
+      "generation": 16,
+      "train_loss": 5.541233455925656,
+      "test_acc": 0.0,
+      "slow_clock_time_sec": 3.027160882949829,
+      "genotype_size_params": 3329,
+      "reconstruction_loss": 210.2890167236328
+    },
+    {
+      "generation": 17,
+      "train_loss": 5.538346667038767,
+      "test_acc": 0.0,
+      "slow_clock_time_sec": 2.935143232345581,
+      "genotype_size_params": 3329,
+      "reconstruction_loss": 14.014385223388672
+    },
+    {
+      "generation": 18,
+      "train_loss": 5.540494600931804,
+      "test_acc": 0.0,
+      "slow_clock_time_sec": 2.9217517375946045,
+      "genotype_size_params": 3329,
+      "reconstruction_loss": 65.49016571044922
+    },
+    {
+      "generation": 19,
+      "train_loss": 5.532968253420111,
+      "test_acc": 0.0,
+      "slow_clock_time_sec": 2.9042787551879883,
+      "genotype_size_params": 3329,
+      "reconstruction_loss": 227.94357299804688
+    },
+    {
+      "generation": 20,
+      "train_loss": 5.53253592106334,
+      "test_acc": 0.0,
+      "slow_clock_time_sec": 2.851142644882202,
+      "genotype_size_params": 3329,
+      "reconstruction_loss": 23.74683952331543
+    }
+  ],
+  "summary": {
+    "cppn": {
+      "avg_slow_clock_time_sec": 3.769173264503479,
+      "final_genotype_size_params": 37377,
+      "avg_reconstruction_loss": 115.78585414886474,
+      "final_test_acc": 0.0
+    },
+    "lora": {
+      "avg_slow_clock_time_sec": 2.937077593803406,
+      "final_genotype_size_params": 3329,
+      "avg_reconstruction_loss": 44089.62972609997,
+      "final_test_acc": 0.0
+    }
+  }
+}

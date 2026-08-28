@@ -1,0 +1,101 @@
+{
+  "total_train_samples": 21177,
+  "total_test_samples": 1115,
+  "standard_model": {
+    "datasets": {
+      "GSM8K (Math Reasoning)": {
+        "loss": 0.06377171725034714,
+        "ppl": 1.0658490560338623,
+        "acc": 98.66477272727273
+      },
+      "MATH (Algebra & Geometry)": {
+        "loss": 0.04467155821621418,
+        "ppl": 1.04568435706595,
+        "acc": 99.02490249024902
+      },
+      "Synthetic Developmental": {
+        "loss": 0.0017903597326949239,
+        "ppl": 1.0017919633835757,
+        "acc": 100.0
+      },
+      "Wikipedia Foundation": {
+        "loss": 0.0016572658205404878,
+        "ppl": 1.0016586398444767,
+        "acc": 100.0
+      }
+    },
+    "train_time_sec": 108.60354423522949
+  },
+  "lora_cppn_model": {
+    "datasets": {
+      "GSM8K (Math Reasoning)": {
+        "loss": 5.710459777287075,
+        "ppl": 302.0098936555427,
+        "acc": 6.526988636363637
+      },
+      "MATH (Algebra & Geometry)": {
+        "loss": 5.576988363265992,
+        "ppl": 264.2745072891263,
+        "acc": 7.540754075407541
+      },
+      "Synthetic Developmental": {
+        "loss": 5.743508815765381,
+        "ppl": 312.1577958118654,
+        "acc": 5.809450038729667
+      },
+      "Wikipedia Foundation": {
+        "loss": 5.334240913391113,
+        "ppl": 207.315318781682,
+        "acc": 5.875
+      }
+    },
+    "train_time_sec": 195.7552525997162,
+    "slow_clock_time_sec": 490.3095166683197,
+    "num_generations": 5,
+    "generational_history": [
+      {
+        "generation": 1,
+        "train_loss": 2.1150284866011755,
+        "fast_time_sec": 34.79103350639343,
+        "slow_clock_time_sec": 110.37015700340271,
+        "dna_params": 264530,
+        "recon_loss": 119.27555847167969
+      },
+      {
+        "generation": 2,
+        "train_loss": 1.7745043061831207,
+        "fast_time_sec": 34.089606285095215,
+        "slow_clock_time_sec": 109.55102968215942,
+        "dna_params": 310802,
+        "recon_loss": 112.23985290527344
+      },
+      {
+        "generation": 3,
+        "train_loss": 1.6040473992730915,
+        "fast_time_sec": 33.815346479415894,
+        "slow_clock_time_sec": 110.0787787437439,
+        "dna_params": 365266,
+        "recon_loss": 111.54486846923828
+      },
+      {
+        "generation": 4,
+        "train_loss": 1.3602865115483362,
+        "fast_time_sec": 34.4910774230957,
+        "slow_clock_time_sec": 109.00191903114319,
+        "dna_params": 427922,
+        "recon_loss": 102.7850112915039
+      },
+      {
+        "generation": 5,
+        "train_loss": 1.3525882202602946,
+        "fast_time_sec": 31.39746332168579,
+        "slow_clock_time_sec": 51.30763220787048,
+        "dna_params": 427922,
+        "recon_loss": 103.80814361572266
+      }
+    ]
+  },
+  "compression_ratio": 4.041154696416637,
+  "std_params": 1729299,
+  "dna_params": 427922
+}

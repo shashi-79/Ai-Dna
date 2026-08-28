@@ -31,7 +31,7 @@ class MultiHeadLatentAttention(nn.Module):
         self.o_proj = nn.Linear(d_model, d_model, bias=False)
         self.rope = RoPE(self.d_head, rope_base)
         
-    def forward(self, x, mask=None, kv_cache=None):
+    def forward(self, x, mask=None, kv_cache=None, is_causal=False):
         # x: [B, S, D]
         B, S, _ = x.shape
         
@@ -58,7 +58,7 @@ class MultiHeadLatentAttention(nn.Module):
         attn_out = F.scaled_dot_product_attention(
             q, k, v, 
             attn_mask=mask, 
-            is_causal=(mask is None) # If no explicit mask, assume causal
+            is_causal=is_causal and (mask is None)
         )
         
         # [B, H, S, D_h] -> [B, S, H, D_h] -> [B, S, D]

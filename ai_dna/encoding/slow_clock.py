@@ -164,18 +164,28 @@ class SlowClockEncoder:
                 except Exception:
                     ewc = None
 
-            # Optimize the adapter CPPN (temporary container)
+            # Optimize the adapter CPPN with dynamic dimensions
             from ..growth.cppn import CPPNNetwork
             arch = genotype_t.dna_architecture
             instinct = genotype_t.dna_instinct
+
+            hidden_dim = getattr(instinct, "adapter_cppn_hidden_dim", max(64, instinct.cppn_hidden_dim * 2))
+            num_layers = getattr(instinct, "adapter_cppn_layers", max(4, instinct.cppn_layers + 1))
+            if prev_adapter_params and "backbone.0.weight" in prev_adapter_params:
+                hidden_dim = prev_adapter_params["backbone.0.weight"].shape[0]
+                num_layers = len([k for k in prev_adapter_params.keys() if k.endswith(".weight") and k.startswith("backbone.")])
+
             cppn = CPPNNetwork(
                 in_features=arch.coord_dim,
-                hidden_dim=instinct.cppn_hidden_dim,
-                num_layers=instinct.cppn_layers,
+                hidden_dim=hidden_dim,
+                num_layers=num_layers,
                 out_features=1,
-                ).to(self.device)
+            ).to(self.device)
             if prev_adapter_params:
-                cppn.load_parameter_dict(prev_adapter_params)
+                try:
+                    cppn.load_parameter_dict(prev_adapter_params)
+                except Exception:
+                    pass
 
             best_params, recon_loss, breakdown = self.cppn_encoder.encode_weight_into_cppn(
                 cppn=cppn,
@@ -186,20 +196,64 @@ class SlowClockEncoder:
                 behavior_fn=behavior_fn,
             )
 
+            # Dynamic Capacity Expansion (DCE) for Adapter CPPN if reconstruction loss is high
+            if recon_loss > 0.05 and hidden_dim < 256:
+                new_hidden_dim = hidden_dim + 32
+                print(f"[Slow Clock Adapter DCE]: Expanding adapter CPPN hidden_dim {hidden_dim} -> {new_hidden_dim}...")
+                expanded_cppn = CPPNNetwork(
+                    in_features=arch.coord_dim,
+                    hidden_dim=new_hidden_dim,
+                    num_layers=num_layers,
+                    out_features=1,
+                ).to(self.device)
+                
+                # Copy overlapping parameter weights
+                expanded_state = expanded_cppn.state_dict()
+                for k, v in best_params.items():
+                    if k in expanded_state:
+                        s = [slice(0, min(d1, d2)) for d1, d2 in zip(expanded_state[k].shape, v.shape)]
+                        expanded_state[k][tuple(s)] = v[tuple(s)].to(self.device)
+                expanded_cppn.load_state_dict(expanded_state)
+                
+                # Re-optimize with expanded capacity
+                best_params, recon_loss, breakdown = self.cppn_encoder.encode_weight_into_cppn(
+                    cppn=expanded_cppn,
+                    target_weights=target_weights,
+                    num_layers=arch.num_layers,
+                    num_experts=arch.num_experts,
+                    ewc=ewc,
+                    behavior_fn=behavior_fn,
+                )
+                print(f"[Slow Clock Adapter DCE]: Re-encoding complete. New recon_loss={recon_loss:.4f}")
+
             # Build final new_genotype
             new_genotype = genotype_t.clone(new_id=f"{genotype_t.genotype_id}_enc")
             new_genotype.generation = genotype_t.generation + 1
             
-            # Combine unchanged base CPPN parameters with prefixed new adapter CPPN parameters
+            # Combine base CPPN parameters, adapter CPPN parameters, and learned modal parameters
             combined_params = {}
             if genotype_t.dna_instinct.genetic_parameters:
                 for k, v in genotype_t.dna_instinct.genetic_parameters.items():
                     if not k.startswith("adapter."):
-                        combined_params[k] = v.clone()
-            
+                        combined_params[k] = v.clone() if hasattr(v, "clone") else v
+
             for k, v in best_params.items():
                 combined_params[f"adapter.{k}"] = v
-                
+
+            # Preserve learned modal parameters (embeddings, prediction head, norm) and exact LoRA residuals
+            if phenotype_model is not None:
+                for name, param in phenotype_model.named_parameters():
+                    if any(m in name for m in ["text_encoder", "embeddings", "ar_head", "ln_final", "ln1", "ln2"]):
+                        combined_params[f"modal.{name}"] = param.clone().detach()
+                    elif "lora_" in name:
+                        combined_params[f"exact_lora.{name}"] = param.clone().detach()
+            elif learned_state_dict:
+                for name, param in learned_state_dict.items():
+                    if any(m in name for m in ["text_encoder", "embeddings", "ar_head", "ln_final", "ln1", "ln2"]):
+                        combined_params[f"modal.{name}"] = param.clone().detach() if hasattr(param, "clone") else param
+                    elif "lora_" in name:
+                        combined_params[f"exact_lora.{name}"] = param.clone().detach() if hasattr(param, "clone") else param
+
             new_genotype.dna_instinct.genetic_parameters = combined_params
         else:
             # Standard CPPN path (direct weight fitting)

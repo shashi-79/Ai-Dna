@@ -13,6 +13,31 @@ class SubstrateCoordinateGenerator:
     """
 
     @staticmethod
+    def get_matrix_idx_from_name(name: str) -> int:
+        """Extracts a unique matrix index from layer name to avoid coordinate aliasing."""
+        is_lora_b = "lora_B" in name
+        if "w_q" in name:
+            base_idx = 0
+        elif "w_dkv" in name:
+            base_idx = 1
+        elif "w_uk" in name:
+            base_idx = 2
+        elif "w_uv" in name:
+            base_idx = 3
+        elif "o_proj" in name:
+            base_idx = 4
+        elif "up_proj" in name:
+            base_idx = 5
+        elif "down_proj" in name:
+            base_idx = 6
+        elif "gate" in name or "router" in name:
+            base_idx = 7
+        else:
+            base_idx = 8
+        
+        return base_idx * 2 + (1 if is_lora_b else 0)
+
+    @staticmethod
     def get_2d_weight_coordinates(
         out_features: int,
         in_features: int,
@@ -20,13 +45,14 @@ class SubstrateCoordinateGenerator:
         num_layers: int = 4,
         expert_idx: int = 0,
         num_experts: int = 1,
+        matrix_idx: int = 0,
         device: Optional[torch.device] = None,
-        coord_dim: int = 5,
+        coord_dim: int = 32,
     ) -> torch.Tensor:
         """
         Generates coordinate grid for a 2D weight matrix W of shape (out_features, in_features).
         Returns: Tensor of shape (out_features, in_features, coord_dim)
-        Coordinates: (x1_src, y1_src, x2_dst, y2_dst, norm_layer_idx, [norm_expert_idx])
+        Coordinates: (x1_src, y1_src, x2_dst, y2_dst, norm_layer_idx, [norm_expert_idx, norm_matrix_idx])
         """
         if device is None:
             device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -40,21 +66,22 @@ class SubstrateCoordinateGenerator:
         # Meshgrid of source and target locations
         x2_grid, x1_grid = torch.meshgrid(x2, x1, indexing="ij")
         
-        # Layer & expert normalized position in [-1, 1]
+        # Layer, expert, and matrix normalized position in [-1, 1]
         norm_layer = (2.0 * layer_idx / max(1, num_layers - 1)) - 1.0 if num_layers > 1 else 0.0
         norm_expert = (2.0 * expert_idx / max(1, num_experts - 1)) - 1.0 if num_experts > 1 else 0.0
+        norm_matrix = (2.0 * matrix_idx / 15.0) - 1.0
         
         layer_grid = torch.full_like(x1_grid, norm_layer)
         expert_grid = torch.full_like(x1_grid, norm_expert)
+        matrix_grid = torch.full_like(x1_grid, norm_matrix)
         zeros = torch.zeros_like(x1_grid)
         ones = torch.ones_like(x1_grid)
         
         if coord_dim == 32:
             # 32D Universal Manifold: 16D Source Address + 16D Target Address
-            # Source 16D: [x1, y1=0, z1=layer, t1=0, dt1=0, m_T=1, m_V=0, m_A=0, m_S=0, e_c=expert, e_id=expert, tau=0.5, h_w=1, h_a=0, h_g=0, eta=0.1]
-            # Target 16D: [x2, y2=0, z2=layer, t2=0, dt2=0, m_T=1, m_V=0, m_A=0, m_S=0, e_c=expert, e_id=expert, tau=0.5, h_w=1, h_a=0, h_g=0, eta=0.1]
-            y1_grid = zeros
-            y2_grid = zeros
+            # Embed matrix_grid into y1 (position 1) and y2 (position 17)
+            y1_grid = matrix_grid
+            y2_grid = matrix_grid
             
             src_16d = [
                 x1_grid, y1_grid, layer_grid,
@@ -74,15 +101,14 @@ class SubstrateCoordinateGenerator:
             ]
             coords = torch.stack(src_16d + tgt_16d, dim=-1)
         elif coord_dim >= 6:
-            y1_grid = zeros
+            y1_grid = matrix_grid
             y2_grid = zeros
             channels = [x1_grid, y1_grid, x2_grid, y2_grid, layer_grid, expert_grid]
             while len(channels) < coord_dim:
                 channels.append(zeros)
             coords = torch.stack(channels[:coord_dim], dim=-1)
         else:
-            # If coord_dim is 5, encode expert index in the y1 dimension
-            y1_grid = torch.full_like(x1_grid, norm_expert)
+            y1_grid = matrix_grid
             y2_grid = zeros
             channels = [x1_grid, y1_grid, x2_grid, y2_grid, layer_grid]
             coords = torch.stack(channels[:coord_dim], dim=-1)

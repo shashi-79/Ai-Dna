@@ -384,6 +384,12 @@ class CustomVideoProcessor:
 class HuggingFaceEngine:
     """Robust Loader for Hugging Face datasets with caching and memory management."""
     @staticmethod
+    def is_online() -> bool:
+        if os.environ.get("AI_DNA_OFFLINE", "0") == "1":
+            return False
+        return True
+
+    @staticmethod
     def load_hf_dataset(
         dataset_name: str,
         split: str = "train",
@@ -392,6 +398,8 @@ class HuggingFaceEngine:
         cache_dir: Optional[str] = "./data_cache",
     ) -> Any:
         os.makedirs(cache_dir, exist_ok=True)
+        if not HuggingFaceEngine.is_online():
+            return []
         try:
             from datasets import load_dataset
             kwargs = {"split": split, "streaming": streaming, "cache_dir": cache_dir}
@@ -414,6 +422,8 @@ class HuggingFaceWebStreamer:
         self.base_url = "https://datasets-server.huggingface.co/rows"
 
     def __iter__(self) -> Iterator[Dict[str, Any]]:
+        if not HuggingFaceEngine.is_online():
+            return
         offset = 0
         length = 100
         max_rows = 50000
@@ -428,7 +438,7 @@ class HuggingFaceWebStreamer:
             url = f"{self.base_url}?{params}"
             try:
                 req = urllib.request.Request(url, headers={"User-Agent": "AI-DNA-DataHub/1.0"})
-                with urllib.request.urlopen(req, timeout=10) as resp:
+                with urllib.request.urlopen(req, timeout=3) as resp:
                     data = json.loads(resp.read().decode("utf-8"))
                     rows = data.get("rows", [])
                     if not rows:

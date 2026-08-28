@@ -54,6 +54,9 @@ def genotype_to_dict(genotype: Genotype) -> Dict[str, Any]:
             "vocab_size": genotype.dna_architecture.vocab_size,
             "coord_dim": genotype.dna_architecture.coord_dim,
             "active_expert_threshold": genotype.dna_architecture.active_expert_threshold,
+            "kv_latent_dim": getattr(genotype.dna_architecture, "kv_latent_dim", 16),
+            "rope_theta": getattr(genotype.dna_architecture, "rope_theta", 10000.0),
+            "lora_rank": getattr(genotype.dna_architecture, "lora_rank", 0),
             "innovation_id": genotype.dna_architecture.innovation_id,
         },
         "dna_instinct": {
@@ -69,12 +72,17 @@ def genotype_to_dict(genotype: Genotype) -> Dict[str, Any]:
             "threshold": genotype.dna_routing.threshold,
             "temperature": genotype.dna_routing.temperature,
             "load_balance_weight": genotype.dna_routing.load_balance_weight,
+            "top_k_experts": getattr(genotype.dna_routing, "top_k_experts", 2),
+            "routing_noise_std": getattr(genotype.dna_routing, "routing_noise_std", 1.0),
             "innovation_id": genotype.dna_routing.innovation_id,
         },
         "dna_memory": {
             "chunk_size": genotype.dna_memory.chunk_size,
             "compression_rate": genotype.dna_memory.compression_rate,
             "num_retrieval": genotype.dna_memory.num_retrieval,
+            "kv_quant_bits": getattr(genotype.dna_memory, "kv_quant_bits", 3),
+            "page_size": getattr(genotype.dna_memory, "page_size", 16),
+            "max_pages": getattr(genotype.dna_memory, "max_pages", 1024),
             "cost_alpha": genotype.dna_memory.cost_alpha,
             "cost_beta": genotype.dna_memory.cost_beta,
             "cost_delta": genotype.dna_memory.cost_delta,
@@ -127,10 +135,14 @@ def dict_to_genotype(data: Dict[str, Any]) -> Genotype:
         num_experts=arch_data.get("num_experts", 4),
         d_expert_hidden=arch_data.get("d_expert_hidden", 128),
         vocab_size=arch_data.get("vocab_size", 1000),
-        coord_dim=arch_data.get("coord_dim", 5),
+        coord_dim=arch_data.get("coord_dim", 32),
         active_expert_threshold=arch_data.get("active_expert_threshold", 0.5),
+        kv_latent_dim=arch_data.get("kv_latent_dim", 16),
+        rope_theta=arch_data.get("rope_theta", 10000.0),
         innovation_id=arch_data.get("innovation_id", 1),
     )
+    if "lora_rank" in arch_data:
+        arch.lora_rank = arch_data["lora_rank"]
 
     routing_data = data.get("dna_routing", {})
     routing = DNARouting(
@@ -138,6 +150,8 @@ def dict_to_genotype(data: Dict[str, Any]) -> Genotype:
         threshold=routing_data.get("threshold", 0.5),
         temperature=routing_data.get("temperature", 1.0),
         load_balance_weight=routing_data.get("load_balance_weight", 0.01),
+        top_k_experts=routing_data.get("top_k_experts", 2),
+        routing_noise_std=routing_data.get("routing_noise_std", 1.0),
         innovation_id=routing_data.get("innovation_id", 3),
     )
 
@@ -146,6 +160,9 @@ def dict_to_genotype(data: Dict[str, Any]) -> Genotype:
         chunk_size=memory_data.get("chunk_size", 32),
         compression_rate=memory_data.get("compression_rate", 0.25),
         num_retrieval=memory_data.get("num_retrieval", 8),
+        kv_quant_bits=memory_data.get("kv_quant_bits", 3),
+        page_size=memory_data.get("page_size", 16),
+        max_pages=memory_data.get("max_pages", 1024),
         cost_alpha=memory_data.get("cost_alpha", 1.0),
         cost_beta=memory_data.get("cost_beta", 0.5),
         cost_delta=memory_data.get("cost_delta", 0.2),

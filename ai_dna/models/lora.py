@@ -78,10 +78,16 @@ def replace_linear_with_lora(
     return adapted_names
 
 
-def freeze_model_except_lora(model: nn.Module):
-    """Freezes all parameters of the network except for active LoRA parameters."""
+def freeze_model_except_lora(model: nn.Module, freeze_modalities: bool = False):
+    """
+    Freezes all base parameters of the network except for active LoRA parameters.
+    If freeze_modalities is False, keeps text_encoder (token embeddings) and ar_head (output projection)
+    trainable so the network can map and decode vocabulary tokens properly.
+    """
     for name, param in model.named_parameters():
         if "lora_" in name:
+            param.requires_grad = True
+        elif not freeze_modalities and any(k in name for k in ["text_encoder", "embeddings", "ar_head", "ln_final", "ln1", "ln2"]):
             param.requires_grad = True
         else:
             param.requires_grad = False
