@@ -1,0 +1,4 @@
+AI-DNA (W_5) SPATIO-TEMPORAL VIDEO ACTION RECOGNITION:
+Input Video: 4-Frame Spatio-Temporal Tubelets (Moving Right)
+AI-DNA Predicted Action Tokens: [39, 39, 42]
+Decoded Action Class Description: 'Object Translation: Moving Right Across Frames'

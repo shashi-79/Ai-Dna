@@ -1,0 +1,28 @@
+=====================================================================================
+ AI-DNA MULTI-MODAL TEXT REASONING & GENERATION COMPLETIONS
+=====================================================================================
+
+Task: Math Addition Reasoning (Calculate 12 + 34 = 46)
+  Input Tokens       : [10, 62, 11, 84, 12]
+  Target Tokens      : [62, 11, 84, 12, 96]
+  Standard Prediction: [100, 11, 100, 11, 100]
+  AI-DNA (W5) Pred   : [20, 11, 27, 12, 104]
+
+Task: Algebraic Step Computation (Calculate 25 + 47 = 72)
+  Input Tokens       : [10, 75, 11, 97, 12]
+  Target Tokens      : [75, 11, 97, 12, 122]
+  Standard Prediction: [100, 11, 100, 11, 100]
+  AI-DNA (W5) Pred   : [24, 11, 27, 12, 114]
+
+Task: Synthetic Arithmetic Logic (Calculate 18 + 51 = 69)
+  Input Tokens       : [10, 68, 11, 101, 12]
+  Target Tokens      : [68, 11, 101, 12, 119]
+  Standard Prediction: [100, 11, 100, 12, 100]
+  AI-DNA (W5) Pred   : [67, 11, 66, 56, 97]
+
+Task: Multi-Step Symbolic Equation (Calculate 42 + 39 = 81)
+  Input Tokens       : [10, 92, 11, 89, 12]
+  Target Tokens      : [92, 11, 89, 12, 131]
+  Standard Prediction: [100, 11, 100, 12, 100]
+  AI-DNA (W5) Pred   : [24, 11, 27, 12, 119]
+

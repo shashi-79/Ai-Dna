@@ -1,0 +1,3 @@
+TASK: Mathematical & Algorithmic Arithmetic Reasoning
+INPUT PROMPT: Solve the equation: 27 + 38 = ?
+Input Tokens: [10, 77, 11, 88, 12] (Prefix, 27, Plus, 38, Equals)

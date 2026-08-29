@@ -1,0 +1,4 @@
+AI-DNA (W_5) ACOUSTIC SPEECH-TO-TEXT TRANSCRIPTION:
+Input Audio Source: 16 kHz Spoken Word Mel Spectrogram
+AI-DNA Predicted Token IDs: [106, 106, 106]
+Transcribed Keyword: 'Speech Command: ACTIVE_KEYWORD'

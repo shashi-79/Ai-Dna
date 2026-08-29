@@ -1,0 +1,12 @@
+AI-DNA (W_5) VIDEO TEMPORAL ACTION REASONING:
+===========================================================================
+<thought>
+1. Frame 0 Object Center: X0 = 3.5, Y0 = 16.0 (Timestamp: 0.00s)
+2. Frame 1 Object Center: X1 = 10.5, Y1 = 16.0 (Timestamp: 0.25s) -> Delta X = +7.0 px
+3. Frame 2 Object Center: X2 = 17.5, Y2 = 16.0 (Timestamp: 0.50s) -> Delta X = +7.0 px
+4. Frame 3 Object Center: X3 = 24.5, Y3 = 16.0 (Timestamp: 0.75s) -> Delta X = +7.0 px
+5. Velocity Vector: (Vx = +28.0 px/s, Vy = 0.0 px/s) -> Constant Positive Lateral Translation.
+</thought>
+TEMPORAL ACTION: 'Linear Rightward Object Translation Across Spatio-Temporal Tubelets'
+===========================================================================
+Predicted Action Tokens: [42, 42, 42]

@@ -4,6 +4,8 @@ Test Runner script to execute all test functions across the test suite.
 
 import sys
 import os
+os.environ["AI_DNA_OFFLINE"] = "1"
+os.environ["HF_HUB_OFFLINE"] = "1"
 import traceback
 
 sys.path.insert(0, os.path.abspath("."))
@@ -20,6 +22,7 @@ def run_all():
     import tests.test_data_pipeline as test_data_pipeline
     import tests.test_inference_io as test_inference_io
     import tests.test_lora_cppn as test_lora_cppn
+    import tests.test_reasoning as test_reasoning
 
     modules = [
         test_dna,
@@ -33,6 +36,7 @@ def run_all():
         test_data_pipeline,
         test_inference_io,
         test_lora_cppn,
+        test_reasoning,
     ]
 
     total_passed = 0

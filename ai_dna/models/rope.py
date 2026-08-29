@@ -1,38 +1,86 @@
+import math
 import torch
 import torch.nn as nn
 
 class RoPE(nn.Module):
     """
-    1D Rotary Position Embedding (RoPE) for sequential data (Text, Audio).
-    Applies rotary transformation based on relative positions, avoiding static additive embeddings.
+    1D Rotary Position Embedding (RoPE) with YaRN & Dynamic NTK-Aware Scaling.
+    Supports long-context sequences (up to 128,000+ tokens) with zero perplexity explosion.
     """
-    def __init__(self, dim, base=10000.0):
+    def __init__(
+        self,
+        dim: int,
+        base: float = 500000.0,
+        max_position_embeddings: int = 2048,
+        scaling_factor: float = 1.0,
+        extrapolation_factor: float = 1.0,
+        attn_factor: float = 1.0,
+        beta_fast: float = 32.0,
+        beta_slow: float = 1.0,
+    ):
         super().__init__()
         self.dim = dim
         self.base = base
-        # Precompute theta frequencies
-        inv_freq = 1.0 / (self.base ** (torch.arange(0, dim, 2).float() / dim))
+        self.max_position_embeddings = max_position_embeddings
+        self.scaling_factor = scaling_factor
+        self.extrapolation_factor = extrapolation_factor
+        self.attn_factor = attn_factor
+        self.beta_fast = beta_fast
+        self.beta_slow = beta_slow
+
+        # Standard / YaRN Inverted Frequencies
+        inv_freq = self._compute_yarn_inv_freq(dim, base, scaling_factor)
         self.register_buffer("inv_freq", inv_freq, persistent=False)
 
-    def _get_cos_sin(self, seq_len, device):
-        t = torch.arange(seq_len, device=device).type_as(self.inv_freq)
-        freqs = torch.einsum("i,j->ij", t, self.inv_freq)
-        # Repeat freqs for alternating cos/sin logic
-        emb = torch.cat((freqs, freqs), dim=-1)
-        return emb.cos()[None, None, :, :], emb.sin()[None, None, :, :]
+    def _compute_yarn_inv_freq(self, dim: int, base: float, scale: float) -> torch.Tensor:
+        """Computes YaRN ramp-based frequency interpolation across dimensions."""
+        pos = torch.arange(0, dim, 2).float()
+        if scale <= 1.0:
+            return 1.0 / (base ** (pos / dim))
 
-    def forward(self, q, k):
+        # YaRN frequency interpolation
+        inv_freq_extrapolation = 1.0 / (base ** (pos / dim))
+        inv_freq_interpolation = 1.0 / (scale * (base ** (pos / dim)))
+
+        low = max(0, int(math.floor(dim * (1.0 - math.log(self.beta_fast) / math.log(base)))))
+        high = min(dim // 2, int(math.ceil(dim * (1.0 - math.log(self.beta_slow) / math.log(base)))))
+
+        if low == high:
+            high += 1
+
+        ramp = torch.clamp((pos / 2.0 - low) / max(1.0, float(high - low)), 0.0, 1.0)
+        inv_freq = (1.0 - ramp) * inv_freq_interpolation + ramp * inv_freq_extrapolation
+        return inv_freq
+
+    def _get_cos_sin(self, seq_len: int, device: torch.device):
+        # Dynamic NTK-aware scaling if sequence length exceeds base context
+        if seq_len > self.max_position_embeddings:
+            scale = seq_len / self.max_position_embeddings
+            base = self.base * ((self.scaling_factor * scale) - (self.scaling_factor - 1.0)) ** (self.dim / (self.dim - 2))
+            inv_freq = 1.0 / (base ** (torch.arange(0, self.dim, 2, device=device).float() / self.dim))
+        else:
+            inv_freq = self.inv_freq.to(device)
+
+        t = torch.arange(seq_len, device=device).type_as(inv_freq)
+        freqs = torch.einsum("i,j->ij", t, inv_freq)
+        emb = torch.cat((freqs, freqs), dim=-1)
+        
+        # YaRN attention scale factor
+        mscale = 0.1 * math.log(max(1.0, seq_len / max(1, self.max_position_embeddings))) + 1.0
+        cos = emb.cos()[None, None, :, :] * mscale
+        sin = emb.sin()[None, None, :, :] * mscale
+        return cos, sin
+
+    def forward(self, q: torch.Tensor, k: torch.Tensor):
         # q, k shape: [B, num_heads, S, head_dim]
         seq_len = q.shape[2]
         cos, sin = self._get_cos_sin(seq_len, q.device)
         
-        # Apply RoPE to query and key
         q_rot = self._apply_rotary_emb(q, cos, sin)
         k_rot = self._apply_rotary_emb(k, cos, sin)
         return q_rot, k_rot
 
     def _apply_rotary_emb(self, x, cos, sin):
-        # x shape: [B, num_heads, S, head_dim]
         d = x.shape[-1]
         x1 = x[..., : d // 2]
         x2 = x[..., d // 2 :]

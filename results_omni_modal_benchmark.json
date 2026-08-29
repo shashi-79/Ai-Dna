@@ -1,0 +1,136 @@
+{
+  "total_train_samples": 5130,
+  "total_test_samples": 270,
+  "standard_model": {
+    "tasks": {
+      "Text -> Text (Reasoning)": {
+        "loss": 2.875629186630249,
+        "score": 30.000001192092896,
+        "unit": "Acc %"
+      },
+      "Vision -> Text (Captioning)": {
+        "loss": 1.1139588356018066,
+        "score": 63.333338499069214,
+        "unit": "Acc %"
+      },
+      "Video -> Text (Action)": {
+        "loss": 1.329622745513916,
+        "score": 46.666666865348816,
+        "unit": "Acc %"
+      },
+      "Audio -> Text (Transcription)": {
+        "loss": 1.1566873788833618,
+        "score": 33.33333432674408,
+        "unit": "Acc %"
+      },
+      "Audio -> Audio (Restoration)": {
+        "loss": 0.020778799429535866,
+        "score": 99.0636944770813,
+        "unit": "Cos %"
+      },
+      "Text -> Diffusion (Latent)": {
+        "loss": 0.14791147410869598,
+        "score": 64.36687707901001,
+        "unit": "Cos %"
+      },
+      "Tabular -> Decision (Class)": {
+        "loss": 0.23314286768436432,
+        "score": 96.66666984558105,
+        "unit": "Acc %"
+      }
+    },
+    "train_time_sec": 62.64940905570984
+  },
+  "lora_cppn_model": {
+    "tasks": {
+      "Text -> Text (Reasoning)": {
+        "loss": 2.522289276123047,
+        "score": 40.00000059604645,
+        "unit": "Acc %"
+      },
+      "Vision -> Text (Captioning)": {
+        "loss": 1.1105173826217651,
+        "score": 54.16666865348816,
+        "unit": "Acc %"
+      },
+      "Video -> Text (Action)": {
+        "loss": 1.132225751876831,
+        "score": 65.55555462837219,
+        "unit": "Acc %"
+      },
+      "Audio -> Text (Transcription)": {
+        "loss": 1.1565096378326416,
+        "score": 33.33333432674408,
+        "unit": "Acc %"
+      },
+      "Audio -> Audio (Restoration)": {
+        "loss": 0.041638799011707306,
+        "score": 98.28184247016907,
+        "unit": "Cos %"
+      },
+      "Text -> Diffusion (Latent)": {
+        "loss": 0.13742460310459137,
+        "score": 68.3819055557251,
+        "unit": "Cos %"
+      },
+      "Tabular -> Decision (Class)": {
+        "loss": 0.25934895873069763,
+        "score": 96.66666984558105,
+        "unit": "Acc %"
+      }
+    },
+    "train_time_sec": 67.90811538696289,
+    "slow_clock_time_sec": 756.505464553833,
+    "num_generations": 5,
+    "generational_history": [
+      {
+        "generation": 1,
+        "train_loss": 2.191237438608099,
+        "train_score": 37.79557871597785,
+        "fast_time_sec": 24.91711950302124,
+        "slow_clock_time_sec": 194.29090642929077,
+        "dna_params": 650141,
+        "recon_loss": 0.0
+      },
+      {
+        "generation": 2,
+        "train_loss": 1.466858513561296,
+        "train_score": 51.449237543123736,
+        "fast_time_sec": 11.414129495620728,
+        "slow_clock_time_sec": 143.8908441066742,
+        "dna_params": 678973,
+        "recon_loss": 0.0
+      },
+      {
+        "generation": 3,
+        "train_loss": 1.250369129633462,
+        "train_score": 56.976777977413605,
+        "fast_time_sec": 11.256175518035889,
+        "slow_clock_time_sec": 142.25844550132751,
+        "dna_params": 713949,
+        "recon_loss": 0.0
+      },
+      {
+        "generation": 4,
+        "train_loss": 1.0846617391769902,
+        "train_score": 65.63206285606196,
+        "fast_time_sec": 10.440887928009033,
+        "slow_clock_time_sec": 132.3053297996521,
+        "dna_params": 755069,
+        "recon_loss": 0.0
+      },
+      {
+        "generation": 5,
+        "train_loss": 0.9756102846866405,
+        "train_score": 68.03828643427954,
+        "fast_time_sec": 9.879802942276001,
+        "slow_clock_time_sec": 143.75993871688843,
+        "dna_params": 802333,
+        "recon_loss": 0.0
+      }
+    ]
+  },
+  "compression_ratio": 3.1620225018788957,
+  "std_params": 2536995,
+  "dna_params": 802333
+}

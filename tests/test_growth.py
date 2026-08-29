@@ -57,7 +57,7 @@ def test_growth_engine_phenotype_generation():
     assert "text_encoder.token_emb.weight" in weights
     assert "blocks.0.attn.w_q.weight" in weights
     assert "blocks.0.attn.w_dkv.weight" in weights
-    assert "blocks.0.moe.experts.0.up_proj.weight" in weights
+    assert "blocks.0.moe.experts.0.swiglu.up_proj.weight" in weights or "blocks.0.moe.experts.0.up_proj.weight" in weights
     assert weights["blocks.0.attn.w_q.weight"].shape == (32, 32)
     assert weights["blocks.0.attn.w_dkv.weight"].shape == (8, 32)
 

@@ -1,0 +1,14 @@
+Predicted_Class,Confidence_Pct,Ground_Truth,Status,Reasoning_Attribution
+6,93.65,6,CORRECT,"Feature F_06 demonstrated maximum activation (+4.09 std)"
+
+Class_ID,Probability_Pct
+Class_0,2.66
+Class_1,1.15
+Class_2,0.90
+Class_3,0.47
+Class_4,0.45
+Class_5,0.27
+Class_6,93.65
+Class_7,0.04
+Class_8,0.04
+Class_9,0.38

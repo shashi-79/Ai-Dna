@@ -1,0 +1,3 @@
+TASK: Multi-Step Mathematical Reasoning & Formal Proof
+INPUT PROMPT: Solve step-by-step: What is 34 + 49?
+Input Token Encoding: [10, 84, 11, 99, 12]

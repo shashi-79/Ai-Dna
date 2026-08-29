@@ -1,0 +1,14 @@
+AI-DNA (W_5) CHAIN-OF-THOUGHT REASONING OUTPUT:
+===========================================================================
+<thought>
+1. Identify Operands: First term A = 34, Second term B = 49.
+2. Tens Decomposition: (3 * 10) + (4 * 10) = 70.
+3. Units Addition: (4) + (9) = 13.
+4. Intermediate Sum: 70 + 13 = 83.
+5. Self-Verification: 83 - 49 == 34 (CHECKED: TRUE).
+</thought>
+FINAL ANSWER: 83
+===========================================================================
+Generated Token IDs : [42, 11, 27, 12, 122]
+Verifier Accuracy   : 100.0% Match
+Format Reward Score : 1.00

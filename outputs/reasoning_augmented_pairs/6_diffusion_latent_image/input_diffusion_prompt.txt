@@ -1,0 +1,1 @@
+PROMPT: Synthesize continuous 2D structured harmonic feature field [Class 5]

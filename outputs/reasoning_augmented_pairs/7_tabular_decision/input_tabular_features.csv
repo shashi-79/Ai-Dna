@@ -1,0 +1,17 @@
+Feature_ID,Value,Signal_Type
+F_00,1.2448,Background_Variance
+F_01,0.0901,Background_Variance
+F_02,-0.6325,Background_Variance
+F_03,-0.5868,Background_Variance
+F_04,-0.1364,Background_Variance
+F_05,-0.3667,Background_Variance
+F_06,4.0894,PRIMARY_ACTIVE_SIGNAL
+F_07,-1.9834,Background_Variance
+F_08,-0.9722,Background_Variance
+F_09,-0.3374,Background_Variance
+F_10,0.9886,Background_Variance
+F_11,0.0123,Background_Variance
+F_12,-0.9686,Background_Variance
+F_13,-1.9489,Background_Variance
+F_14,2.3331,Background_Variance
+F_15,0.7852,Background_Variance
