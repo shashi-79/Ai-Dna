@@ -240,16 +240,20 @@ class SlowClockEncoder:
             for k, v in best_params.items():
                 combined_params[f"adapter.{k}"] = v
 
-            # Preserve learned modal parameters (embeddings, prediction head, norm) and exact LoRA residuals
+            modal_keywords = [
+                "text_encoder", "audio_encoder", "vision_encoder", "video_encoder",
+                "embeddings", "ar_head", "cls_head", "diff_head", "audio_head", "tabular_proj",
+                "contrastive_head", "ln_final", "ln1", "ln2"
+            ]
             if phenotype_model is not None:
                 for name, param in phenotype_model.named_parameters():
-                    if any(m in name for m in ["text_encoder", "embeddings", "ar_head", "ln_final", "ln1", "ln2"]):
+                    if any(m in name for m in modal_keywords):
                         combined_params[f"modal.{name}"] = param.clone().detach()
                     elif "lora_" in name:
                         combined_params[f"exact_lora.{name}"] = param.clone().detach()
             elif learned_state_dict:
                 for name, param in learned_state_dict.items():
-                    if any(m in name for m in ["text_encoder", "embeddings", "ar_head", "ln_final", "ln1", "ln2"]):
+                    if any(m in name for m in modal_keywords):
                         combined_params[f"modal.{name}"] = param.clone().detach() if hasattr(param, "clone") else param
                     elif "lora_" in name:
                         combined_params[f"exact_lora.{name}"] = param.clone().detach() if hasattr(param, "clone") else param

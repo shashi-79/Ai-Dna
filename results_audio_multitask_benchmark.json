@@ -1,0 +1,98 @@
+{
+  "total_train_samples": 5700,
+  "total_test_samples": 300,
+  "standard_model": {
+    "datasets": {
+      "Speech Commands (Words)": {
+        "loss": 0.30382854491472244,
+        "acc": 100.0
+      },
+      "ESC-50 (Environment)": {
+        "loss": 1.696624755859375,
+        "acc": 0.0
+      },
+      "GTZAN (Music Genres)": {
+        "loss": 2.5751569271087646,
+        "acc": 0.0
+      },
+      "Synthetic Acoustic Logic": {
+        "loss": 0.004957210272550583,
+        "acc": 100.0
+      }
+    },
+    "train_time_sec": 40.05385732650757
+  },
+  "lora_cppn_model": {
+    "datasets": {
+      "Speech Commands (Words)": {
+        "loss": 0.36254698038101196,
+        "acc": 100.0
+      },
+      "ESC-50 (Environment)": {
+        "loss": 1.618607997894287,
+        "acc": 0.0
+      },
+      "GTZAN (Music Genres)": {
+        "loss": 2.375873327255249,
+        "acc": 0.0
+      },
+      "Synthetic Acoustic Logic": {
+        "loss": 0.0002797786728478968,
+        "acc": 100.0
+      }
+    },
+    "train_time_sec": 49.70834827423096,
+    "slow_clock_time_sec": 540.1376402378082,
+    "num_generations": 5,
+    "generational_history": [
+      {
+        "generation": 1,
+        "train_loss": 0.7428103253715916,
+        "train_acc": 74.7719298245614,
+        "fast_time_sec": 10.266060829162598,
+        "slow_clock_time_sec": 109.46952056884766,
+        "dna_params": 634575,
+        "recon_loss": 0.0
+      },
+      {
+        "generation": 2,
+        "train_loss": 0.722362654669243,
+        "train_acc": 75.0,
+        "fast_time_sec": 9.834810018539429,
+        "slow_clock_time_sec": 106.62712216377258,
+        "dna_params": 663407,
+        "recon_loss": 0.0
+      },
+      {
+        "generation": 3,
+        "train_loss": 0.7161497217730471,
+        "train_acc": 75.0,
+        "fast_time_sec": 9.793162822723389,
+        "slow_clock_time_sec": 107.9623076915741,
+        "dna_params": 698383,
+        "recon_loss": 0.0
+      },
+      {
+        "generation": 4,
+        "train_loss": 0.7169114946064196,
+        "train_acc": 74.91228070175438,
+        "fast_time_sec": 9.853960752487183,
+        "slow_clock_time_sec": 108.65013480186462,
+        "dna_params": 739503,
+        "recon_loss": 0.0
+      },
+      {
+        "generation": 5,
+        "train_loss": 0.7127283358992191,
+        "train_acc": 75.0,
+        "fast_time_sec": 9.96035385131836,
+        "slow_clock_time_sec": 107.42855501174927,
+        "dna_params": 786767,
+        "recon_loss": 0.0
+      }
+    ]
+  },
+  "compression_ratio": 2.5462239773655986,
+  "std_params": 2003285,
+  "dna_params": 786767
+}

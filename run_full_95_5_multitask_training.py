@@ -485,17 +485,24 @@ def run_benchmark():
         prompt_text = f"Problem: {p['prompt']}\nAnswer:"
         prompt_ids = tokenizer.encode(prompt_text).unsqueeze(0).to(device)
 
-        res_s = pipeline_std.generate(prompt_ids, modality="text", max_new_tokens=15, temperature=0.2)
-        out_s = tokenizer.decode(res_s["output"].squeeze(0))[len(prompt_text):].strip().replace("\n", " ")[:35]
+        res_s = pipeline_std.generate(prompt_ids, modality="text", max_new_tokens=20, temperature=0.2)
+        new_tokens_s = res_s["output"].squeeze(0)[prompt_ids.shape[1]:]
+        out_s = tokenizer.decode(new_tokens_s).strip().replace("\n", " ")
 
-        res_l = pipeline_lora.generate(prompt_ids, modality="text", max_new_tokens=15, temperature=0.2)
-        out_l = tokenizer.decode(res_l["output"].squeeze(0))[len(prompt_text):].strip().replace("\n", " ")[:35]
+        res_l = pipeline_lora.generate(prompt_ids, modality="text", max_new_tokens=20, temperature=0.2)
+        new_tokens_l = res_l["output"].squeeze(0)[prompt_ids.shape[1]:]
+        out_l = tokenizer.decode(new_tokens_l).strip().replace("\n", " ")
 
         print(f"\n[Dataset: {p['dataset']}]")
         print(f"  Prompt:   {p['prompt'][:80]}...")
         print(f"  Expected: {p['expected']}")
         print(f"  Standard: {out_s}")
         print(f"  LoRA+DNA: {out_l}")
+
+    # Save Checkpoints
+    torch.save(model_std.state_dict(), "checkpoint_standard.pt")
+    torch.save(current_genotype_lora, "checkpoint_aidna.pt")
+    print("\n[+] Checkpoints saved to checkpoint_standard.pt and checkpoint_aidna.pt", flush=True)
 
     # 6. Parameter and Storage Footprint
     std_params = sum(p.numel() for p in model_std.parameters())

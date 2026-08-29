@@ -1,0 +1,106 @@
+{
+  "total_train_samples": 4750,
+  "total_test_samples": 250,
+  "standard_model": {
+    "datasets": {
+      "Speech Denoising": {
+        "loss": 0.01466192522396644,
+        "mse": 0.010387904631594816,
+        "cosine_fidelity": 99.14519588152567
+      },
+      "Acoustic Inpainting": {
+        "loss": 0.014040261507034302,
+        "mse": 0.009953171014785767,
+        "cosine_fidelity": 99.1825819015503
+      },
+      "Harmonic Super-Resolution": {
+        "loss": 0.013968519866466522,
+        "mse": 0.009906910359859467,
+        "cosine_fidelity": 99.18767809867859
+      },
+      "Synthetic Acoustic Inversion": {
+        "loss": 0.006070489529520273,
+        "mse": 0.004298622254282236,
+        "cosine_fidelity": 99.64562654495239
+      }
+    },
+    "train_time_sec": 35.24633049964905
+  },
+  "lora_cppn_model": {
+    "datasets": {
+      "Speech Denoising": {
+        "loss": 0.015852886562546093,
+        "mse": 0.011306680738925934,
+        "cosine_fidelity": 99.0907589594523
+      },
+      "Acoustic Inpainting": {
+        "loss": 0.015237916260957718,
+        "mse": 0.010832536965608597,
+        "cosine_fidelity": 99.11892414093018
+      },
+      "Harmonic Super-Resolution": {
+        "loss": 0.015402661636471748,
+        "mse": 0.01096414215862751,
+        "cosine_fidelity": 99.11229610443115
+      },
+      "Synthetic Acoustic Inversion": {
+        "loss": 0.0075130769982934,
+        "mse": 0.005332202650606632,
+        "cosine_fidelity": 99.56382513046265
+      }
+    },
+    "train_time_sec": 41.94972229003906,
+    "slow_clock_time_sec": 550.6834540367126,
+    "num_generations": 5,
+    "generational_history": [
+      {
+        "generation": 1,
+        "train_loss": 0.041722108364889494,
+        "train_mse": 0.029277580509452443,
+        "fast_time_sec": 8.656731605529785,
+        "slow_clock_time_sec": 104.95138001441956,
+        "dna_params": 650053,
+        "recon_loss": 0.0
+      },
+      {
+        "generation": 2,
+        "train_loss": 0.021603649658199987,
+        "train_mse": 0.015266683811027753,
+        "fast_time_sec": 7.9526495933532715,
+        "slow_clock_time_sec": 107.98958945274353,
+        "dna_params": 678885,
+        "recon_loss": 0.0
+      },
+      {
+        "generation": 3,
+        "train_loss": 0.01727981728432994,
+        "train_mse": 0.012086191784394415,
+        "fast_time_sec": 8.402601480484009,
+        "slow_clock_time_sec": 113.452960729599,
+        "dna_params": 713861,
+        "recon_loss": 0.0
+      },
+      {
+        "generation": 4,
+        "train_loss": 0.015594507244856734,
+        "train_mse": 0.010834293090591305,
+        "fast_time_sec": 8.498878955841064,
+        "slow_clock_time_sec": 113.37780928611755,
+        "dna_params": 754981,
+        "recon_loss": 0.0
+      },
+      {
+        "generation": 5,
+        "train_loss": 0.015155483672493383,
+        "train_mse": 0.010563065771601703,
+        "fast_time_sec": 8.438860654830933,
+        "slow_clock_time_sec": 110.91171455383301,
+        "dna_params": 802245,
+        "recon_loss": 0.0
+      }
+    ]
+  },
+  "compression_ratio": 2.5163921246003405,
+  "std_params": 2018763,
+  "dna_params": 802245
+}

@@ -22,18 +22,18 @@ from .modules import (
     AutoregressiveDecoderHead,
     DiffusionDecoderHead,
     ClassificationHead,
+    SwiGLU,
 )
 
 
 class SparseMoEExpert(nn.Module):
-    """Individual MoE Feed-Forward Expert."""
+    """Individual MoE Feed-Forward Expert with SwiGLU Gated Activation."""
     def __init__(self, d_model: int, d_hidden: int):
         super().__init__()
-        self.up_proj = nn.Linear(d_model, d_hidden)
-        self.down_proj = nn.Linear(d_hidden, d_model)
+        self.swiglu = SwiGLU(in_features=d_model, hidden_features=d_hidden, out_features=d_model, bias=False)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        return self.down_proj(F.silu(self.up_proj(x)))
+        return self.swiglu(x)
 
 
 class SparseMoELayer(nn.Module):
@@ -185,8 +185,13 @@ class PhenotypeNeuralNetwork(nn.Module):
 
         # 4. Multi-Mode Output Decoders
         self.ar_head = AutoregressiveDecoderHead(self.d_model, arch.vocab_size)
-        self.diff_head = DiffusionDecoderHead(self.d_model, out_dim=self.d_model)
-        self.cls_head = ClassificationHead(self.d_model, num_classes=10)
+        self.diff_head = DiffusionDecoderHead(self.d_model, out_dim=64)
+        self.cls_head = ClassificationHead(self.d_model, num_classes=getattr(arch, "num_classes", 10))
+        self.audio_head = nn.Sequential(
+            nn.LayerNorm(self.d_model),
+            SwiGLU(in_features=self.d_model, hidden_features=self.d_model * 2, out_features=80, bias=True),
+        )
+        self.contrastive_head = ContrastiveAlignmentHead(self.d_model, embed_dim=self.d_model)
 
     def encode_input(self, x: torch.Tensor, modality: str = "text") -> torch.Tensor:
         if modality in ["text", "code", "bio"]:

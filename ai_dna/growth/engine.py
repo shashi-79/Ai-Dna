@@ -165,12 +165,15 @@ class GrowthEngine:
                 cppn, d_model, d_model, layer_idx=l, num_layers=num_layers, matrix_idx=8, **kwargs
             )
 
-            # MoE Experts
+            # MoE Experts with SwiGLU Gated Activation
             for e in range(num_experts):
-                weights[f"blocks.{l}.moe.experts.{e}.up_proj.weight"] = self.grow_weight_matrix(
+                weights[f"blocks.{l}.moe.experts.{e}.swiglu.gate_proj.weight"] = self.grow_weight_matrix(
                     cppn, d_expert_hidden, d_model, layer_idx=l, num_layers=num_layers, expert_idx=e, num_experts=num_experts, matrix_idx=10, **kwargs
                 )
-                weights[f"blocks.{l}.moe.experts.{e}.down_proj.weight"] = self.grow_weight_matrix(
+                weights[f"blocks.{l}.moe.experts.{e}.swiglu.up_proj.weight"] = self.grow_weight_matrix(
+                    cppn, d_expert_hidden, d_model, layer_idx=l, num_layers=num_layers, expert_idx=e, num_experts=num_experts, matrix_idx=11, **kwargs
+                )
+                weights[f"blocks.{l}.moe.experts.{e}.swiglu.down_proj.weight"] = self.grow_weight_matrix(
                     cppn, d_model, d_expert_hidden, layer_idx=l, num_layers=num_layers, expert_idx=e, num_experts=num_experts, matrix_idx=12, **kwargs
                 )
 
@@ -203,12 +206,25 @@ class GrowthEngine:
         # 3. Load weights into the model
         model.load_state_dict(grown_weights, strict=False)
 
-        # 3.2 Load preserved modal parameters (token embeddings, AR head) if present in genotype
+        # 3.2 Load preserved modal parameters (token embeddings, AR head, cls_head) if present in genotype
         if genotype.dna_instinct.genetic_parameters:
             modal_dict = {}
             for k, v in genotype.dna_instinct.genetic_parameters.items():
                 if k.startswith("modal."):
                     modal_dict[k[len("modal."):]] = v.to(self.device)
+            if "cls_head.classifier.1.weight" in modal_dict:
+                ckpt_classes = modal_dict["cls_head.classifier.1.weight"].shape[0]
+                if model.cls_head.classifier[1].out_features != ckpt_classes:
+                    from ..models.modules import ClassificationHead
+                    model.cls_head = ClassificationHead(model.d_model, num_classes=ckpt_classes).to(self.device)
+            if any(k.startswith("audio_head.") for k in modal_dict):
+                if not hasattr(model, "audio_head") or model.audio_head is None:
+                    model.audio_head = nn.Sequential(
+                        nn.LayerNorm(model.d_model),
+                        nn.Linear(model.d_model, model.d_model),
+                        nn.GELU(),
+                        nn.Linear(model.d_model, 80)
+                    ).to(self.device)
             if modal_dict:
                 model.load_state_dict(modal_dict, strict=False)
 

@@ -112,9 +112,10 @@ class ContrastiveAlignmentHead(nn.Module):
     CLIP/BLIP-style cross-modal contrastive alignment projector and loss (Section 6.5).
     Maps pooled modality representations into a common normalized embedding space.
     """
-    def __init__(self, d_model: int, embed_dim: int = 64, temperature: float = 0.07):
+    def __init__(self, d_model: int, embed_dim: Optional[int] = None, temperature: float = 0.07):
         super().__init__()
-        self.proj = nn.Linear(d_model, embed_dim, bias=False)
+        self.embed_dim = embed_dim if embed_dim is not None else d_model
+        self.proj = nn.Linear(d_model, self.embed_dim, bias=False)
         self.temperature = nn.Parameter(torch.tensor(temperature))
 
     def forward(self, h: torch.Tensor) -> torch.Tensor:
@@ -148,8 +149,25 @@ class AutoregressiveDecoderHead(nn.Module):
         return self.proj(h)
 
 
+class SwiGLU(nn.Module):
+    """
+    Swish-Gated Linear Unit (SwiGLU):
+    SwiGLU(x) = (SiLU(x W_gate) * (x W_up)) W_down
+    State-of-the-art bilinear gated activation (LLaMA 3, Mistral, PaLM, DeepSeek-V3).
+    """
+    def __init__(self, in_features: int, hidden_features: int, out_features: Optional[int] = None, bias: bool = False):
+        super().__init__()
+        out_features = out_features or in_features
+        self.gate_proj = nn.Linear(in_features, hidden_features, bias=bias)
+        self.up_proj = nn.Linear(in_features, hidden_features, bias=bias)
+        self.down_proj = nn.Linear(hidden_features, out_features, bias=bias)
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        return self.down_proj(F.silu(self.gate_proj(x)) * self.up_proj(x))
+
+
 class DiffusionDecoderHead(nn.Module):
-    """Predicts continuous denoising vector: \\hat{\\epsilon} = f_theta(x_t, t, h'_t)."""
+    """Predicts continuous denoising vector with SwiGLU: \hat{\epsilon} = f_theta(x_t, t, h'_t)."""
     def __init__(self, d_model: int, out_dim: int = 64, time_emb_dim: int = 32):
         super().__init__()
         self.d_model = d_model
@@ -159,11 +177,7 @@ class DiffusionDecoderHead(nn.Module):
             nn.SiLU(),
             nn.Linear(d_model, d_model),
         )
-        self.net = nn.Sequential(
-            nn.Linear(out_dim + d_model, d_model * 2),
-            nn.GELU(),
-            nn.Linear(d_model * 2, out_dim),
-        )
+        self.net = SwiGLU(in_features=out_dim + d_model, hidden_features=d_model * 2, out_features=out_dim, bias=True)
 
     def get_timestep_embedding(self, timesteps: torch.Tensor) -> torch.Tensor:
         half_dim = self.time_emb_dim // 2
