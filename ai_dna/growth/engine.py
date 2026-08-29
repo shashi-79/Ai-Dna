@@ -200,13 +200,11 @@ class GrowthEngine:
             dna_memory=genotype.dna_memory,
         ).to(self.device)
 
-        # 2. Grow weights from CPPN
+        # 2. Grow and load continuous weights from CPPN
         grown_weights = self.grow_phenotype_weights(genotype)
-
-        # 3. Load weights into the model
         model.load_state_dict(grown_weights, strict=False)
 
-        # 3.2 Load preserved modal parameters (token embeddings, AR head, cls_head) if present in genotype
+        # 3. Load preserved high-precision modal parameters (token embeddings, AR head, cls_head)
         if genotype.dna_instinct.genetic_parameters:
             modal_dict = {}
             for k, v in genotype.dna_instinct.genetic_parameters.items():

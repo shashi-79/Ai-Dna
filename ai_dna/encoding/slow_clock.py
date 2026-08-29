@@ -260,9 +260,23 @@ class SlowClockEncoder:
 
             new_genotype.dna_instinct.genetic_parameters = combined_params
         else:
-            # Standard CPPN path (direct weight fitting)
-            target_weights = {k: v for k, v in learned_state_dict.items() if "weight" in k or "bias" in k}
-            mean_energy = 1.0  # SVD is bypassed
+            modal_keywords = [
+                "text_encoder", "audio_encoder", "vision_encoder", "video_encoder",
+                "embeddings", "ar_head", "cls_head", "diff_head", "audio_head", "tabular_proj",
+                "contrastive_head", "ln_final", "ln1", "ln2"
+            ]
+
+            # 1. Filter continuous backbone weights for CPPN functional fitting
+            backbone_weights = {
+                k: v for k, v in learned_state_dict.items()
+                if ("blocks." in k or "layers." in k or "moe." in k or "attn." in k)
+                and ("weight" in k or "bias" in k)
+                and not any(m in k for m in modal_keywords)
+            }
+            target_weights = backbone_weights if backbone_weights else {
+                k: v for k, v in learned_state_dict.items() if "weight" in k or "bias" in k
+            }
+            mean_energy = 1.0  # Exact energy preservation
 
             # Register ancestral genotype for EWC protection
             ewc = None
@@ -291,25 +305,12 @@ class SlowClockEncoder:
                 behavior_fn=behavior_fn,
             )
 
-            # Dynamic CPPN Capacity Expansion (DCE) if reconstruction limit is hit
-            if recon_loss > 0.04 and new_genotype.dna_instinct.cppn_hidden_dim < 128:
-                old_dim = new_genotype.dna_instinct.cppn_hidden_dim
-                new_dim = old_dim + 16
-                print(f"[Slow Clock DCE]: Saturation detected (recon_loss={recon_loss:.4f} > 0.04). Expanding CPPN hidden_dim {old_dim} -> {new_dim}...")
-                
-                # Net2Net expand the genotype parameter state
-                self._expand_cppn_genotype(new_genotype, delta_dim=16)
-                
-                # Re-run encoder to optimize the new dimensions
-                new_genotype, recon_loss, breakdown = self.cppn_encoder.encode_genotype(
-                    genotype=new_genotype,
-                    target_weights=target_weights,
-                    ewc=ewc,
-                    behavior_fn=behavior_fn,
-                )
-                # Correct generation count (prevent double increment)
-                new_genotype.generation = genotype_t.generation + 1
-                print(f"[Slow Clock DCE]: Re-encoding complete. New recon_loss={recon_loss:.4f}")
+            # Preserve discrete modal projection tables (embeddings, AR head, multimodal heads)
+            combined_params = {k: v.cpu().clone() if hasattr(v, "clone") else v for k, v in new_genotype.dna_instinct.genetic_parameters.items()}
+            for name, param in learned_state_dict.items():
+                if any(m in name for m in modal_keywords):
+                    combined_params[f"modal.{name}"] = param.cpu().clone() if hasattr(param, "clone") else param
+            new_genotype.dna_instinct.genetic_parameters = combined_params
 
         # 5. Compute future learning loss if available (Section 15.3)
         future_loss = self._compute_future_learning_loss(

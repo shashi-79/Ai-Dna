@@ -1,0 +1,8 @@
+=== Math Problem ===
+Calculate the integral of e^(-x^2) from -infinity to infinity.
+
+=== Step-Level Reasoning Tokens ===
+[429, 429, 429, 429, 429, 429, 429, 429, 429]
+
+=== Solution Summary ===
+sqrt(pi) via Gaussian polar integral.
