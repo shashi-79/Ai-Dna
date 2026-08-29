@@ -57,17 +57,18 @@ class GRPOTrainer:
         top_k: int = 50,
     ) -> Tuple[torch.Tensor, torch.Tensor]:
         """
-        Samples G candidate completions from current policy.
+        Samples G candidate completions per prompt from current policy.
+        Supports arbitrary batch size B >= 1 via repeat_interleave.
         Returns:
-            sampled_tokens: (G, prompt_len + gen_len)
-            old_log_probs: (G, gen_len)
+            sampled_tokens: (B * G, prompt_len + gen_len)
+            old_log_probs: (B * G, gen_len)
         """
         self.model.eval()
         B = prompt_tokens.size(0)
         G = self.group_size
         
-        # Repeat prompt G times: (G, S_prompt)
-        curr_tokens = prompt_tokens.repeat(G, 1).to(self.device)
+        # Repeat prompt G times per batch element: (B * G, S_prompt)
+        curr_tokens = prompt_tokens.repeat_interleave(G, dim=0).to(self.device)
         prompt_len = prompt_tokens.size(1)
         gen_log_probs = []
 
@@ -88,7 +89,7 @@ class GRPOTrainer:
                 gen_log_probs.append(log_prob)
                 curr_tokens = torch.cat([curr_tokens, next_token], dim=1)
 
-        old_log_probs = torch.cat(gen_log_probs, dim=1)  # (G, max_gen_len)
+        old_log_probs = torch.cat(gen_log_probs, dim=1)  # (B * G, max_gen_len)
         return curr_tokens, old_log_probs
 
     def compute_group_advantages(
@@ -98,42 +99,95 @@ class GRPOTrainer:
         ground_truth_answers: List[str],
     ) -> Tuple[torch.Tensor, Dict[str, float]]:
         """
-        Evaluates candidate completions with verifier and normalizes rewards:
-        A_i = (R_i - mean(R)) / (std(R) + eps)
+        Evaluates candidate completions with verifier and normalizes rewards intra-group:
+        A_{b, i} = (R_{b, i} - mean(R_b)) / (std(R_b) + eps)
+        Supports multiple prompt groups (B >= 1) each with G candidates.
         """
-        G = candidate_tokens.size(0)
-        rewards = []
+        N = candidate_tokens.size(0)
+        G = self.group_size
+        B = max(1, N // G)
+        
+        all_advantages = []
+        all_rewards = []
         acc_scores = []
         format_scores = []
 
-        for i in range(G):
-            gen_tokens = candidate_tokens[i, prompt_len:].cpu().tolist()
-            # Convert token IDs to text string representation
-            gen_text = f"<thought> step: {' '.join(str(t) for t in gen_tokens[:4])} </thought> {gen_tokens[-1]}"
-            gt_ans = ground_truth_answers[min(i, len(ground_truth_answers) - 1)]
+        for b in range(B):
+            group_rewards = []
+            gt_ans = ground_truth_answers[min(b, len(ground_truth_answers) - 1)]
+            
+            for i in range(G):
+                idx = b * G + i
+                gen_tokens = candidate_tokens[idx, prompt_len:].cpu().tolist()
+                # Convert token IDs to text string representation
+                gen_text = f"<thought> step: {' '.join(str(t) for t in gen_tokens[:4])} </thought> {gen_tokens[-1]}"
 
-            score_dict = self.verifier.compute_composite_reward(
-                generated_text=gen_text,
-                ground_truth_answer=gt_ans,
-                token_length=len(gen_tokens),
-            )
-            rewards.append(score_dict["reward_total"])
-            acc_scores.append(score_dict["reward_accuracy"])
-            format_scores.append(score_dict["reward_format"])
+                score_dict = self.verifier.compute_composite_reward(
+                    generated_text=gen_text,
+                    ground_truth_answer=gt_ans,
+                    token_length=len(gen_tokens),
+                )
+                group_rewards.append(score_dict["reward_total"])
+                acc_scores.append(score_dict["reward_accuracy"])
+                format_scores.append(score_dict["reward_format"])
 
-        rewards_tensor = torch.tensor(rewards, dtype=torch.float32, device=self.device)
-        mean_r = rewards_tensor.mean()
-        std_r = rewards_tensor.std() + 1e-6
+            group_r_tensor = torch.tensor(group_rewards, dtype=torch.float32, device=self.device)
+            all_rewards.extend(group_rewards)
+            
+            mean_b = group_r_tensor.mean()
+            std_b = group_r_tensor.std() + 1e-6
+            adv_b = (group_r_tensor - mean_b) / std_b
+            all_advantages.append(adv_b)
 
-        # Normalized Group Advantages
-        advantages = (rewards_tensor - mean_r) / std_r
+        advantages = torch.cat(all_advantages, dim=0)
 
         metrics = {
-            "mean_reward": mean_r.item(),
+            "mean_reward": float(sum(all_rewards) / max(1, len(all_rewards))),
             "mean_accuracy": float(sum(acc_scores) / max(1, len(acc_scores))),
             "mean_format": float(sum(format_scores) / max(1, len(format_scores))),
         }
         return advantages, metrics
+
+    def compute_step_level_advantages(
+        self,
+        candidate_tokens: torch.Tensor,
+        prompt_len: int,
+        ground_truth_answers: List[str],
+    ) -> Tuple[torch.Tensor, Dict[str, float]]:
+        """
+        Process-Supervised Step-Level GRPO:
+        Normalizes advantages across step boundaries for fine-grained credit assignment.
+        """
+        N = candidate_tokens.size(0)
+        G = self.group_size
+        B = max(1, N // G)
+        all_step_advs = []
+        all_rewards = []
+
+        for b in range(B):
+            group_step_rewards = []
+            gt_ans = ground_truth_answers[min(b, len(ground_truth_answers) - 1)]
+
+            for i in range(G):
+                idx = b * G + i
+                gen_tokens = candidate_tokens[idx, prompt_len:].cpu().tolist()
+                gen_text = f"<thought> step: {' '.join(str(t) for t in gen_tokens[:4])} </thought> {gen_tokens[-1]}"
+                step_rs = self.verifier.compute_step_level_rewards(gen_text, gt_ans)
+                step_tot = float(sum(step_rs))
+                group_step_rewards.append(step_tot)
+                all_rewards.append(step_tot)
+
+            g_tensor = torch.tensor(group_step_rewards, dtype=torch.float32, device=self.device)
+            mean_g = g_tensor.mean()
+            std_g = g_tensor.std() + 1e-6
+            all_step_advs.append((g_tensor - mean_g) / std_g)
+
+        advantages = torch.cat(all_step_advs, dim=0)
+        metrics = {
+            "mean_step_reward": float(sum(all_rewards) / max(1, len(all_rewards))),
+        }
+        return advantages, metrics
+
 
     def step_grpo_update(
         self,

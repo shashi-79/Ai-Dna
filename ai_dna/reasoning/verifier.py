@@ -93,3 +93,30 @@ class ReasoningVerifier:
             "reward_format": r_format,
             "len_penalty": len_penalty,
         }
+
+    def compute_step_level_rewards(
+        self,
+        generated_text: str,
+        ground_truth_answer: str,
+    ) -> List[float]:
+        """
+        Process-Supervised Step-Level PRM reward computation:
+        Splits reasoning text into thought steps and evaluates incremental reward deltas.
+        """
+        steps = re.findall(r"<thought>(.*?)</thought>", generated_text, flags=re.DOTALL)
+        if not steps:
+            total = self.compute_composite_reward(generated_text, ground_truth_answer, len(generated_text))["reward_total"]
+            return [total]
+
+        step_rewards = []
+        for i, step in enumerate(steps):
+            step_clean = step.strip()
+            has_math = bool(re.search(r"[-+]?\d*\.?\d+", step_clean))
+            step_r = (0.2 if len(step_clean) > 5 else 0.0) + (0.3 if has_math else 0.1)
+            step_rewards.append(step_r)
+
+        # Add final answer verification reward to the terminal step
+        final_acc = self.verify_math_solution(generated_text, ground_truth_answer)
+        step_rewards[-1] += self.accuracy_reward_weight * final_acc
+        return step_rewards
+

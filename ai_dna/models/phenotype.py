@@ -38,14 +38,27 @@ class SparseMoEExpert(nn.Module):
 
 class SparseMoELayer(nn.Module):
     """
-    Sparse MoE Layer with Top-K Noisy Gating.
+    Sparse MoE Layer with Top-K Noisy Gating and DeepSeek-V3 Style Shared Base Expert.
     Integrates hardware-aware token grouping and Triton GPU acceleration.
     """
-    def __init__(self, d_model: int, num_experts: int, d_expert_hidden: int, router: GenerativeSparseRouter, use_hardware_executor: bool = True):
+    def __init__(
+        self,
+        d_model: int,
+        num_experts: int,
+        d_expert_hidden: int,
+        router: GenerativeSparseRouter,
+        use_hardware_executor: bool = True,
+        use_shared_expert: bool = True,
+    ):
         super().__init__()
         self.d_model = d_model
         self.num_experts = num_experts
         self.router = router
+        self.use_shared_expert = use_shared_expert
+
+        # DeepSeek-V3 Style Shared Base Expert for universal cross-modal representations
+        self.shared_expert = SparseMoEExpert(d_model, d_expert_hidden) if use_shared_expert else None
+
         self.experts = nn.ModuleList([
             SparseMoEExpert(d_model, d_expert_hidden) for _ in range(num_experts)
         ])
@@ -76,6 +89,10 @@ class SparseMoELayer(nn.Module):
                 if (e_mask > 0).any():
                     expert_out = self.experts[e](h)
                     out = out + (expert_out * e_prob * e_mask)
+
+        # DeepSeek-V3 Style: Add Shared Base Expert output to routed MoE output
+        if self.shared_expert is not None:
+            out = out + self.shared_expert(h)
 
         return out, aux_loss
 
@@ -192,30 +209,46 @@ class PhenotypeNeuralNetwork(nn.Module):
             SwiGLU(in_features=self.d_model, hidden_features=self.d_model * 2, out_features=80, bias=True),
         )
         self.contrastive_head = ContrastiveAlignmentHead(self.d_model, embed_dim=self.d_model)
+        
+        # 5. Modality Segment Embeddings (for cross-attention disambiguation in unified token streams)
+        self.modality_embeddings = nn.Embedding(8, self.d_model)
+        nn.init.normal_(self.modality_embeddings.weight, std=0.02)
+        self.modality_map = {
+            "text": 0, "vision": 1, "audio": 2, "video": 3,
+            "tabular": 4, "scientific": 5, "code": 6, "bio": 7
+        }
 
-    def encode_input(self, x: torch.Tensor, modality: str = "text") -> torch.Tensor:
+    def encode_input(self, x: torch.Tensor, modality: str = "text", add_modality_emb: bool = False) -> torch.Tensor:
         if modality in ["text", "code", "bio"]:
             if x.dim() == 1:
                 x = x.unsqueeze(0)
-            return self.text_encoder(x)
+            h = self.text_encoder(x)
         elif modality == "vision":
-            return self.vision_encoder(x)
+            h = self.vision_encoder(x)
         elif modality == "audio":
-            return self.audio_encoder(x)
+            h = self.audio_encoder(x)
         elif modality == "video":
-            return self.video_encoder(x)
+            h = self.video_encoder(x)
         elif modality in ["tabular", "scientific"] or x.dim() == 2:
             if x.dim() == 2:
                 if x.shape[-1] != self.tabular_proj.in_features:
                     self.tabular_proj = nn.Linear(x.shape[-1], self.d_model).to(x.device)
-                return self.tabular_proj(x).unsqueeze(1)
+                h = self.tabular_proj(x).unsqueeze(1)
             elif x.dim() == 3:
-                return x
-            return x.unsqueeze(1)
+                h = x
+            else:
+                h = x.unsqueeze(1)
         else:
             if x.dim() == 2:
-                return x.unsqueeze(1)
-            return x
+                h = x.unsqueeze(1)
+            else:
+                h = x
+
+        if add_modality_emb:
+            mod_id = torch.tensor(self.modality_map.get(modality, 0), device=h.device)
+            h = h + self.modality_embeddings(mod_id)
+
+        return h
 
     def forward(
         self,
@@ -261,17 +294,18 @@ class PhenotypeNeuralNetwork(nn.Module):
     ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, Dict[str, float]]:
         """
         Processes a heterogeneous Unified Multimodal Token Stream [Text | Vision | Audio | Video]
-        through the shared transformer substrate and genotypic MoE router (idea.md Section 6.7).
+        through the shared transformer substrate and genotypic MoE router (idea.md Section 6.7),
+        differentiated by learned modality segment indicators.
         """
         token_streams = []
         if text_inputs is not None:
-            token_streams.append(self.encode_input(text_inputs, modality="text"))
+            token_streams.append(self.encode_input(text_inputs, modality="text", add_modality_emb=True))
         if vision_inputs is not None:
-            token_streams.append(self.encode_input(vision_inputs, modality="vision"))
+            token_streams.append(self.encode_input(vision_inputs, modality="vision", add_modality_emb=True))
         if audio_inputs is not None:
-            token_streams.append(self.encode_input(audio_inputs, modality="audio"))
+            token_streams.append(self.encode_input(audio_inputs, modality="audio", add_modality_emb=True))
         if video_inputs is not None:
-            token_streams.append(self.encode_input(video_inputs, modality="video"))
+            token_streams.append(self.encode_input(video_inputs, modality="video", add_modality_emb=True))
 
         if not token_streams:
             raise ValueError("forward_multimodal requires at least one sensory input.")

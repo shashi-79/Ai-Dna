@@ -39,6 +39,7 @@ class DNAInstinct:
     genetic_parameters: Dict[str, torch.Tensor] = field(default_factory=dict)
     singular_energy_threshold: float = 0.85
     instinct_rank_ratio: float = 0.25
+    epigenetic_mask: Optional[Dict[str, torch.Tensor]] = None  # Epigenetic gene silencing/scaling mask
     innovation_id: int = 2
 
 

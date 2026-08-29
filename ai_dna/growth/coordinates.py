@@ -148,3 +148,35 @@ class SubstrateCoordinateGenerator:
         else:
             coords = torch.stack([zeros, zeros, x, zeros, layer_col][:coord_dim], dim=-1)
         return coords
+
+    @staticmethod
+    def apply_rff_embedding(
+        coords: torch.Tensor,
+        num_fourier_feats: int = 16,
+        sigma: float = 1.0,
+        seed: int = 42,
+    ) -> torch.Tensor:
+        """
+        Random Fourier Features (RFF) / SIREN high-frequency coordinate embedding.
+        Projects raw coordinates c into gamma(c) = [cos(2*pi*B*c), sin(2*pi*B*c)].
+        Overcomes spectral bias of standard MLPs for high-frequency weight boundaries.
+        """
+        in_dim = coords.shape[-1]
+        generator = torch.Generator().manual_seed(seed)
+        B_mat = torch.randn(in_dim, num_fourier_feats, generator=generator, device=coords.device) * sigma
+        
+        proj = 2.0 * 3.141592653589793 * torch.matmul(coords, B_mat)
+        return torch.cat([torch.cos(proj), torch.sin(proj)], dim=-1)
+
+    @staticmethod
+    def compute_manifold_isomorphism_order(dim: int, device: Optional[torch.device] = None) -> torch.Tensor:
+        """
+        Computes 1D Graph Laplacian spectral embedding order for topologically
+        aligning homologous neurons across diverse layer sizes.
+        """
+        if device is None:
+            device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        # Continuous spectral eigenmap coordinates in [-1, 1]
+        t = torch.linspace(0.0, 3.141592653589793, dim, device=device)
+        return -torch.cos(t)
+

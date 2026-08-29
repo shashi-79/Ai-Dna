@@ -34,17 +34,30 @@ class CPPNNetwork(nn.Module):
     CPPN Neural Network acting as the developmental kernel G_D.
     Input: coordinate tensor (..., in_features)
     Output: scalar weight (..., 1) or vector representation
+    Supports optional Random Fourier Feature (RFF) / SIREN coordinate projections.
     """
-    def __init__(self, in_features: int = 32, hidden_dim: int = 32, num_layers: int = 3, out_features: int = 1):
+    def __init__(
+        self,
+        in_features: int = 32,
+        hidden_dim: int = 32,
+        num_layers: int = 3,
+        out_features: int = 1,
+        use_rff: bool = False,
+        rff_features: int = 16,
+    ):
         super().__init__()
         self.in_features = in_features
         self.hidden_dim = hidden_dim
         self.num_layers = num_layers
         self.out_features = out_features
+        self.use_rff = use_rff
+        self.rff_features = rff_features
+
+        actual_in_dim = (rff_features * 2) if use_rff else in_features
 
         layers = []
         # Input projection
-        layers.append(nn.Linear(in_features, hidden_dim))
+        layers.append(nn.Linear(actual_in_dim, hidden_dim))
         layers.append(CPPNActivation())
 
         # Hidden layers
@@ -61,6 +74,12 @@ class CPPNNetwork(nn.Module):
         coords: Tensor of shape (..., in_features)
         returns: Tensor of shape (..., out_features)
         """
+        if self.use_rff:
+            from .coordinates import SubstrateCoordinateGenerator
+            coords = SubstrateCoordinateGenerator.apply_rff_embedding(
+                coords, num_fourier_feats=self.rff_features
+            )
+
         features = self.backbone(coords)
         out = self.out_proj(features)
         # Scaled tanh for zero-centered stable weight ranges

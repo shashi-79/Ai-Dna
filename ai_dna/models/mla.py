@@ -31,6 +31,10 @@ class MultiHeadLatentAttention(nn.Module):
         self.o_proj = nn.Linear(d_model, d_model, bias=False)
         self.rope = RoPE(self.d_head, rope_base)
         
+        # Query-Key Normalization (QK-Norm) to stabilize attention on long multimodal contexts
+        self.q_norm = nn.LayerNorm(self.d_head)
+        self.k_norm = nn.LayerNorm(self.d_head)
+        
     def forward(self, x, mask=None, kv_cache=None, is_causal=False):
         # x: [B, S, D]
         B, S, _ = x.shape
@@ -49,7 +53,9 @@ class MultiHeadLatentAttention(nn.Module):
         k = k.view(B, S, self.num_heads, self.d_head).transpose(1, 2) # [B, H, S, D_h]
         v = v.view(B, S, self.num_heads, self.d_head).transpose(1, 2) # [B, H, S, D_h]
         
-        # 4. Apply RoPE to Q and K
+        # 4. Apply QK-Norm and RoPE to Q and K
+        q = self.q_norm(q)
+        k = self.k_norm(k)
         q, k = self.rope(q, k)
         
         # Optional: KV cache concatenation would happen here in autoregressive mode

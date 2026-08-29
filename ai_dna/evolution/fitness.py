@@ -191,3 +191,55 @@ class GenerationalScalingTracker:
             return []
         se_values = [d["sample_efficiency"] for d in self.generation_data]
         return [se_values[i+1] - se_values[i] for i in range(len(se_values) - 1)]
+
+
+class MapElitesArchive:
+    """
+    Multi-dimensional Quality-Diversity (QD) MAP-Elites Evolutionary Archive.
+    Maintains a 2D behavioral niche grid (e.g., Reasoning Capability vs Parameter Compression Ratio).
+    Preserves diverse elite genotypes across behavioral dimensions to prevent evolutionary collapse.
+    """
+    def __init__(
+        self,
+        dim_x_bins: int = 10,
+        dim_y_bins: int = 10,
+        x_range: Tuple[float, float] = (0.0, 1.0),   # e.g. Reasoning / Task Accuracy
+        y_range: Tuple[float, float] = (1.0, 10.0),  # e.g. Compression Ratio C_R
+    ):
+        self.dim_x_bins = dim_x_bins
+        self.dim_y_bins = dim_y_bins
+        self.x_range = x_range
+        self.y_range = y_range
+        self.grid: Dict[Tuple[int, int], Tuple[Genotype, float]] = {}
+
+    def _get_cell_coords(self, behavior_x: float, behavior_y: float) -> Tuple[int, int]:
+        """Maps continuous behavior coordinates into discrete grid cell indices."""
+        norm_x = (behavior_x - self.x_range[0]) / max(1e-6, self.x_range[1] - self.x_range[0])
+        norm_y = (behavior_y - self.y_range[0]) / max(1e-6, self.y_range[1] - self.y_range[0])
+        cell_x = int(math.floor(norm_x * self.dim_x_bins))
+        cell_y = int(math.floor(norm_y * self.dim_y_bins))
+        cell_x = max(0, min(self.dim_x_bins - 1, cell_x))
+        cell_y = max(0, min(self.dim_y_bins - 1, cell_y))
+        return (cell_x, cell_y)
+
+    def add_or_replace(self, genotype: Genotype, fitness: float, behavior_x: float, behavior_y: float) -> bool:
+        """
+        Attempts to insert genotype into its behavioral niche cell.
+        Replaces occupant only if candidate fitness is superior.
+        Returns True if genotype was added/replaced as new cell elite.
+        """
+        cell = self._get_cell_coords(behavior_x, behavior_y)
+        if cell not in self.grid or fitness > self.grid[cell][1]:
+            self.grid[cell] = (genotype, fitness)
+            return True
+        return False
+
+    def get_elites(self) -> List[Genotype]:
+        """Returns all current elite genotypes stored across the behavioral grid."""
+        return [g for g, _ in self.grid.values()]
+
+    def coverage(self) -> float:
+        """Returns archive niche coverage percentage in [0.0, 1.0]."""
+        total_cells = self.dim_x_bins * self.dim_y_bins
+        return len(self.grid) / max(1, total_cells)
+
