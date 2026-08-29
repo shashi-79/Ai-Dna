@@ -343,8 +343,9 @@ class SlowClockEncoder:
     def extract_calibration_anchors(self, phenotype_model: nn.Module, K: int = 8) -> Dict[str, torch.Tensor]:
         """
         Extracts high-density calibration anchors for Text, Vision, and Audio modalities
-        directly from the trained phenotype model using SVD decomposition of projection layers.
+        directly from the trained phenotype model using exact cuSOLVER SVD with canonical sign stabilization.
         """
+        from ..kernels.hybrid_svd import exact_cusolver_svd
         anchors = {}
         with torch.no_grad():
             # Get output head weights for target logit mapping
@@ -354,8 +355,8 @@ class SlowClockEncoder:
             # 1. Text Modality Anchors (from Token Embedding)
             if hasattr(phenotype_model, "text_encoder") and hasattr(phenotype_model.text_encoder, "token_emb"):
                 w_text = phenotype_model.text_encoder.token_emb.weight # [vocab_size, d_model]
-                # SVD of embedding space to get principal components
-                U, S, V = torch.svd(w_text)
+                # Canonical cuSOLVER SVD of embedding space to get principal components
+                U, S, V, _ = exact_cusolver_svd(w_text, rank=K, apply_canonical_signs=True)
                 a_text = V[:, :K].t() * S[:K].unsqueeze(-1) # [K, d_model]
                 y_text = F.softmax(a_text @ w_out.t(), dim=-1) # [K, vocab_size]
                 anchors["text"] = torch.cat([a_text, y_text], dim=-1) # Pack keys and targets together
@@ -363,7 +364,7 @@ class SlowClockEncoder:
             # 2. Vision Modality Anchors (from Patch Projection)
             if hasattr(phenotype_model, "vision_encoder") and hasattr(phenotype_model.vision_encoder, "patch_proj"):
                 w_vis = phenotype_model.vision_encoder.patch_proj.weight # [d_model, patch_dim]
-                U, S, V = torch.svd(w_vis.t())
+                U, S, V, _ = exact_cusolver_svd(w_vis.t(), rank=K, apply_canonical_signs=True)
                 a_vis = V[:, :K].t() * S[:K].unsqueeze(-1)
                 y_vis = F.softmax(a_vis @ w_out.t(), dim=-1)
                 anchors["vision"] = torch.cat([a_vis, y_vis], dim=-1)
@@ -371,7 +372,7 @@ class SlowClockEncoder:
             # 3. Audio Modality Anchors (from Audio Projection)
             if hasattr(phenotype_model, "audio_encoder") and hasattr(phenotype_model.audio_encoder, "proj"):
                 w_aud = phenotype_model.audio_encoder.proj.weight # [d_model, in_dim]
-                U, S, V = torch.svd(w_aud.t())
+                U, S, V, _ = exact_cusolver_svd(w_aud.t(), rank=K, apply_canonical_signs=True)
                 a_aud = V[:, :K].t() * S[:K].unsqueeze(-1)
                 y_aud = F.softmax(a_aud @ w_out.t(), dim=-1)
                 anchors["audio"] = torch.cat([a_aud, y_aud], dim=-1)

@@ -219,7 +219,7 @@ class PhenotypeNeuralNetwork(nn.Module):
         }
 
     def encode_input(self, x: torch.Tensor, modality: str = "text", add_modality_emb: bool = False) -> torch.Tensor:
-        if modality in ["text", "code", "bio"]:
+        if modality in ["text", "code", "bio", "math"] or x.dtype in [torch.long, torch.int64, torch.int32]:
             if x.dim() == 1:
                 x = x.unsqueeze(0)
             h = self.text_encoder(x)
