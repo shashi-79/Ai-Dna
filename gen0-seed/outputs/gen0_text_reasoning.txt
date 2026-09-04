@@ -1,8 +1,0 @@
-=== Prompt ===
-Explain the fundamental principle of AI-DNA continuous weight morphogenesis.
-
-=== Generated Token IDs (Top-p 0.9, T 0.7) ===
-[429, 202, 488, 92, 321, 355, 304, 440, 264, 263, 184, 103, 172, 160, 34, 246]
-
-=== Status ===
-Generated successfully from Gen-0 DNA.

@@ -305,11 +305,13 @@ class SlowClockEncoder:
                 behavior_fn=behavior_fn,
             )
 
-            # Preserve discrete modal projection tables (embeddings, AR head, multimodal heads)
+            # Preserve discrete modal projection tables and exact raw parameter weights (No SVD)
             combined_params = {k: v.cpu().clone() if hasattr(v, "clone") else v for k, v in new_genotype.dna_instinct.genetic_parameters.items()}
             for name, param in learned_state_dict.items():
-                if any(m in name for m in modal_keywords):
+                if any(m in name for m in modal_keywords) or param.ndim <= 1:
                     combined_params[f"modal.{name}"] = param.cpu().clone() if hasattr(param, "clone") else param
+                else:
+                    combined_params[f"raw.{name}"] = param.cpu().clone() if hasattr(param, "clone") else param
             new_genotype.dna_instinct.genetic_parameters = combined_params
 
         # 5. Compute future learning loss if available (Section 15.3)
@@ -356,25 +358,21 @@ class SlowClockEncoder:
             # 1. Text Modality Anchors (from Token Embedding)
             if hasattr(phenotype_model, "text_encoder") and hasattr(phenotype_model.text_encoder, "token_emb"):
                 w_text = phenotype_model.text_encoder.token_emb.weight # [vocab_size, d_model]
-                # Canonical cuSOLVER SVD of embedding space to get principal components
-                U, S, V, _ = exact_cusolver_svd(w_text, rank=K, apply_canonical_signs=True)
-                a_text = V[:, :K].t() * S[:K].unsqueeze(-1) # [K, d_model]
+                a_text = w_text[:K, :] # [K, d_model]
                 y_text = F.softmax(a_text @ w_out.t(), dim=-1) # [K, vocab_size]
                 anchors["text"] = torch.cat([a_text, y_text], dim=-1) # Pack keys and targets together
 
             # 2. Vision Modality Anchors (from Patch Projection)
             if hasattr(phenotype_model, "vision_encoder") and hasattr(phenotype_model.vision_encoder, "patch_proj"):
                 w_vis = phenotype_model.vision_encoder.patch_proj.weight # [d_model, patch_dim]
-                U, S, V, _ = exact_cusolver_svd(w_vis.t(), rank=K, apply_canonical_signs=True)
-                a_vis = V[:, :K].t() * S[:K].unsqueeze(-1)
+                a_vis = w_vis.t()[:K, :]
                 y_vis = F.softmax(a_vis @ w_out.t(), dim=-1)
                 anchors["vision"] = torch.cat([a_vis, y_vis], dim=-1)
 
             # 3. Audio Modality Anchors (from Audio Projection)
             if hasattr(phenotype_model, "audio_encoder") and hasattr(phenotype_model.audio_encoder, "proj"):
                 w_aud = phenotype_model.audio_encoder.proj.weight # [d_model, in_dim]
-                U, S, V, _ = exact_cusolver_svd(w_aud.t(), rank=K, apply_canonical_signs=True)
-                a_aud = V[:, :K].t() * S[:K].unsqueeze(-1)
+                a_aud = w_aud.t()[:K, :]
                 y_aud = F.softmax(a_aud @ w_out.t(), dim=-1)
                 anchors["audio"] = torch.cat([a_aud, y_aud], dim=-1)
 

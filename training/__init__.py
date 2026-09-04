@@ -1,15 +1,6 @@
 """
-Failproof Multi-Modal Streaming Training Suite.
-Provides zero-disk streaming dataset managers, stateful atomic checkpointing,
-and resilient multi-modal training loops.
+Backward-compatibility proxy for ai_dna.training.
+All training managers and modules have been consolidated into `ai_dna.training`.
 """
 
-from .dataset_manager import StreamDatasetManager
-from .checkpoint_manager import FailproofCheckpointManager
-from .trainer import MultiModalStreamingTrainer
-
-__all__ = [
-    "StreamDatasetManager",
-    "FailproofCheckpointManager",
-    "MultiModalStreamingTrainer",
-]
+from ai_dna.training import *

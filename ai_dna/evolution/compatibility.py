@@ -34,8 +34,10 @@ class CompatibilityChecker:
         head_diff = abs(a1.num_heads - a2.num_heads) / max(a1.num_heads, a2.num_heads)
         c_arch = max(0.0, 1.0 - (layer_diff * 0.6 + head_diff * 0.4))
 
-        # 2. Dimension compatibility: d_model and coord_dim
-        dim_match = 1.0 if a1.d_model == a2.d_model else 0.0
+        # 2. Dimension compatibility: d_model ratio and coord_dim
+        # Use min/max ratio for soft cross-modal dimension compatibility
+        # (e.g., d_model 384 vs 576 gives 0.67 instead of hard 0.0)
+        dim_match = min(a1.d_model, a2.d_model) / max(a1.d_model, a2.d_model, 1)
         coord_match = 1.0 if a1.coord_dim == a2.coord_dim else 0.0
         c_dim = 0.7 * dim_match + 0.3 * coord_match
 
@@ -43,7 +45,7 @@ class CompatibilityChecker:
         c_modality = 1.0 if a1.vocab_size == a2.vocab_size else 0.5
 
         overall = 0.4 * c_arch + 0.4 * c_dim + 0.2 * c_modality
-        is_compat = overall >= min_score and dim_match > 0.0
+        is_compat = overall >= min_score
 
         reason = "Compatible" if is_compat else f"Score {overall:.2f} < threshold {min_score:.2f} or dimension mismatch"
         return CompatibilityScore(

@@ -1,0 +1,73 @@
+"""
+AI-DNA Multi-Modal Data Ingestion, Processing & Streaming Package.
+Provides dedicated loaders and streaming processors for Text, Audio, Vision, Video,
+Tabular, Bio, Code, and Multi-Modal datasets.
+"""
+
+from .pipeline import (
+    DataType,
+    CustomTextTokenizer,
+    CustomBioTokenizer,
+    CustomAudioProcessor,
+    CustomVisionProcessor,
+    CustomVideoProcessor,
+    HuggingFaceEngine,
+    HuggingFaceWebStreamer,
+    HuggingFaceTextDataset,
+    HuggingFaceVisionDataset,
+    HuggingFaceAudioDataset,
+    HuggingFaceVideoDataset,
+    HuggingFaceCodeDataset,
+    HuggingFaceBioDataset,
+    HuggingFaceTabularDataset,
+    HuggingFaceMultiModalDataset,
+    AIDNABenchmarkDataset,
+    tqdm,
+    get_text_dataset,
+    get_vision_dataset,
+    get_audio_dataset,
+    get_video_dataset,
+    get_code_dataset,
+    get_bio_dataset,
+    get_tabular_dataset,
+    get_multimodal_dataset,
+    get_dataset,
+    get_dataloader,
+    load_ai_dna_benchmarks,
+)
+
+# Alias for semantic clarity
+Modality = DataType
+
+__all__ = [
+    "DataType",
+    "Modality",
+    "CustomTextTokenizer",
+    "CustomBioTokenizer",
+    "CustomAudioProcessor",
+    "CustomVisionProcessor",
+    "CustomVideoProcessor",
+    "HuggingFaceEngine",
+    "HuggingFaceWebStreamer",
+    "HuggingFaceTextDataset",
+    "HuggingFaceVisionDataset",
+    "HuggingFaceAudioDataset",
+    "HuggingFaceVideoDataset",
+    "HuggingFaceCodeDataset",
+    "HuggingFaceBioDataset",
+    "HuggingFaceTabularDataset",
+    "HuggingFaceMultiModalDataset",
+    "AIDNABenchmarkDataset",
+    "tqdm",
+    "get_text_dataset",
+    "get_vision_dataset",
+    "get_audio_dataset",
+    "get_video_dataset",
+    "get_code_dataset",
+    "get_bio_dataset",
+    "get_tabular_dataset",
+    "get_multimodal_dataset",
+    "get_dataset",
+    "get_dataloader",
+    "load_ai_dna_benchmarks",
+]

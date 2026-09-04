@@ -77,22 +77,44 @@ class GrowthEngine:
         Grows a 2D weight matrix W_ij = G(D, C_ij) of shape (out_features, in_features)
         using the CPPN genotype decoder with unique matrix coordinate index.
         """
-        coords = SubstrateCoordinateGenerator.get_2d_weight_coordinates(
-            out_features=out_features,
-            in_features=in_features,
-            layer_idx=layer_idx,
-            num_layers=num_layers,
-            expert_idx=expert_idx,
-            num_experts=num_experts,
-            matrix_idx=matrix_idx,
-            device=self.device,
-            coord_dim=coord_dim,
-        )
-        with torch.no_grad():
-            raw_weights = cppn(coords).squeeze(-1)
-            std = (2.0 / (in_features + out_features)) ** 0.5
-            scaled_weights = raw_weights * std
-        return scaled_weights
+        row_batch_size = 2048
+        if out_features > row_batch_size:
+            out_rows = []
+            for r_start in range(0, out_features, row_batch_size):
+                r_end = min(r_start + row_batch_size, out_features)
+                n_rows = r_end - r_start
+                coords_chunk = SubstrateCoordinateGenerator.get_2d_weight_coordinates(
+                    out_features=n_rows,
+                    in_features=in_features,
+                    layer_idx=layer_idx,
+                    num_layers=num_layers,
+                    expert_idx=expert_idx,
+                    num_experts=num_experts,
+                    matrix_idx=matrix_idx,
+                    device=self.device,
+                    coord_dim=coord_dim,
+                )
+                with torch.no_grad():
+                    w_chunk = cppn(coords_chunk).squeeze(-1)
+                out_rows.append(w_chunk)
+            raw_weights = torch.cat(out_rows, dim=0)
+        else:
+            coords = SubstrateCoordinateGenerator.get_2d_weight_coordinates(
+                out_features=out_features,
+                in_features=in_features,
+                layer_idx=layer_idx,
+                num_layers=num_layers,
+                expert_idx=expert_idx,
+                num_experts=num_experts,
+                matrix_idx=matrix_idx,
+                device=self.device,
+                coord_dim=coord_dim,
+            )
+            with torch.no_grad():
+                raw_weights = cppn(coords).squeeze(-1)
+
+        std = (2.0 / (in_features + out_features)) ** 0.5
+        return raw_weights * std
 
     def grow_bias_vector(
         self,
@@ -204,12 +226,24 @@ class GrowthEngine:
         grown_weights = self.grow_phenotype_weights(genotype)
         model.load_state_dict(grown_weights, strict=False)
 
-        # 3. Load preserved high-precision modal parameters (token embeddings, AR head, cls_head)
+        # 3. Load preserved high-precision modal parameters and raw exact matrices (No SVD)
         if genotype.dna_instinct.genetic_parameters:
             modal_dict = {}
             for k, v in genotype.dna_instinct.genetic_parameters.items():
                 if k.startswith("modal."):
                     modal_dict[k[len("modal."):]] = v.to(self.device)
+                elif k.startswith("raw."):
+                    modal_dict[k[len("raw."):]] = v.to(self.device)
+                elif k.startswith("svd.") and k.endswith(".A"):
+                    base_name = k[len("svd."):-len(".A")]
+                    k_B = f"svd.{base_name}.B"
+                    if k_B in genotype.dna_instinct.genetic_parameters:
+                        A = v.to(self.device)
+                        B = genotype.dna_instinct.genetic_parameters[k_B].to(self.device)
+                        modal_dict[base_name] = (A @ B).to(self.device)
+                elif not k.startswith("meta."):
+                    modal_dict[k] = v.to(self.device)
+
             if "cls_head.classifier.1.weight" in modal_dict:
                 ckpt_classes = modal_dict["cls_head.classifier.1.weight"].shape[0]
                 if model.cls_head.classifier[1].out_features != ckpt_classes:

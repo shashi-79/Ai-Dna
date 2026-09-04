@@ -30,7 +30,7 @@ def compute_sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
-def genotype_to_dict(genotype: Genotype, include_tensors: bool = False) -> Dict[str, Any]:
+def genotype_to_dict(genotype: Genotype, include_tensors: bool = True) -> Dict[str, Any]:
     """Converts a Genotype into a structured metadata dictionary."""
     genetic_params_meta = {}
     for name, tensor in genotype.dna_instinct.genetic_parameters.items():
@@ -71,6 +71,7 @@ def genotype_to_dict(genotype: Genotype, include_tensors: bool = False) -> Dict[
         "fitness_history": genotype.fitness_history,
         "node_innovation_map": genotype.node_innovation_map,
         "calibration_anchors": calibration_anchors_meta,
+        "sensory_assets": getattr(genotype, "sensory_assets", {}),
         "dna_architecture": {
             "num_layers": genotype.dna_architecture.num_layers,
             "d_model": genotype.dna_architecture.d_model,
@@ -234,6 +235,7 @@ def dict_to_genotype(data: Dict[str, Any]) -> Genotype:
         fitness_history=data.get("fitness_history", {}),
         node_innovation_map=data.get("node_innovation_map", {}),
         calibration_anchors=calibration_anchors,
+        sensory_assets=data.get("sensory_assets", {}),
     )
 
 
@@ -251,9 +253,15 @@ def save_genotype(genotype: Genotype, file_path: str):
     """
     os.makedirs(os.path.dirname(os.path.abspath(file_path)), exist_ok=True)
 
-    if file_path.endswith(".json"):
-        # Human-readable JSON blueprint metadata
+    if file_path.endswith(".json_aidna") or "_aidna" in os.path.basename(file_path).split(".")[-1]:
+        # Human-readable JSON blueprint metadata for non-weight files
         meta_dict = genotype_to_dict(genotype, include_tensors=False)
+        with open(file_path, "w", encoding="utf-8") as f:
+            json.dump(meta_dict, f, indent=2)
+        return
+    elif file_path.endswith(".json"):
+        # Full JSON serialization with tensor weights
+        meta_dict = genotype_to_dict(genotype, include_tensors=True)
         with open(file_path, "w", encoding="utf-8") as f:
             json.dump(meta_dict, f, indent=2)
         return
@@ -325,9 +333,9 @@ def verify_aidna_integrity(file_path: str) -> bool:
 
 def load_genotype(file_path: str) -> Genotype:
     """
-    Loads a genotype from binary .aidna (v2/v1) or JSON file with automatic format detection.
+    Loads a genotype from binary .aidna (v2/v1) or JSON file (*.*_aidna) with automatic format detection.
     """
-    if file_path.endswith(".json"):
+    if file_path.endswith(".json") or file_path.endswith(".json_aidna"):
         with open(file_path, "r", encoding="utf-8") as f:
             data = json.load(f)
         return dict_to_genotype(data)

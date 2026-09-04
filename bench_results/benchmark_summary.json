@@ -1,0 +1,86 @@
+{
+  "model_dir": "C:\\Users\\anamika sakal\\Downloads\\shashi\\ai_dna\\my_llm_folder",
+  "timestamp": "2026-09-03 01:50:42",
+  "overall_accuracy": 0.0,
+  "total_evaluated": 9,
+  "tasks": {
+    "mmlu": {
+      "name": "MMLU",
+      "accuracy": 0.0,
+      "correct": 0,
+      "total": 3,
+      "samples": [
+        {
+          "index": 1,
+          "prompt": "Which of the following elements has the highest electronegativity?\nA) Sodium\nB) Chlorine\nC) Fluorine\nD) Oxygen\nAnswer:",
+          "response": "ilantropeuticsorgetownijuanaortunatelyaspberriesijuanaropractediatrreponameuthorsceptivesikhailomegranaminophenyalgiaeme",
+          "correct": false
+        },
+        {
+          "index": 2,
+          "prompt": "In group theory, what is the order of the identity element in any group?\nA) 0\nB) 1\nC) Infinity\nD) Undefined\nAnswer:",
+          "response": "racuseureusopoldfirehoseiscopalyalgiaemeteriesikhailolkienijuanarossoilantroorexiaonsaiijuanadprintingermalemeteryforget",
+          "correct": false
+        },
+        {
+          "index": 3,
+          "prompt": "What primary function does ATP synthase perform in cellular respiration?\nA) Hydrolyzing glucose\nB) Phosphorylating ADP to ATP\nC) Pumping protons out of mitochondria\nD) Oxidizing NADH\nAnswer:",
+          "response": "ilantroiriamuckinghamforgettableikhailomegranapagosolkienijuanaropractediatricsertiaryonsaiemeteriesediatrijuanaiacinsor",
+          "correct": false
+        }
+      ]
+    },
+    "gsm8k": {
+      "name": "GSM8K",
+      "accuracy": 0.0,
+      "correct": 0,
+      "total": 3,
+      "samples": [
+        {
+          "index": 1,
+          "prompt": "A bakery sells boxes of donuts for $12 each. If a customer buys 4 boxes and pays with a $100 bill, how much change should they receive?\nAnswer with the final number:",
+          "response": "adoopropractijuanahatmaountainsreponameemeteryijuanaolkienolkienolkienolkienolkienolkienolkienikhailomegraniliencyiriamo",
+          "correct": false
+        },
+        {
+          "index": 2,
+          "prompt": "A train travels at a constant speed of 60 miles per hour for 2.5 hours. How many miles does it travel?\nAnswer with the final number:",
+          "response": "ummijuanaropractastrousemeteryolkienolkienolkienolkienolkienolkienolkienijuanaapagosreponameuthorsilantroramewonsaiijuan",
+          "correct": false
+        },
+        {
+          "index": 3,
+          "prompt": "If a rectangle has length 15 cm and width 8 cm, what is its perimeter in cm?\nAnswer with the final number:",
+          "response": "againolkienijuanaropractastrousemeteryemeteriesikhailomegranapagosreponameuthorsceptivesikhailuggageonsaiendixounsaturat",
+          "correct": false
+        }
+      ]
+    },
+    "ifeval": {
+      "name": "IFEval",
+      "accuracy": 0.0,
+      "correct": 0,
+      "total": 3,
+      "samples": [
+        {
+          "index": 1,
+          "prompt": "Write a sentence describing the sun. Your response MUST end with the exact word 'light'.",
+          "response": "asculaririamuckinghamparalleledincinnolkienomegraniliencyemeteriesikhailikhailikhailurtlesopenhagenyalgiaonsaiijuanaapag",
+          "correct": false
+        },
+        {
+          "index": 2,
+          "prompt": "List exactly 3 primary colors as comma-separated words. Do NOT include any additional explanation.",
+          "response": "kovfirehoseiscopalyalgiaonsaiijuanaooseveltBatchNormaphylococcusilantroestialramewaphragropractincinnolkienolkienolkieno",
+          "correct": false
+        },
+        {
+          "index": 3,
+          "prompt": "Write a 3-word sentence about water.",
+          "response": "ilantroijuanaolkienolkienijuanaincinninnitusemeteryijuanaropractotheliomaaspberriesonsaiaticanforgettableiriamsoriasisij",
+          "correct": false
+        }
+      ]
+    }
+  }
+}

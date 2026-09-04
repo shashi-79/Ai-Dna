@@ -24,6 +24,7 @@ class DNAArchitecture:
     active_expert_threshold: float = 0.5
     kv_latent_dim: int = 16    # d_kv (MLA latent dimension)
     rope_theta: float = 10000.0 # Base frequency for RoPE
+    lora_rank: int = 0         # Rank for low-rank adaptation
     innovation_id: int = 1
 
 
@@ -115,6 +116,9 @@ class Genotype:
     
     # Genotypically Embedded Calibration Anchors (GECA) for zero-dataset calibration
     calibration_anchors: Dict[str, torch.Tensor] = field(default_factory=dict)
+
+    # Embedded Sensory Assets (Tokenizers, BPE merge tables, vocoder/diffusion configs)
+    sensory_assets: Dict[str, Any] = field(default_factory=dict)
 
     @classmethod
     def create_default(cls, tracker: Optional[InnovationTracker] = None, genotype_id: str = "gen_0") -> "Genotype":

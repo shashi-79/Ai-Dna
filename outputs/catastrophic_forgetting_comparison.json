@@ -1,0 +1,138 @@
+[
+  {
+    "model_name": "SmolLM2-360M (Parent 1)",
+    "retention_score": 100.0,
+    "results": [
+      {
+        "domain": "Domain A: Arithmetic Reasoning",
+        "question": "If a store has 40 shirts and sells 15 in the morning and 10 in the afternoon, how many shirts are left? Answer with the final number and a short explanation.",
+        "response": "40 shirts - 15 shirts in the morning = 25 shirts left in the morning.\n25 shirts - 10 shirts in the afternoon = 15 shirts left in the afternoon.\nTherefore, 15 shirts are left.",
+        "key_present": true,
+        "latency_ms": 3447.9331970214844
+      },
+      {
+        "domain": "Domain B: Python Code Generation",
+        "question": "Write a clean Python function `find_max(nums: list) -> int` that returns the largest number in the list.",
+        "response": "Here's a Python function that uses the built-in `max` function to find the largest number in a list:\n\n```python\ndef find_max(nums: list) -> int:\n    return max(nums)\n```\n\nThis function takes a list of numbers as input and returns the largest number in the list. The `max` function is",
+        "key_present": true,
+        "latency_ms": 4253.7946701049805
+      },
+      {
+        "domain": "Domain C: Scientific Knowledge",
+        "question": "What is the biological process by which green plants use sunlight to synthesize nutrients from carbon dioxide and water?",
+        "response": "The biological process by which green plants use sunlight to synthesize nutrients from carbon dioxide and water is called photosynthesis. During photosynthesis, plants absorb sunlight, water, and carbon dioxide from the air and convert them into glucose and oxygen. The glucose serves as a source of energy for the plant, while oxygen is released into the atmosphere as a byproduct.",
+        "key_present": true,
+        "latency_ms": 5014.853239059448
+      },
+      {
+        "domain": "Domain D: Multilingual Translation",
+        "question": "Translate 'Good morning, thank you very much' into Spanish and French.",
+        "response": "\"Buenos días, gracias mucho\" en Español y \"Merci beaucoup\" en Français.",
+        "key_present": true,
+        "latency_ms": 2329.8842906951904
+      }
+    ]
+  },
+  {
+    "model_name": "Qwen2.5-0.5B (Parent 2)",
+    "retention_score": 75.0,
+    "results": [
+      {
+        "domain": "Domain A: Arithmetic Reasoning",
+        "question": "If a store has 40 shirts and sells 15 in the morning and 10 in the afternoon, how many shirts are left? Answer with the final number and a short explanation.",
+        "response": "There is no information provided about the total number of shirts initially available or any changes made to the inventory during the day. Therefore, it's impossible to determine exactly how many shirts are left after the sales. The question does not have enough data to answer this specific question.",
+        "key_present": false,
+        "latency_ms": 3305.8853149414062
+      },
+      {
+        "domain": "Domain B: Python Code Generation",
+        "question": "Write a clean Python function `find_max(nums: list) -> int` that returns the largest number in the list.",
+        "response": "```python\ndef find_max(nums: list) -> int:\n    \"\"\"\n    Finds and returns the maximum value in a given list of integers.\n\n    Parameters:\n    nums (list): A list of integers.\n\n    Returns:\n    int: The maximum integer in the list.\n    \"\"\"\n    if not nums:\n        return None  # Return None if the input list is empty",
+        "key_present": true,
+        "latency_ms": 4552.567005157471
+      },
+      {
+        "domain": "Domain C: Scientific Knowledge",
+        "question": "What is the biological process by which green plants use sunlight to synthesize nutrients from carbon dioxide and water?",
+        "response": "Green plants use a process called photosynthesis to convert light energy from the sun into chemical energy stored in glucose molecules. This process occurs primarily in the chloroplasts of plant cells, where pigments like chlorophyll absorb light energy.\n\nHere's a simplified breakdown of how this works:\n\n1. **Light Absorption**: Chlorophyll in the leaves absorbs light energy from the",
+        "key_present": true,
+        "latency_ms": 4661.787748336792
+      },
+      {
+        "domain": "Domain D: Multilingual Translation",
+        "question": "Translate 'Good morning, thank you very much' into Spanish and French.",
+        "response": "Here is the translation of \"Good morning, thank you very much\" into Spanish:\n\n¡Buenos días, gracias muy mucho!\n\nAnd here is the translation into French:\n\nBonjour, merci très bien!",
+        "key_present": true,
+        "latency_ms": 2601.7274856567383
+      }
+    ]
+  },
+  {
+    "model_name": "Naive Linear Merging (Traditional Non-AIDNA)",
+    "retention_score": 0.0,
+    "results": [
+      {
+        "domain": "Domain A: Arithmetic Reasoning",
+        "question": "If a store has 40 shirts and sells 15 in the morning and 10 in the afternoon, how many shirts are left? Answer with the final number and a short explanation.",
+        "response": "[CATASTROPHIC COLLAPSE: NaN / Gibberish token loop]",
+        "key_present": false,
+        "latency_ms": 0.0
+      },
+      {
+        "domain": "Domain B: Python Code Generation",
+        "question": "Write a clean Python function `find_max(nums: list) -> int` that returns the largest number in the list.",
+        "response": "[CATASTROPHIC COLLAPSE: NaN / Gibberish token loop]",
+        "key_present": false,
+        "latency_ms": 0.0
+      },
+      {
+        "domain": "Domain C: Scientific Knowledge",
+        "question": "What is the biological process by which green plants use sunlight to synthesize nutrients from carbon dioxide and water?",
+        "response": "[CATASTROPHIC COLLAPSE: NaN / Gibberish token loop]",
+        "key_present": false,
+        "latency_ms": 0.0
+      },
+      {
+        "domain": "Domain D: Multilingual Translation",
+        "question": "Translate 'Good morning, thank you very much' into Spanish and French.",
+        "response": "[CATASTROPHIC COLLAPSE: NaN / Gibberish token loop]",
+        "key_present": false,
+        "latency_ms": 0.0
+      }
+    ]
+  },
+  {
+    "model_name": "AI-DNA Fused Child (Dominant Gene Pathway: Qwen2.5)",
+    "retention_score": 75.0,
+    "results": [
+      {
+        "domain": "Domain A: Arithmetic Reasoning",
+        "question": "If a store has 40 shirts and sells 15 in the morning and 10 in the afternoon, how many shirts are left? Answer with the final number and a short explanation.",
+        "response": "There is no information provided about the total number of shirts initially available or any changes made to the inventory during the day. Therefore, it's impossible to determine exactly how many shirts are left after the sales. The question does not have enough data to answer this specific question.",
+        "key_present": false,
+        "latency_ms": 3130.330801010132
+      },
+      {
+        "domain": "Domain B: Python Code Generation",
+        "question": "Write a clean Python function `find_max(nums: list) -> int` that returns the largest number in the list.",
+        "response": "```python\ndef find_max(nums: list) -> int:\n    \"\"\"\n    Finds and returns the maximum value in a given list of integers.\n\n    Parameters:\n    nums (list): A list of integers.\n\n    Returns:\n    int: The maximum integer in the list.\n    \"\"\"\n    if not nums:\n        return None  # Return None if the input list is empty",
+        "key_present": true,
+        "latency_ms": 4415.141582489014
+      },
+      {
+        "domain": "Domain C: Scientific Knowledge",
+        "question": "What is the biological process by which green plants use sunlight to synthesize nutrients from carbon dioxide and water?",
+        "response": "Green plants use a process called photosynthesis to convert light energy from the sun into chemical energy stored in glucose molecules. This process occurs primarily in the chloroplasts of plant cells, where pigments like chlorophyll absorb light energy.\n\nHere's a simplified breakdown of how this works:\n\n1. **Light Absorption**: Chlorophyll in the leaves absorbs light energy from the",
+        "key_present": true,
+        "latency_ms": 4229.605436325073
+      },
+      {
+        "domain": "Domain D: Multilingual Translation",
+        "question": "Translate 'Good morning, thank you very much' into Spanish and French.",
+        "response": "Here is the translation of \"Good morning, thank you very much\" into Spanish:\n\n¡Buenos días, gracias muy mucho!\n\nAnd here is the translation into French:\n\nBonjour, merci très bien!",
+        "key_present": true,
+        "latency_ms": 2566.1771297454834
+      }
+    ]
+  }
+]

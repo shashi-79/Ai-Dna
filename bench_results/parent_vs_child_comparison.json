@@ -1,0 +1,476 @@
+{
+  "Parent: SmolLM2-135M": {
+    "params": "134.5M",
+    "accuracy": 30.0,
+    "correct": 3,
+    "total": 10,
+    "time_seconds": 11.73,
+    "details": [
+      {
+        "category": "Science",
+        "q": "Which of the following elements has the highest electronegativity?",
+        "expected": "C",
+        "response": "D) Oxygen",
+        "correct": false
+      },
+      {
+        "category": "Computer Science",
+        "q": "In computer architecture, what does ALU stand for?",
+        "expected": "A",
+        "response": "A) Arithmetic Logic Unit",
+        "correct": true
+      },
+      {
+        "category": "Physics",
+        "q": "Which law states that the total entropy of an isolated system always increases over time?",
+        "expected": "B",
+        "response": "The Zeroth Law of Thermodynamics states that the total entropy of an i",
+        "correct": false
+      },
+      {
+        "category": "Biology",
+        "q": "What primary function does ATP synthase perform in cellular respiration?",
+        "expected": "B",
+        "response": "A) Hydrolyzing glucose",
+        "correct": false
+      },
+      {
+        "category": "Math",
+        "q": "A bakery sells boxes of donuts for $12 each. If a customer buys 4 boxes and pays with a $100 bill, how much change should they receive?",
+        "expected": "52",
+        "response": "To find out how much change the customer should receive, we need to ca",
+        "correct": false
+      },
+      {
+        "category": "Math",
+        "q": "A train travels at a constant speed of 60 miles per hour for 2.5 hours. How many miles does it travel?",
+        "expected": "150",
+        "response": "The train travels for 2.5 hours, so it travels for 2.5 * 60 = 150 mile",
+        "correct": true
+      },
+      {
+        "category": "Math",
+        "q": "If a rectangle has length 15 cm and width 8 cm, what is its perimeter in cm?",
+        "expected": "46",
+        "response": "To find the perimeter of the rectangle, we need to calculate the sum o",
+        "correct": false
+      },
+      {
+        "category": "Math",
+        "q": "A store offers a 20% discount on an item originally priced at $80. What is the discounted price?",
+        "expected": "64",
+        "response": "To find the discounted price, we need to calculate the original price ",
+        "correct": false
+      },
+      {
+        "category": "Instruction",
+        "q": "Write a 3-word sentence about water.",
+        "expected": "3words",
+        "response": "Water is a clear, colorless, and odorless liquid that is essential for",
+        "correct": false
+      },
+      {
+        "category": "Instruction",
+        "q": "Write the word CONFIRMED in all uppercase letters.",
+        "expected": "CONFIRMED",
+        "response": "CONFIRMED",
+        "correct": true
+      }
+    ]
+  },
+  "Parent: OPT-125M": {
+    "params": "125.2M",
+    "accuracy": 20.0,
+    "correct": 2,
+    "total": 10,
+    "time_seconds": 3.86,
+    "details": [
+      {
+        "category": "Science",
+        "q": "Which of the following elements has the highest electronegativity?",
+        "expected": "C",
+        "response": "Answer (one letter only): Answer (one letter only): Answer (one letter",
+        "correct": false
+      },
+      {
+        "category": "Computer Science",
+        "q": "In computer architecture, what does ALU stand for?",
+        "expected": "A",
+        "response": "A) Arithmetic Logic Unit B) Asynchronous Linear Utility C) Algorithmic",
+        "correct": true
+      },
+      {
+        "category": "Physics",
+        "q": "Which law states that the total entropy of an isolated system always increases over time?",
+        "expected": "B",
+        "response": "1) First Law of Thermodynamics 2) Second Law of Thermodynamics 3) Zero",
+        "correct": false
+      },
+      {
+        "category": "Biology",
+        "q": "What primary function does ATP synthase perform in cellular respiration?",
+        "expected": "B",
+        "response": "A) ATP synthase is a protein that is synthesized by the ATP synthase. ",
+        "correct": false
+      },
+      {
+        "category": "Math",
+        "q": "A bakery sells boxes of donuts for $12 each. If a customer buys 4 boxes and pays with a $100 bill, how much change should they receive?",
+        "expected": "52",
+        "response": "$12. The bakery is selling boxes of donuts for $12 each. If a customer",
+        "correct": false
+      },
+      {
+        "category": "Math",
+        "q": "A train travels at a constant speed of 60 miles per hour for 2.5 hours. How many miles does it travel?",
+        "expected": "150",
+        "response": "1.5 hours. I'm not sure if you're being sarcastic or not, but I'm pret",
+        "correct": false
+      },
+      {
+        "category": "Math",
+        "q": "If a rectangle has length 15 cm and width 8 cm, what is its perimeter in cm?",
+        "expected": "46",
+        "response": "",
+        "correct": false
+      },
+      {
+        "category": "Math",
+        "q": "A store offers a 20% discount on an item originally priced at $80. What is the discounted price?",
+        "expected": "64",
+        "response": "$80. The discount is based on the item's retail price. The discount is",
+        "correct": false
+      },
+      {
+        "category": "Instruction",
+        "q": "Write a 3-word sentence about water.",
+        "expected": "3words",
+        "response": "I'm not sure if I can do that. I'm not sure if I can write a 3-word se",
+        "correct": false
+      },
+      {
+        "category": "Instruction",
+        "q": "Write the word CONFIRMED in all uppercase letters.",
+        "expected": "CONFIRMED",
+        "response": "I'm not sure if that's a good idea. I'm not sure if it's a good idea t",
+        "correct": true
+      }
+    ]
+  },
+  "Parent: SmolLM2-360M": {
+    "params": "361.8M",
+    "accuracy": 30.0,
+    "correct": 3,
+    "total": 10,
+    "time_seconds": 6.71,
+    "details": [
+      {
+        "category": "Science",
+        "q": "Which of the following elements has the highest electronegativity?",
+        "expected": "C",
+        "response": "C",
+        "correct": true
+      },
+      {
+        "category": "Computer Science",
+        "q": "In computer architecture, what does ALU stand for?",
+        "expected": "A",
+        "response": "D) Array Linear Unit",
+        "correct": false
+      },
+      {
+        "category": "Physics",
+        "q": "Which law states that the total entropy of an isolated system always increases over time?",
+        "expected": "B",
+        "response": "C) Third Law of Thermodynamics",
+        "correct": false
+      },
+      {
+        "category": "Biology",
+        "q": "What primary function does ATP synthase perform in cellular respiration?",
+        "expected": "B",
+        "response": "C) Pumping protons out of mitochondria",
+        "correct": false
+      },
+      {
+        "category": "Math",
+        "q": "A bakery sells boxes of donuts for $12 each. If a customer buys 4 boxes and pays with a $100 bill, how much change should they receive?",
+        "expected": "52",
+        "response": "$100",
+        "correct": false
+      },
+      {
+        "category": "Math",
+        "q": "A train travels at a constant speed of 60 miles per hour for 2.5 hours. How many miles does it travel?",
+        "expected": "150",
+        "response": "2.5 hours * 60 miles per hour = 150 miles.",
+        "correct": true
+      },
+      {
+        "category": "Math",
+        "q": "If a rectangle has length 15 cm and width 8 cm, what is its perimeter in cm?",
+        "expected": "46",
+        "response": "15 cm + 8 cm + 2 * (15 cm + 8 cm) = 15 cm + 2 * 23 cm = 15 cm + 46 cm ",
+        "correct": true
+      },
+      {
+        "category": "Math",
+        "q": "A store offers a 20% discount on an item originally priced at $80. What is the discounted price?",
+        "expected": "64",
+        "response": "$80 * 0.20 = $16",
+        "correct": false
+      },
+      {
+        "category": "Instruction",
+        "q": "Write a 3-word sentence about water.",
+        "expected": "3words",
+        "response": "Water is a clear, transparent, and colorless liquid that is essential ",
+        "correct": false
+      },
+      {
+        "category": "Instruction",
+        "q": "Write the word CONFIRMED in all uppercase letters.",
+        "expected": "CONFIRMED",
+        "response": "C-O-F-I-R-I-D-E-D",
+        "correct": false
+      }
+    ]
+  },
+  "Parent: Qwen2.5-0.5B": {
+    "params": "494.0M",
+    "accuracy": 30.0,
+    "correct": 3,
+    "total": 10,
+    "time_seconds": 10.88,
+    "details": [
+      {
+        "category": "Science",
+        "q": "Which of the following elements has the highest electronegativity?",
+        "expected": "C",
+        "response": "To determine which element has the highest electronegativity, we need ",
+        "correct": false
+      },
+      {
+        "category": "Computer Science",
+        "q": "In computer architecture, what does ALU stand for?",
+        "expected": "A",
+        "response": "A)",
+        "correct": true
+      },
+      {
+        "category": "Physics",
+        "q": "Which law states that the total entropy of an isolated system always increases over time?",
+        "expected": "B",
+        "response": "To determine which law states that the total entropy of an isolated sy",
+        "correct": false
+      },
+      {
+        "category": "Biology",
+        "q": "What primary function does ATP synthase perform in cellular respiration?",
+        "expected": "B",
+        "response": "B",
+        "correct": true
+      },
+      {
+        "category": "Math",
+        "q": "A bakery sells boxes of donuts for $12 each. If a customer buys 4 boxes and pays with a $100 bill, how much change should they receive?",
+        "expected": "52",
+        "response": "To determine the change a customer should receive, we need to follow t",
+        "correct": false
+      },
+      {
+        "category": "Math",
+        "q": "A train travels at a constant speed of 60 miles per hour for 2.5 hours. How many miles does it travel?",
+        "expected": "150",
+        "response": "To determine how many miles the train travels, we can use the formula:",
+        "correct": false
+      },
+      {
+        "category": "Math",
+        "q": "If a rectangle has length 15 cm and width 8 cm, what is its perimeter in cm?",
+        "expected": "46",
+        "response": "The perimeter of a rectangle can be calculated using the formula:  \\[ ",
+        "correct": false
+      },
+      {
+        "category": "Math",
+        "q": "A store offers a 20% discount on an item originally priced at $80. What is the discounted price?",
+        "expected": "64",
+        "response": "To calculate the discounted price of the item after a 20% discount on ",
+        "correct": false
+      },
+      {
+        "category": "Instruction",
+        "q": "Write a 3-word sentence about water.",
+        "expected": "3words",
+        "response": "Water flows through the river.",
+        "correct": false
+      },
+      {
+        "category": "Instruction",
+        "q": "Write the word CONFIRMED in all uppercase letters.",
+        "expected": "CONFIRMED",
+        "response": "CONFIRMED",
+        "correct": true
+      }
+    ]
+  },
+  "Parent: TinyLlama-1.1B": {
+    "params": "1100.0M",
+    "accuracy": 20.0,
+    "correct": 2,
+    "total": 10,
+    "time_seconds": 8.43,
+    "details": [
+      {
+        "category": "Science",
+        "q": "Which of the following elements has the highest electronegativity?",
+        "expected": "C",
+        "response": "Answer: D) Oxygen",
+        "correct": false
+      },
+      {
+        "category": "Computer Science",
+        "q": "In computer architecture, what does ALU stand for?",
+        "expected": "A",
+        "response": "Answer: A) ALU",
+        "correct": true
+      },
+      {
+        "category": "Physics",
+        "q": "Which law states that the total entropy of an isolated system always increases over time?",
+        "expected": "B",
+        "response": "Answer: A) First Law of Thermodynamics",
+        "correct": false
+      },
+      {
+        "category": "Biology",
+        "q": "What primary function does ATP synthase perform in cellular respiration?",
+        "expected": "B",
+        "response": "Answer: A) Hydrolyzing glucose Primary function of ATP synthase in cel",
+        "correct": false
+      },
+      {
+        "category": "Math",
+        "q": "A bakery sells boxes of donuts for $12 each. If a customer buys 4 boxes and pays with a $100 bill, how much change should they receive?",
+        "expected": "52",
+        "response": "The final number is $10.",
+        "correct": false
+      },
+      {
+        "category": "Math",
+        "q": "A train travels at a constant speed of 60 miles per hour for 2.5 hours. How many miles does it travel?",
+        "expected": "150",
+        "response": "The train travels at a constant speed of 60 miles per hour for 2.5 hou",
+        "correct": false
+      },
+      {
+        "category": "Math",
+        "q": "If a rectangle has length 15 cm and width 8 cm, what is its perimeter in cm?",
+        "expected": "46",
+        "response": "The perimeter of a rectangle with length 15 cm and width 8 cm is 130 c",
+        "correct": false
+      },
+      {
+        "category": "Math",
+        "q": "A store offers a 20% discount on an item originally priced at $80. What is the discounted price?",
+        "expected": "64",
+        "response": "The discounted price is $50.",
+        "correct": false
+      },
+      {
+        "category": "Instruction",
+        "q": "Write a 3-word sentence about water.",
+        "expected": "3words",
+        "response": "Water is a liquid that flows freely and is essential for life.",
+        "correct": false
+      },
+      {
+        "category": "Instruction",
+        "q": "Write the word CONFIRMED in all uppercase letters.",
+        "expected": "CONFIRMED",
+        "response": "CONFIRMED",
+        "correct": true
+      }
+    ]
+  },
+  "AI-DNA Fused Child": {
+    "params": "134.5M",
+    "accuracy": 0.0,
+    "correct": 0,
+    "total": 10,
+    "time_seconds": 18.89,
+    "details": [
+      {
+        "category": "Science",
+        "q": "Which of the following elements has the highest electronegativity?",
+        "expected": "C",
+        "response": "",
+        "correct": false
+      },
+      {
+        "category": "Computer Science",
+        "q": "In computer architecture, what does ALU stand for?",
+        "expected": "A",
+        "response": "",
+        "correct": false
+      },
+      {
+        "category": "Physics",
+        "q": "Which law states that the total entropy of an isolated system always increases over time?",
+        "expected": "B",
+        "response": "",
+        "correct": false
+      },
+      {
+        "category": "Biology",
+        "q": "What primary function does ATP synthase perform in cellular respiration?",
+        "expected": "B",
+        "response": "",
+        "correct": false
+      },
+      {
+        "category": "Math",
+        "q": "A bakery sells boxes of donuts for $12 each. If a customer buys 4 boxes and pays with a $100 bill, how much change should they receive?",
+        "expected": "52",
+        "response": "",
+        "correct": false
+      },
+      {
+        "category": "Math",
+        "q": "A train travels at a constant speed of 60 miles per hour for 2.5 hours. How many miles does it travel?",
+        "expected": "150",
+        "response": "",
+        "correct": false
+      },
+      {
+        "category": "Math",
+        "q": "If a rectangle has length 15 cm and width 8 cm, what is its perimeter in cm?",
+        "expected": "46",
+        "response": "",
+        "correct": false
+      },
+      {
+        "category": "Math",
+        "q": "A store offers a 20% discount on an item originally priced at $80. What is the discounted price?",
+        "expected": "64",
+        "response": "",
+        "correct": false
+      },
+      {
+        "category": "Instruction",
+        "q": "Write a 3-word sentence about water.",
+        "expected": "3words",
+        "response": "",
+        "correct": false
+      },
+      {
+        "category": "Instruction",
+        "q": "Write the word CONFIRMED in all uppercase letters.",
+        "expected": "CONFIRMED",
+        "response": "",
+        "correct": false
+      }
+    ]
+  }
+}

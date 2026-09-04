@@ -37,8 +37,8 @@ def test_compatibility_and_fusion():
     child = fusion.fuse([p1, p2], weights=[0.5, 0.5], child_id="child_12")
 
     assert child.generation == 1
-    # Shared node should be averaged: (1.0 + 3.0) / 2 = 2.0
-    assert torch.allclose(child.dna_instinct.genetic_parameters["w_shared"], torch.tensor([[2.0, 2.0], [2.0, 2.0]]))
+    # Overlapping instinct inherits from parent with higher SVD energy (p2 with 3.0 vs p1 with 1.0)
+    assert torch.allclose(child.dna_instinct.genetic_parameters["w_shared"], torch.tensor([[3.0, 3.0], [3.0, 3.0]]))
     # Disjoint node should be inherited
     assert "w_disjoint" in child.dna_instinct.genetic_parameters
 

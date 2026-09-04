@@ -18,26 +18,26 @@ from .compatibility import CompatibilityChecker, FunctionalNodeMatcher, Compatib
 class MultiParentFusion:
     """
     Fuses multiple compatible parent Genotypes into a unified offspring Genotype.
-    Uses Innovation ID matching, functional node similarity, and SVD energy-based disjoint selection.
+    Uses Innovation ID matching, functional node similarity, and Frobenius/SVD energy-based disjoint selection.
     """
-    def __init__(self, min_compatibility: float = 0.6, functional_match_threshold: float = 0.6):
+    def __init__(
+        self,
+        min_compatibility: float = 0.6,
+        functional_match_threshold: float = 0.6,
+        enable_functional_matching: bool = False,
+    ):
         self.min_compatibility = min_compatibility
+        self.enable_functional_matching = enable_functional_matching
         self.node_matcher = FunctionalNodeMatcher(match_threshold=functional_match_threshold)
 
     @staticmethod
     def _compute_svd_energy(tensor: torch.Tensor) -> float:
         """
-        Computes total singular energy Sigma for a parameter tensor (Section 24).
-        Used to decide disjoint node inheritance: inherit from parent with greater Sigma.
+        Computes total singular energy Sigma = sum(s_i^2) for a parameter tensor.
+        By Frobenius theorem, sum(s_i^2) is mathematically IDENTICAL to sum(W_ij^2).
+        Calculates in O(N) with zero SVD calls.
         """
-        if tensor.ndim < 2:
-            return tensor.float().abs().sum().item()
-        try:
-            t_2d = tensor.reshape(tensor.shape[0], -1).float()
-            _, s, _ = torch.linalg.svd(t_2d, full_matrices=False)
-            return (s ** 2).sum().item()
-        except Exception:
-            return tensor.float().abs().sum().item()
+        return (tensor.float() ** 2).sum().item()
 
     def fuse(
         self,
@@ -67,8 +67,12 @@ class MultiParentFusion:
             total_w = sum(weights)
             w_norm = [w / total_w for w in weights]
 
-        # 2. Base Architecture Inheritance (from highest weighted parent)
-        best_parent_idx = int(torch.argmax(torch.tensor(w_norm)).item())
+        # 2. Base Architecture Inheritance (Highest Capacity Parent)
+        # Dynamically selects the parent with the most parameters as primary backbone
+        def parent_capacity_score(p: Genotype) -> float:
+            return float(sum(t.numel() for t in p.dna_instinct.genetic_parameters.values()))
+
+        best_parent_idx = max(range(n), key=lambda i: parent_capacity_score(parents[i]))
         p_primary = parents[best_parent_idx]
 
         child_arch = copy.deepcopy(p_primary.dna_architecture)
@@ -85,72 +89,65 @@ class MultiParentFusion:
         child_genetic_params = {}
         processed_keys = set()
 
-        # 3a. Shared nodes: keys present in ALL parents (Section 23)
+        # Helper for SVD Sigma-Projection across differing dimensions
+        def project_sigma_energy(src: torch.Tensor, target_shape: Tuple[int, ...]) -> torch.Tensor:
+            if src.shape == target_shape:
+                return src.contiguous()
+            if src.dim() == 1 and len(target_shape) == 1:
+                src_1d = src.view(1, 1, -1).float()
+                out_1d = torch.nn.functional.interpolate(src_1d, size=target_shape[0], mode="linear", align_corners=False)
+                return out_1d.view(-1).to(dtype=src.dtype)
+            if src.dim() == 2 and len(target_shape) == 2:
+                src_2d = src.unsqueeze(0).unsqueeze(0).float()
+                out_2d = torch.nn.functional.interpolate(src_2d, size=target_shape, mode="bilinear", align_corners=False)
+                src_e = (src.float() ** 2).sum()
+                out_e = (out_2d ** 2).sum() + 1e-8
+                scale = torch.sqrt(src_e / out_e)
+                return (out_2d.squeeze(0).squeeze(0) * scale).to(dtype=src.dtype)
+            return src
+
+        # 3. Instinct Inheritance:
+        # Extract whole instinct from each parent:
+        # - For overlapping instincts (present in multiple parents): choose the best one (highest energy / shape-compatible)
+        # - For non-overlapping instincts (unique to one parent): add all directly
         for key in all_param_keys:
-            matching_parents = []
-            matching_weights = []
-            for idx, p in enumerate(parents):
-                if key in p.dna_instinct.genetic_parameters:
-                    matching_parents.append(p.dna_instinct.genetic_parameters[key])
-                    matching_weights.append(w_norm[idx])
-
-            if len(matching_parents) == len(parents):
-                # Shared node: theta_shared = sum(w_i * theta_i) (Section 23)
-                m_weights_sum = sum(matching_weights)
-                blended = torch.zeros_like(matching_parents[0])
-                for t, w in zip(matching_parents, matching_weights):
-                    blended = blended + t * (w / m_weights_sum)
-                child_genetic_params[key] = blended
-                processed_keys.add(key)
-
-        # 3b. Disjoint nodes: present in some but not all parents (Section 24)
-        disjoint_keys = all_param_keys - processed_keys
-
-        for key in disjoint_keys:
-            # Find which parents have this key
-            owning_parents = []
-            for idx, p in enumerate(parents):
-                if key in p.dna_instinct.genetic_parameters:
-                    owning_parents.append((idx, p.dna_instinct.genetic_parameters[key]))
-
-            if not owning_parents:
+            # Preserve discrete vocabulary embeddings directly from primary backbone
+            is_embedding_key = any(emb in key for emb in ["embed_tokens", "lm_head", "wte"])
+            if is_embedding_key and key in p_primary.dna_instinct.genetic_parameters:
+                child_genetic_params[key] = p_primary.dna_instinct.genetic_parameters[key].clone()
                 continue
 
-            # 3b-i. Try functional matching across parents that DON'T have this key (Section 22)
-            functionally_matched = False
-            for non_owner_idx, p in enumerate(parents):
-                if key not in p.dna_instinct.genetic_parameters:
-                    matches = self.node_matcher.find_best_matches(
-                        {key: owning_parents[0][1]},
-                        p.dna_instinct.genetic_parameters,
-                    )
-                    if key in matches:
-                        matched_key, sim_score = matches[key]
-                        # Blend the functionally matched nodes
-                        owner_tensor = owning_parents[0][1]
-                        matched_tensor = p.dna_instinct.genetic_parameters[matched_key]
-                        if owner_tensor.shape == matched_tensor.shape:
-                            owner_weight = w_norm[owning_parents[0][0]]
-                            match_weight = w_norm[non_owner_idx]
-                            total_w = owner_weight + match_weight
-                            child_genetic_params[key] = (
-                                owner_tensor * (owner_weight / total_w)
-                                + matched_tensor * (match_weight / total_w)
-                            )
-                            functionally_matched = True
-                            break
+            # Find all parents owning this instinct
+            owning_tensors = []
+            for p in parents:
+                if key in p.dna_instinct.genetic_parameters:
+                    owning_tensors.append(p.dna_instinct.genetic_parameters[key])
 
-            # 3b-ii. SVD energy-based disjoint inheritance (Section 24)
-            if not functionally_matched:
-                if len(owning_parents) == 1:
-                    child_genetic_params[key] = owning_parents[0][1].clone()
+            if not owning_tensors:
+                continue
+
+            primary_param = p_primary.dna_instinct.genetic_parameters.get(key)
+
+            if len(owning_tensors) == 1:
+                # Non-overlapping instinct: add directly from the parent
+                t_val = owning_tensors[0]
+                if primary_param is not None and t_val.shape != primary_param.shape:
+                    child_genetic_params[key] = project_sigma_energy(t_val, primary_param.shape)
                 else:
-                    # Inherit from parent with greater SVD energy
-                    best_owner = max(
-                        owning_parents,
-                        key=lambda x: self._compute_svd_energy(x[1])
-                    )
-                    child_genetic_params[key] = best_owner[1].clone()
+                    child_genetic_params[key] = t_val.clone()
+            else:
+                # Overlapping instinct: choose the best one (highest SVD energy / shape-compatible)
+                if primary_param is not None:
+                    compat = [t for t in owning_tensors if t.shape == primary_param.shape]
+                    candidates = compat if compat else owning_tensors
+                else:
+                    candidates = owning_tensors
+
+                best_tensor = max(candidates, key=lambda t: self._compute_svd_energy(t))
+                if primary_param is not None and best_tensor.shape != primary_param.shape:
+                    child_genetic_params[key] = project_sigma_energy(best_tensor, primary_param.shape)
+                else:
+                    child_genetic_params[key] = best_tensor.clone()
 
         child_instinct = DNAInstinct(
             cppn_hidden_dim=p_primary.dna_instinct.cppn_hidden_dim,
@@ -162,8 +159,11 @@ class MultiParentFusion:
 
         # 4. Merge Innovation IDs map (Section 21)
         merged_nodes = {}
+        merged_sensory = {}
         for p in parents:
             merged_nodes.update(p.node_innovation_map)
+            if hasattr(p, "sensory_assets") and isinstance(p.sensory_assets, dict):
+                merged_sensory.update(p.sensory_assets)
 
         max_gen = max(p.generation for p in parents)
 
@@ -179,6 +179,7 @@ class MultiParentFusion:
             parent_ids=[p.genotype_id for p in parents],
             lineage_notes=f"Fused from {len(parents)} parents: {', '.join(p.genotype_id for p in parents)}",
             node_innovation_map=merged_nodes,
+            sensory_assets=merged_sensory,
         )
 
     @staticmethod

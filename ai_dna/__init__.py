@@ -46,6 +46,17 @@ from .inference.output_engine import OutputEngine
 from .inference.sparse_executor import SparseHardwareExecutor
 from .inference.tokenizer import TextTokenizer
 from .inference.pipeline import InferencePipeline
+from .inference.omni_engine import (
+    OmniInferenceEngine,
+    MultimodalOutputHandler,
+    InterleavedMultimodalParser,
+    CoreDiffusionOrgan,
+    CoreAudioGenOrgan,
+    CoreVideoGenOrgan,
+    CoreSmolLM2Organ,
+    CoreCLIPOrgan,
+    CoreWhisperOrgan,
+)
 
 from .encoding.cppn_encoder import InverseCPPNEncoder
 from .encoding.ewc import EWCConsolidator
@@ -101,6 +112,9 @@ __all__ = [
     "SparseHardwareExecutor",
     "TextTokenizer",
     "InferencePipeline",
+    "OmniInferenceEngine",
+    "MultimodalOutputHandler",
+    "InterleavedMultimodalParser",
     "InverseCPPNEncoder",
     "EWCConsolidator",
     "SlowClockEncoder",

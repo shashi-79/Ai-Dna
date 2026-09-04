@@ -1,0 +1,182 @@
+{
+  "math_reasoning": {
+    "title": "Category 1: Math & Logical Reasoning",
+    "prompt": "If a train travels at 60 mph for 2.5 hours, how far does it travel? Show the step-by-step calculation.",
+    "models": {
+      "SmolLM2-135M": {
+        "generated_text": "To find the distance traveled by the train, we need to follow these steps:\n\n1. Determine the total distance traveled: The total distance traveled is the sum of the time taken to travel the first 2.5 hours and the remaining 2.5 hours.\n2. Calculate the time taken to travel the first 2.5 hours: The time taken to travel the first 2.5 hours is 2.5 hours * 60 mph =",
+        "gen_time_ms": 5078.713417053223,
+        "new_tokens": 95,
+        "tokens_per_sec": 18.705524844345522
+      },
+      "OPT-125M": {
+        "generated_text": "The step-by-step calculation is based on the number of steps taken in a given train.\nThe step-by-step calculation is based on the number of steps taken in a given train.\nThe step-by-step calculation is based on the number of steps taken in a given train.\nThe step-by-step calculation is based on the number of steps taken in a given train.\nThe step-by-step calculation is based on the",
+        "gen_time_ms": 1079.1916847229004,
+        "new_tokens": 95,
+        "tokens_per_sec": 88.02884727970523
+      },
+      "SmolLM2-360M": {
+        "generated_text": "To find the distance traveled by the train, we need to calculate the time it took to travel that distance.\n\nStep 1: Convert the speed from mph to km/h\n60 mph = 60 * 1.609344 km/h\n60 mph = 96.72 km/h\n\nStep 2: Calculate the time taken to travel the distance\nTime = Distance / Speed\nTime =",
+        "gen_time_ms": 4835.823535919189,
+        "new_tokens": 95,
+        "tokens_per_sec": 19.645051002040436
+      },
+      "Qwen2.5-0.5B": {
+        "generated_text": "To calculate the distance traveled by the train, we can use the formula:\n\n\\[ \\text{Distance} = \\text{Speed} \\times \\text{Time} \\]\n\nGiven:\n- Speed = 60 mph\n- Time = 2.5 hours\n\nStep-by-step calculation:\n\n1. Multiply the speed by the time:\n   \\[ \\text{Distance} = 60 \\, \\text{mph} \\times 2.5 \\",
+        "gen_time_ms": 3965.6665325164795,
+        "new_tokens": 95,
+        "tokens_per_sec": 23.955619873997872
+      },
+      "TinyLlama-1.1B": {
+        "generated_text": "To calculate the distance traveled by a train traveling at 60 mph for 2.5 hours, we need to follow the following steps:\n\n1. Convert the speed of the train from miles per hour (mph) to kilometers per hour (km/h): 60 mph = 124.4 km/h\n\n2. Calculate the distance traveled by multiplying the speed by the number",
+        "gen_time_ms": 3234.232187271118,
+        "new_tokens": 95,
+        "tokens_per_sec": 29.373277643419968
+      }
+    }
+  },
+  "code_generation": {
+    "title": "Category 2: Python Code Generation",
+    "prompt": "Write a clean Python function `is_palindrome(s: str) -> bool` that returns True if string s is a palindrome, ignoring spaces and case.",
+    "models": {
+      "SmolLM2-135M": {
+        "generated_text": "Here is a Python function that implements this approach:\n\n```python\ndef is_palindrome(s: str) -> bool:\n    \"\"\"\n    Returns True if string s is a palindrome, ignoring spaces and case.\n    \"\"\"\n    s = ''.join(c for c in s if c.isalnum()).lower()\n    return s == s[::-1]\n```\n\nThis function works by first removing all non-alphanumeric",
+        "gen_time_ms": 4769.719362258911,
+        "new_tokens": 95,
+        "tokens_per_sec": 19.91731437109301
+      },
+      "OPT-125M": {
+        "generated_text": "I have a question about the Python function is_palindrome(s: str) -> bool. I have a string s that is a palindrome, ignoring spaces and case.\n\nI have a question about the Python function is_palindrome(s: str) -> bool. I have a string s that is a palindrome, ignoring spaces and case.\n\nI have a question about the Python function is_palindrome(",
+        "gen_time_ms": 935.4844093322754,
+        "new_tokens": 95,
+        "tokens_per_sec": 101.55166569564591
+      },
+      "SmolLM2-360M": {
+        "generated_text": "Here's a Python function that checks if a string is a palindrome, ignoring spaces and case:\n\n```python\ndef is_palindrome(s: str) -> bool:\n    s = ''.join(c for c in s if c.isalnum()).lower()\n    return s == s[::-1]\n```\n\nThis function works by first removing all non-alphanumeric characters from the string and converting it to lowercase.",
+        "gen_time_ms": 4845.097541809082,
+        "new_tokens": 95,
+        "tokens_per_sec": 19.607448390921046
+      },
+      "Qwen2.5-0.5B": {
+        "generated_text": "```python\ndef is_palindrome(s: str) -> bool:\n    \"\"\"\n    Check if the given string s is a palindrome, ignoring spaces and case.\n    \n    A palindrome is a word, phrase, number, or other sequence of characters that reads the same forward and backward (ignoring spaces, punctuation, and capitalization).\n    \n    Parameters:\n    s (str): The input string to check.\n    \n    Returns:\n    bool: True if s is a palindrome",
+        "gen_time_ms": 4104.06231880188,
+        "new_tokens": 95,
+        "tokens_per_sec": 23.147796651327127
+      },
+      "TinyLlama-1.1B": {
+        "generated_text": "```python\ndef is_palindrome(s: str) -> bool:\n    \"\"\"\n    Check if a given string is a palindrome ignoring spaces and case.\n\n    :param s: The string to check.\n    :return: True if the string is a palindrome, False otherwise.\n    \"\"\"\n    # Convert string to lowercase and remove any non-alphanumeric characters\n    s = s.lower",
+        "gen_time_ms": 3336.9338512420654,
+        "new_tokens": 95,
+        "tokens_per_sec": 28.46924878796723
+      }
+    }
+  },
+  "world_knowledge": {
+    "title": "Category 3: World Knowledge & Fact Retrieval",
+    "prompt": "What is the capital of Australia, and what is the difference between an asteroid and a meteorite?",
+    "models": {
+      "SmolLM2-135M": {
+        "generated_text": "The capital of Australia is Canberra, and the capital city is Canberra, which is also known as Canberra Harbour.",
+        "gen_time_ms": 1065.7434463500977,
+        "new_tokens": 23,
+        "tokens_per_sec": 21.58117892140852
+      },
+      "OPT-125M": {
+        "generated_text": "A meteorite is a meteorite that is a meteorite that is a meteorite that is a meteorite that is a meteorite that is a meteorite that is a meteorite that is a meteorite that is a meteorite that is a meteorite that is a meteorite that is a meteorite that is a meteorite that is a meteorite that is a meteorite that is a meteorite that is a meteorite that is a meteorite that is a",
+        "gen_time_ms": 962.4843597412109,
+        "new_tokens": 95,
+        "tokens_per_sec": 98.70290258591135
+      },
+      "SmolLM2-360M": {
+        "generated_text": "Hi, I'm sorry for the confusion, but as a Hugging Face AI, I don't have the ability to provide geographical information or answer questions about specific countries. I'm designed to assist with language translation and provide explanations based on the context you provide.\n\nHowever, I can tell you that the capital of Australia is Canberra. An asteroid is a small rocky or metallic object that orbits the Sun, whereas a meteorite is a piece of rock that has fallen to Earth",
+        "gen_time_ms": 5152.125120162964,
+        "new_tokens": 95,
+        "tokens_per_sec": 18.438993189085267
+      },
+      "Qwen2.5-0.5B": {
+        "generated_text": "The capital of Australia is Canberra.\n\nAn asteroid is a celestial body that orbits the Sun but does not fall back into the Sun's gravity. Examples include the asteroid Vesta, which was discovered in 1807, and the asteroid Ceres, which was discovered in 1801. An asteroid is typically much smaller than a planet or moon.\n\nA meteorite, on the other hand, is a fragment of a meteoroid (a small piece of space",
+        "gen_time_ms": 4534.049987792969,
+        "new_tokens": 95,
+        "tokens_per_sec": 20.95257005453594
+      },
+      "TinyLlama-1.1B": {
+        "generated_text": "The capital of Australia is Canberra, and the difference between an asteroid and a meteorite is that asteroids are rocky objects that orbit the Sun, while meteorites are small, rocky objects that are ejected from a star and enter Earth's atmosphere.\n\nAn asteroid is a rocky body that orbits the Sun, while a meteor is a small, rocky object that enters Earth's atmosphere and burns up in the",
+        "gen_time_ms": 3618.2539463043213,
+        "new_tokens": 95,
+        "tokens_per_sec": 26.25575800090893
+      }
+    }
+  },
+  "concise_explanation": {
+    "title": "Category 4: Concise Explanation (for a 10-year-old)",
+    "prompt": "Explain what an artificial neural network is in two simple, clear sentences for a 10-year-old child.",
+    "models": {
+      "SmolLM2-135M": {
+        "generated_text": "An artificial neural network is like a special kind of computer that can learn and do things just like you do. It's like a brain that can do lots of cool things!",
+        "gen_time_ms": 1922.473669052124,
+        "new_tokens": 36,
+        "tokens_per_sec": 18.725874158656126
+      },
+      "OPT-125M": {
+        "generated_text": "A neural network is a computer program that uses a computer program to learn a new language.\nThe program is called a neural network.\nThe program is called a neural network.\nThe program is called a neural network.\nThe program is called a neural network.\nThe program is called a neural network.\nThe program is called a neural network.\nThe program is called a neural network.\nThe program is called a neural network.\nThe program is called",
+        "gen_time_ms": 984.2324256896973,
+        "new_tokens": 95,
+        "tokens_per_sec": 96.52191649084219
+      },
+      "SmolLM2-360M": {
+        "generated_text": "Imagine you have a big brain that can learn and do lots of things, like recognizing pictures, understanding speech, and even making decisions. That's kind of like an artificial neural network, but instead of a brain, it's a computer program that uses lots of tiny, simple parts called \"neurons\" to help it learn. These neurons work together to make the computer do things that are hard for humans to do, like recognizing pictures or understanding speech.",
+        "gen_time_ms": 4688.278913497925,
+        "new_tokens": 91,
+        "tokens_per_sec": 19.41010799037656
+      },
+      "Qwen2.5-0.5B": {
+        "generated_text": "An artificial neural network is like a magical toy that helps computers learn and understand things on their own! It's made of tiny parts called \"neurons\" that work together to figure out how to do something. Just like how you might use your imagination to make up stories or solve puzzles, this magic toy can help computers think and learn too!",
+        "gen_time_ms": 3145.9362506866455,
+        "new_tokens": 70,
+        "tokens_per_sec": 22.25092768002578
+      },
+      "TinyLlama-1.1B": {
+        "generated_text": "1. An artificial neural network (ANN) is a type of machine learning algorithm that mimics the structure and function of the human brain. It consists of a series of interconnected nodes (neurons) that receive input data and process it to make predictions or make decisions.\n\n2. In an ANN, each node (neuron) receives input data from other nodes in the network, processes it, and outputs a result. The output of a",
+        "gen_time_ms": 3710.4125022888184,
+        "new_tokens": 95,
+        "tokens_per_sec": 25.60362222297331
+      }
+    }
+  },
+  "multilingual": {
+    "title": "Category 5: Multilingual Translation",
+    "prompt": "Translate this sentence into Spanish and French:\n'Technology and artificial intelligence are shaping the future of humanity.'",
+    "models": {
+      "SmolLM2-135M": {
+        "generated_text": "'Technology y aplicaciones estructuradas estructurarán la futura de la humanidad.'",
+        "gen_time_ms": 1319.148063659668,
+        "new_tokens": 25,
+        "tokens_per_sec": 18.951625438196334
+      },
+      "OPT-125M": {
+        "generated_text": "'Technology and artificial intelligence are shaping the future of humanity.'\nAnswer:\n'Technology and artificial intelligence are shaping the future of humanity.'\nAnswer:\n'Technology and artificial intelligence are shaping the future of humanity.'\nAnswer:\n'Technology and artificial intelligence are shaping the future of humanity.'\nAnswer:\n'Technology and artificial intelligence are shaping the future of humanity.'\nAnswer:\n'Technology and artificial intelligence are shaping the future of humanity.'\nAnswer:",
+        "gen_time_ms": 926.7113208770752,
+        "new_tokens": 95,
+        "tokens_per_sec": 102.51304571318752
+      },
+      "SmolLM2-360M": {
+        "generated_text": "'La tecnología y la automática son llevando a la futura de nuestro hombre.'",
+        "gen_time_ms": 1364.7124767303467,
+        "new_tokens": 28,
+        "tokens_per_sec": 20.517142238696273
+      },
+      "Qwen2.5-0.5B": {
+        "generated_text": "La traducción al español es:\n\n\"La tecnología y la inteligencia artificial están marcando el futuro de la humanidad.\"\n\nLa traducción al francés es:\n\n\"L'innovation technologique et l'intelligence artificielle sont shapeant le futur de la humaine.\"",
+        "gen_time_ms": 2624.854326248169,
+        "new_tokens": 60,
+        "tokens_per_sec": 22.858411379255816
+      },
+      "TinyLlama-1.1B": {
+        "generated_text": "\"La tecnología y la inteligencia artificial están transformando el futuro de la humanidad.\"",
+        "gen_time_ms": 899.7418880462646,
+        "new_tokens": 22,
+        "tokens_per_sec": 24.451456903681205
+      }
+    }
+  }
+}

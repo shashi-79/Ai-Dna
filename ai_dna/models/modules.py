@@ -16,11 +16,15 @@ class TextEncoder(nn.Module):
     def __init__(self, vocab_size: int, d_model: int):
         super().__init__()
         self.d_model = d_model
+        self.vocab_size = vocab_size
         self.token_emb = nn.Embedding(vocab_size, d_model)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """x: (B, S) integer token ids -> (B, S, D_model)"""
-        return self.token_emb(x) * math.sqrt(self.d_model)
+        if x.dim() == 1:
+            x = x.unsqueeze(0)
+        x_clamped = torch.clamp(x.long(), 0, self.vocab_size - 1)
+        return self.token_emb(x_clamped) * math.sqrt(self.d_model)
 
 
 class VisionEncoder(nn.Module):
@@ -41,19 +45,22 @@ class VisionEncoder(nn.Module):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """x: (B, C, H, W) -> (B, num_patches + 1, D_model)"""
+        if x.dim() == 3:
+            x = x.unsqueeze(0)
         B, C, H, W = x.shape
         p = self.patch_size
-        assert H % p == 0 and W % p == 0, f"Image dims ({H}, {W}) must be divisible by patch size {p}"
-        
-        # Reshape to patches: (B, C, H//p, p, W//p, p) -> (B, (H//p)*(W//p), C*p*p)
+
+        if H % p != 0 or W % p != 0:
+            target_h = ((H + p - 1) // p) * p
+            target_w = ((W + p - 1) // p) * p
+            x = F.interpolate(x.float(), size=(target_h, target_w), mode="bicubic", align_corners=False)
+            B, C, H, W = x.shape
+
         h_p, w_p = H // p, W // p
         patches = x.view(B, C, h_p, p, w_p, p).permute(0, 2, 4, 1, 3, 5).contiguous()
         patches = patches.view(B, h_p * w_p, self.patch_dim)
         
-        # Project patches
-        projected = self.patch_proj(patches) # (B, N, D_model)
-        
-        # Prepend [CLS] token
+        projected = self.patch_proj(patches.float())
         cls_tokens = self.cls_token.expand(B, -1, -1)
         out = torch.cat([cls_tokens, projected], dim=1)
         return self.ln(out)
@@ -67,12 +74,17 @@ class AudioEncoder(nn.Module):
     def __init__(self, in_dim: int = 80, d_model: int = 64):
         super().__init__()
         self.d_model = d_model
+        self.in_dim = in_dim
         self.proj = nn.Linear(in_dim, d_model)
         self.ln = nn.LayerNorm(d_model)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        """x: (B, S, in_dim) -> (B, S, D_model)"""
-        return self.ln(self.proj(x))
+        """x: (B, S, in_dim) or (B, in_dim, S) -> (B, S, D_model)"""
+        if x.dim() == 2:
+            x = x.unsqueeze(1)
+        elif x.dim() == 3 and x.shape[1] == self.in_dim and x.shape[2] != self.in_dim:
+            x = x.transpose(1, 2)
+        return self.ln(self.proj(x.float()))
 
 
 class VideoEncoder(nn.Module):
@@ -93,15 +105,23 @@ class VideoEncoder(nn.Module):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """x: (B, C, T, H, W) -> (B, num_tubes + 1, D_model)"""
+        if x.dim() == 4:
+            x = x.unsqueeze(0)
         B, C, T, H, W = x.shape
         t_p, s_p = self.t_p, self.s_p
-        assert T % t_p == 0 and H % s_p == 0 and W % s_p == 0, "Video dimensions must be divisible by tube sizes"
-        
+
+        if T % t_p != 0 or H % s_p != 0 or W % s_p != 0:
+            target_t = ((T + t_p - 1) // t_p) * t_p
+            target_h = ((H + s_p - 1) // s_p) * s_p
+            target_w = ((W + s_p - 1) // s_p) * s_p
+            x = F.interpolate(x.float(), size=(target_t, target_h, target_w), mode="trilinear", align_corners=False)
+            B, C, T, H, W = x.shape
+
         n_t, n_h, n_w = T // t_p, H // s_p, W // s_p
         tubes = x.view(B, C, n_t, t_p, n_h, s_p, n_w, s_p).permute(0, 2, 4, 6, 1, 3, 5, 7).contiguous()
         tubes = tubes.view(B, n_t * n_h * n_w, self.tube_dim)
         
-        projected = self.tube_proj(tubes)
+        projected = self.tube_proj(tubes.float())
         cls_tokens = self.cls_token.expand(B, -1, -1)
         out = torch.cat([cls_tokens, projected], dim=1)
         return self.ln(out)
@@ -189,13 +209,17 @@ class DiffusionDecoderHead(nn.Module):
 
     def forward(self, noisy_x: torch.Tensor, timesteps: torch.Tensor, h_context: torch.Tensor) -> torch.Tensor:
         """
-        noisy_x: (B, S, out_dim)
+        noisy_x: (B, S, out_dim) or (B, 1, out_dim)
         timesteps: (B,)
         h_context: (B, S, D_model)
         """
         t_emb = self.time_mlp(self.get_timestep_embedding(timesteps))  # (B, D_model)
-        t_emb = t_emb.unsqueeze(1).expand(-1, h_context.shape[1], -1)
-        h_conditioned = h_context + t_emb
+        if h_context.dim() == 3 and noisy_x.dim() == 3 and noisy_x.shape[1] == 1 and h_context.shape[1] > 1:
+            h_ctx = h_context.mean(dim=1, keepdim=True)
+        else:
+            h_ctx = h_context
+        t_emb = t_emb.unsqueeze(1).expand(-1, h_ctx.shape[1], -1)
+        h_conditioned = h_ctx + t_emb
         combined = torch.cat([noisy_x, h_conditioned], dim=-1)
         return self.net(combined)
 

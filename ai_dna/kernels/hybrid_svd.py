@@ -44,7 +44,7 @@ def exact_cusolver_svd(
     rank: Optional[int] = None,
     min_rank: int = 128,
     max_rank_cap: Optional[int] = None,
-    energy_threshold: float = 0.995,
+    energy_threshold: float = 0.999,
     apply_canonical_signs: bool = True,
 ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, int]:
     """
