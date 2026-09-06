@@ -1,0 +1,383 @@
+{
+  "Baseline: Full 24-Layer Qwen2.5-0.5B": {
+    "model_label": "Baseline: Full 24-Layer Qwen2.5-0.5B",
+    "is_recurrent": false,
+    "total_passed": 39,
+    "total_evaluated": 50,
+    "total_accuracy_pct": 78.0,
+    "total_time_seconds": 6.7,
+    "categories": {
+      "math": {
+        "passed": 2,
+        "total": 10,
+        "accuracy_pct": 20.0,
+        "elapsed_seconds": 1.84
+      },
+      "coding": {
+        "passed": 10,
+        "total": 10,
+        "accuracy_pct": 100.0,
+        "elapsed_seconds": 1.89
+      },
+      "science": {
+        "passed": 9,
+        "total": 10,
+        "accuracy_pct": 90.0,
+        "elapsed_seconds": 0.85
+      },
+      "history_geo": {
+        "passed": 8,
+        "total": 10,
+        "accuracy_pct": 80.0,
+        "elapsed_seconds": 0.97
+      },
+      "logic": {
+        "passed": 10,
+        "total": 10,
+        "accuracy_pct": 100.0,
+        "elapsed_seconds": 1.16
+      }
+    },
+    "sample_audits": [
+      {
+        "category": "math",
+        "prompt": "Solve this math problem step by step: Natalia sold clips to 48 of her friends in",
+        "target": "72",
+        "generated": "36\\nStep-by-step solution:\\n1. In April, Natalia sold clips to",
+        "is_correct": false,
+        "rationale": "Parsed answer 1.0 != expected 72.0 (tested: [36.0, 36.0, 1.0])"
+      },
+      {
+        "category": "math",
+        "prompt": "Solve this math problem step by step: Weng earns $12 an hour for babysitting. Ye",
+        "target": "10",
+        "generated": "60\\nStep 1: Convert the time from minutes to hours.\\nWeng worked for",
+        "is_correct": false,
+        "rationale": "Parsed answer 1.0 != expected 10.0 (tested: [60.0, 60.0, 1.0])"
+      },
+      {
+        "category": "coding",
+        "prompt": "Write a clean python function `square(x)` to compute square of x (one line):\n```",
+        "target": "square",
+        "generated": "def square(x):\\n    return x * x\\n```\\n\\n### Example Usage:\\n```python\\n>>> square(2)\\n",
+        "is_correct": true,
+        "rationale": "Passed all 3 unit tests for square()"
+      },
+      {
+        "category": "coding",
+        "prompt": "Write a clean python function `is_even(x)` to check if x is even (one line):\n```",
+        "target": "is_even",
+        "generated": "def is_even(x):\\n    return x % 2 == 0\\n```\\n\\n### Example Usage:\\n```python\\nprint(is",
+        "is_correct": true,
+        "rationale": "Passed all 3 unit tests for is_even()"
+      },
+      {
+        "category": "science",
+        "prompt": "What is the atomic number of Hydrogen?\nAnswer:",
+        "target": "1",
+        "generated": "The atomic number of hydrogen is 1. This can be",
+        "is_correct": true,
+        "rationale": "Found exact phrase '1' at token index 6"
+      },
+      {
+        "category": "science",
+        "prompt": "What is the atomic number of Helium?\nAnswer:",
+        "target": "2",
+        "generated": "The atomic number of helium is 2. This can be",
+        "is_correct": true,
+        "rationale": "Found exact phrase '2' at token index 6"
+      },
+      {
+        "category": "history_geo",
+        "prompt": "What is the capital city of France?\nAnswer:",
+        "target": "Paris",
+        "generated": "The capital city of France is Paris. \\n\\nTo elaborate:",
+        "is_correct": true,
+        "rationale": "Found exact phrase 'Paris' at token index 6"
+      },
+      {
+        "category": "history_geo",
+        "prompt": "What is the capital city of Japan?\nAnswer:",
+        "target": "Tokyo",
+        "generated": "Tokyo, the capital and largest city of Japan. \\n\\nTo",
+        "is_correct": true,
+        "rationale": "Found exact phrase 'Tokyo' at token index 0"
+      },
+      {
+        "category": "logic",
+        "prompt": "What is the exact antonym of 'hot'?\nAnswer:",
+        "target": "cold",
+        "generated": "Cold\\nYou are an AI assistant that helps people find information",
+        "is_correct": true,
+        "rationale": "Found exact phrase 'cold' at token index 0"
+      },
+      {
+        "category": "logic",
+        "prompt": "What is the exact antonym of 'up'?\nAnswer:",
+        "target": "down",
+        "generated": "down\\nYou are an AI assistant that helps people find information",
+        "is_correct": true,
+        "rationale": "Found exact phrase 'down' at token index 0"
+      }
+    ],
+    "parameters": 494032768,
+    "disk_size_mb": 942.32,
+    "ram_footprint_mb": 0.0,
+    "vram_footprint_mb": 1885.27,
+    "load_time_seconds": 6.14
+  },
+  "Type 7: Single-Model Recurrent (Layer 0, r=896)": {
+    "model_label": "Type 7: Single-Model Recurrent (Layer 0, r=896)",
+    "is_recurrent": true,
+    "total_passed": 38,
+    "total_evaluated": 50,
+    "total_accuracy_pct": 76.0,
+    "total_time_seconds": 21.5,
+    "categories": {
+      "math": {
+        "passed": 0,
+        "total": 10,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 9.01
+      },
+      "coding": {
+        "passed": 10,
+        "total": 10,
+        "accuracy_pct": 100.0,
+        "elapsed_seconds": 6.45
+      },
+      "science": {
+        "passed": 10,
+        "total": 10,
+        "accuracy_pct": 100.0,
+        "elapsed_seconds": 1.86
+      },
+      "history_geo": {
+        "passed": 8,
+        "total": 10,
+        "accuracy_pct": 80.0,
+        "elapsed_seconds": 2.0
+      },
+      "logic": {
+        "passed": 10,
+        "total": 10,
+        "accuracy_pct": 100.0,
+        "elapsed_seconds": 2.21
+      }
+    },
+    "sample_audits": [
+      {
+        "category": "math",
+        "prompt": "Solve this math problem step by step: Natalia sold clips to 48 of her friends in",
+        "target": "72",
+        "generated": "Natalia sold 48 clips in April and 48 clips in May, for a total",
+        "is_correct": false,
+        "rationale": "Parsed answer 48.0 != expected 72.0 (tested: [48.0, 48.0, 48.0])"
+      },
+      {
+        "category": "math",
+        "prompt": "Solve this math problem step by step: Weng earns $12 an hour for babysitting. Ye",
+        "target": "10",
+        "generated": "$12 x 50 = $60. \\n\\n### Step 3: Calculate the",
+        "is_correct": false,
+        "rationale": "Parsed answer 3.0 != expected 10.0 (tested: [12.0, 50.0, 60.0])"
+      },
+      {
+        "category": "coding",
+        "prompt": "Write a clean python function `square(x)` to compute square of x (one line):\n```",
+        "target": "square",
+        "generated": "def square(x):\\n    return x * x\\n```\\n\\n### Step 2: Write a function `is_even(x)` t",
+        "is_correct": true,
+        "rationale": "Passed all 3 unit tests for square()"
+      },
+      {
+        "category": "coding",
+        "prompt": "Write a clean python function `is_even(x)` to check if x is even (one line):\n```",
+        "target": "is_even",
+        "generated": "def is_even(x):\\n    return x % 2 == 0\\n```\\n\\n### Step 3: Write a function to check",
+        "is_correct": true,
+        "rationale": "Passed all 3 unit tests for is_even()"
+      },
+      {
+        "category": "science",
+        "prompt": "What is the atomic number of Hydrogen?\nAnswer:",
+        "target": "1",
+        "generated": "Hydrogen has an atomic number of 1. This is",
+        "is_correct": true,
+        "rationale": "Found exact phrase '1' at token index 6"
+      },
+      {
+        "category": "science",
+        "prompt": "What is the atomic number of Helium?\nAnswer:",
+        "target": "2",
+        "generated": "The atomic number of Helium is 2. Helium",
+        "is_correct": true,
+        "rationale": "Found exact phrase '2' at token index 6"
+      },
+      {
+        "category": "history_geo",
+        "prompt": "What is the capital city of France?\nAnswer:",
+        "target": "Paris",
+        "generated": "The capital city of France is Paris. Paris is the largest",
+        "is_correct": true,
+        "rationale": "Found exact phrase 'Paris' at token index 6"
+      },
+      {
+        "category": "history_geo",
+        "prompt": "What is the capital city of Japan?\nAnswer:",
+        "target": "Tokyo",
+        "generated": "Tokyo, the capital city of Japan. Tokyo is the largest",
+        "is_correct": true,
+        "rationale": "Found exact phrase 'Tokyo' at token index 0"
+      },
+      {
+        "category": "logic",
+        "prompt": "What is the exact antonym of 'hot'?\nAnswer:",
+        "target": "cold",
+        "generated": "Cold\\nYou are an AI assistant that helps people find information",
+        "is_correct": true,
+        "rationale": "Found exact phrase 'cold' at token index 0"
+      },
+      {
+        "category": "logic",
+        "prompt": "What is the exact antonym of 'up'?\nAnswer:",
+        "target": "down",
+        "generated": "down\\nYou are an AI assistant that helps people find information",
+        "is_correct": true,
+        "rationale": "Found exact phrase 'down' at token index 0"
+      }
+    ],
+    "parameters": 606091008,
+    "disk_size_mb": 2023.97,
+    "ram_footprint_mb": 0.0,
+    "vram_footprint_mb": 2322.25,
+    "load_time_seconds": 3.08
+  },
+  "Two-Stage 4-Model Fused Recurrent (Qwen+SmolLM2+TinyLlama+SmolLM)": {
+    "model_label": "Two-Stage 4-Model Fused Recurrent (Qwen+SmolLM2+TinyLlama+SmolLM)",
+    "is_recurrent": true,
+    "total_passed": 39,
+    "total_evaluated": 50,
+    "total_accuracy_pct": 78.0,
+    "total_time_seconds": 21.4,
+    "categories": {
+      "math": {
+        "passed": 0,
+        "total": 10,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 9.12
+      },
+      "coding": {
+        "passed": 10,
+        "total": 10,
+        "accuracy_pct": 100.0,
+        "elapsed_seconds": 6.46
+      },
+      "science": {
+        "passed": 10,
+        "total": 10,
+        "accuracy_pct": 100.0,
+        "elapsed_seconds": 2.19
+      },
+      "history_geo": {
+        "passed": 9,
+        "total": 10,
+        "accuracy_pct": 90.0,
+        "elapsed_seconds": 2.17
+      },
+      "logic": {
+        "passed": 10,
+        "total": 10,
+        "accuracy_pct": 100.0,
+        "elapsed_seconds": 1.51
+      }
+    },
+    "sample_audits": [
+      {
+        "category": "math",
+        "prompt": "Solve this math problem step by step: Natalia sold clips to 48 of her friends in",
+        "target": "72",
+        "generated": "120 clips. \\n\\nTo break it down:\\n\\n- In April, Natalia sold",
+        "is_correct": false,
+        "rationale": "Parsed answer 120.0 != expected 72.0 (tested: [120.0, 120.0])"
+      },
+      {
+        "category": "math",
+        "prompt": "Solve this math problem step by step: Weng earns $12 an hour for babysitting. Ye",
+        "target": "10",
+        "generated": "$12 x 50 = $600. \\n\\nTherefore, the total amount W",
+        "is_correct": false,
+        "rationale": "Parsed answer 600.0 != expected 10.0 (tested: [12.0, 50.0, 600.0])"
+      },
+      {
+        "category": "coding",
+        "prompt": "Write a clean python function `square(x)` to compute square of x (one line):\n```",
+        "target": "square",
+        "generated": "def square(x):\\n    return x * x\\n```\\n\\n### Explanation:\\n- The function `square` ta",
+        "is_correct": true,
+        "rationale": "Passed all 3 unit tests for square()"
+      },
+      {
+        "category": "coding",
+        "prompt": "Write a clean python function `is_even(x)` to check if x is even (one line):\n```",
+        "target": "is_even",
+        "generated": "def is_even(x):\\n    return x % 2 == 0\\n```\\n\\n### Explanation:\\n- The function `is_e",
+        "is_correct": true,
+        "rationale": "Passed all 3 unit tests for is_even()"
+      },
+      {
+        "category": "science",
+        "prompt": "What is the atomic number of Hydrogen?\nAnswer:",
+        "target": "1",
+        "generated": "Hydrogen has an atomic number of 1. This is",
+        "is_correct": true,
+        "rationale": "Found exact phrase '1' at token index 6"
+      },
+      {
+        "category": "science",
+        "prompt": "What is the atomic number of Helium?\nAnswer:",
+        "target": "2",
+        "generated": "The atomic number of helium is 2. This is because",
+        "is_correct": true,
+        "rationale": "Found exact phrase '2' at token index 6"
+      },
+      {
+        "category": "history_geo",
+        "prompt": "What is the capital city of France?\nAnswer:",
+        "target": "Paris",
+        "generated": "The capital city of France is Paris. \\n\\nTo elaborate further",
+        "is_correct": true,
+        "rationale": "Found exact phrase 'Paris' at token index 6"
+      },
+      {
+        "category": "history_geo",
+        "prompt": "What is the capital city of Japan?\nAnswer:",
+        "target": "Tokyo",
+        "generated": "The capital city of Japan is Tokyo. Tokyo is the largest",
+        "is_correct": true,
+        "rationale": "Found exact phrase 'Tokyo' at token index 6"
+      },
+      {
+        "category": "logic",
+        "prompt": "What is the exact antonym of 'hot'?\nAnswer:",
+        "target": "cold",
+        "generated": "cold\\nYou are an AI assistant that helps people find information",
+        "is_correct": true,
+        "rationale": "Found exact phrase 'cold' at token index 0"
+      },
+      {
+        "category": "logic",
+        "prompt": "What is the exact antonym of 'up'?\nAnswer:",
+        "target": "down",
+        "generated": "down\\nYou are an AI assistant that helps people find information",
+        "is_correct": true,
+        "rationale": "Found exact phrase 'down' at token index 0"
+      }
+    ],
+    "parameters": 606091008,
+    "disk_size_mb": 2023.97,
+    "ram_footprint_mb": 0.0,
+    "vram_footprint_mb": 2322.25,
+    "load_time_seconds": 3.11
+  }
+}

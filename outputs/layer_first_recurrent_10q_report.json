@@ -1,0 +1,119 @@
+{
+  "Baseline: 24-Layer Dense Qwen2.5-0.5B": {
+    "model_name": "Baseline: 24-Layer Dense Qwen2.5-0.5B",
+    "total_correct": 40,
+    "total_tested": 50,
+    "total_accuracy_pct": 80.0,
+    "total_time_seconds": 107.06,
+    "categories": {
+      "math": {
+        "correct": 2,
+        "total": 10,
+        "accuracy_pct": 20.0
+      },
+      "coding": {
+        "correct": 10,
+        "total": 10,
+        "accuracy_pct": 100.0
+      },
+      "science": {
+        "correct": 10,
+        "total": 10,
+        "accuracy_pct": 100.0
+      },
+      "history_geo": {
+        "correct": 8,
+        "total": 10,
+        "accuracy_pct": 80.0
+      },
+      "logic": {
+        "correct": 10,
+        "total": 10,
+        "accuracy_pct": 100.0
+      }
+    },
+    "parameters": 494032768,
+    "disk_size_mb": 942.32,
+    "ram_footprint_mb": 0.0,
+    "vram_footprint_mb": 1885.27,
+    "load_time_seconds": 4.24
+  },
+  "Type 7 Canonical: Single-Model Recurrent (Layer 0 Anchor, r=896)": {
+    "model_name": "Type 7 Canonical: Single-Model Recurrent (Layer 0 Anchor, r=896)",
+    "total_correct": 41,
+    "total_tested": 50,
+    "total_accuracy_pct": 82.0,
+    "total_time_seconds": 322.16,
+    "categories": {
+      "math": {
+        "correct": 3,
+        "total": 10,
+        "accuracy_pct": 30.0
+      },
+      "coding": {
+        "correct": 10,
+        "total": 10,
+        "accuracy_pct": 100.0
+      },
+      "science": {
+        "correct": 10,
+        "total": 10,
+        "accuracy_pct": 100.0
+      },
+      "history_geo": {
+        "correct": 8,
+        "total": 10,
+        "accuracy_pct": 80.0
+      },
+      "logic": {
+        "correct": 10,
+        "total": 10,
+        "accuracy_pct": 100.0
+      }
+    },
+    "parameters": 606091008,
+    "disk_size_mb": 2023.97,
+    "ram_footprint_mb": 0.0,
+    "vram_footprint_mb": 2322.25,
+    "load_time_seconds": 3.48
+  },
+  "Type 7 Fused: Two-Stage Layer-First Recurrent (Qwen + SmolLM2)": {
+    "model_name": "Type 7 Fused: Two-Stage Layer-First Recurrent (Qwen + SmolLM2)",
+    "total_correct": 41,
+    "total_tested": 50,
+    "total_accuracy_pct": 82.0,
+    "total_time_seconds": 319.68,
+    "categories": {
+      "math": {
+        "correct": 2,
+        "total": 10,
+        "accuracy_pct": 20.0
+      },
+      "coding": {
+        "correct": 10,
+        "total": 10,
+        "accuracy_pct": 100.0
+      },
+      "science": {
+        "correct": 10,
+        "total": 10,
+        "accuracy_pct": 100.0
+      },
+      "history_geo": {
+        "correct": 9,
+        "total": 10,
+        "accuracy_pct": 90.0
+      },
+      "logic": {
+        "correct": 10,
+        "total": 10,
+        "accuracy_pct": 100.0
+      }
+    },
+    "parameters": 606091008,
+    "disk_size_mb": 2023.97,
+    "ram_footprint_mb": 0.0,
+    "vram_footprint_mb": 2322.25,
+    "load_time_seconds": 2.33
+  }
+}

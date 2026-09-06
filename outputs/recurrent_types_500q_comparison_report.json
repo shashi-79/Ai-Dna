@@ -1,0 +1,810 @@
+{
+  "Baseline: Full 24-Layer Qwen2.5-0.5B": {
+    "model_label": "Baseline: Full 24-Layer Qwen2.5-0.5B",
+    "is_recurrent": false,
+    "total_passed": 1941,
+    "total_evaluated": 2500,
+    "total_accuracy_pct": 77.64,
+    "total_time_seconds": 40.3,
+    "categories": {
+      "math": {
+        "passed": 33,
+        "total": 500,
+        "accuracy_pct": 6.6,
+        "elapsed_seconds": 19.1
+      },
+      "coding": {
+        "passed": 500,
+        "total": 500,
+        "accuracy_pct": 100.0,
+        "elapsed_seconds": 10.0
+      },
+      "science": {
+        "passed": 480,
+        "total": 500,
+        "accuracy_pct": 96.0,
+        "elapsed_seconds": 3.8
+      },
+      "history_geo": {
+        "passed": 428,
+        "total": 500,
+        "accuracy_pct": 85.6,
+        "elapsed_seconds": 3.0
+      },
+      "logic": {
+        "passed": 500,
+        "total": 500,
+        "accuracy_pct": 100.0,
+        "elapsed_seconds": 4.4
+      }
+    },
+    "sample_audits": [],
+    "parameters": 494032768,
+    "disk_size_mb": 942.32,
+    "ram_footprint_mb": 0.0,
+    "vram_footprint_mb": 1885.3,
+    "load_time_seconds": 6.84
+  },
+  "Type 1: Step-Modulated LoRA (Middle-Band SVD Centroid)": {
+    "model_label": "Type 1: Step-Modulated LoRA (Middle-Band SVD Centroid)",
+    "is_recurrent": true,
+    "total_passed": 0,
+    "total_evaluated": 2500,
+    "total_accuracy_pct": 0.0,
+    "total_time_seconds": 987.0,
+    "categories": {
+      "math": {
+        "passed": 0,
+        "total": 500,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 806.1
+      },
+      "coding": {
+        "passed": 0,
+        "total": 500,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 122.0
+      },
+      "science": {
+        "passed": 0,
+        "total": 500,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 20.3
+      },
+      "history_geo": {
+        "passed": 0,
+        "total": 500,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 18.2
+      },
+      "logic": {
+        "passed": 0,
+        "total": 500,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 20.3
+      }
+    },
+    "sample_audits": [
+      {
+        "category": "math",
+        "prompt": "Solve this math problem step by step: Natalia sold clips to 48 of her friends in April, and then she",
+        "expected": "72",
+        "raw_output": "tum tum tum tum tum tum tum tum tum tum tum tum tum\u85d5 tum tum tum tum tum tum",
+        "passed": false,
+        "rationale": "No numeric tokens found in response"
+      },
+      {
+        "category": "math",
+        "prompt": "Solve this math problem step by step: Weng earns $12 an hour for babysitting. Yesterday, she just di",
+        "expected": "10",
+        "raw_output": "tum tum tum tum tum tum tum tum tum tum tum tum tum tum tum\u85d5\u85d5\u85d5\u85d5\u85d5",
+        "passed": false,
+        "rationale": "No numeric tokens found in response"
+      },
+      {
+        "category": "coding",
+        "prompt": "Write a clean python function `square(x)` to compute square of x (one line):\n```python",
+        "expected": "square",
+        "raw_output": "tum tum tum tum tum tum tum tum tum tum tum tum tum tum tum tum tum tum\u85d5\u9c7cild tum\u85d5 tum\u85d5\u793e\u4ea4\u793e\u4ea4\u793e\u4ea4\u793e\u4ea4\u793e\u4ea4\u793e\u4ea4\u793e\u4ea4",
+        "passed": false,
+        "rationale": "SyntaxError: invalid syntax (<unknown>, line 1)"
+      },
+      {
+        "category": "coding",
+        "prompt": "Write a clean python function `is_even(x)` to check if x is even (one line):\n```python",
+        "expected": "is_even",
+        "raw_output": "- - - - - - - - - - - - - - - -\u9c7c\u9c7c\u9c7c\u9c7c\u9c7c\u9c7c\u9c7c\u9c7c\u9c7c\u9c7c\u9c7c\u9c7c\u9c7c\u9c7c\u9c7c\u9c7c",
+        "passed": false,
+        "rationale": "ExecError: name '\u9c7c\u9c7c\u9c7c\u9c7c\u9c7c\u9c7c\u9c7c\u9c7c\u9c7c\u9c7c\u9c7c\u9c7c\u9c7c\u9c7c\u9c7c\u9c7c' is not defined"
+      },
+      {
+        "category": "science",
+        "prompt": "What is the atomic number of Hydrogen?\nAnswer:",
+        "expected": "1",
+        "raw_output": "tum tum tum tum\u85d5\u85d5\u85d5\u85d5\u85d5\u85d5\u85d5\u85d5",
+        "passed": false,
+        "rationale": "Phrase '1' not found in token sequence: ['tum', 'tum', 'tum', 'tum\u85d5\u85d5\u85d5\u85d5\u85d5\u85d5\u85d5\u85d5']..."
+      },
+      {
+        "category": "science",
+        "prompt": "What is the atomic number of Helium?\nAnswer:",
+        "expected": "2",
+        "raw_output": "tum tum tum\u85d5\u85d5\u85d5\u85d5\u85d5\u85d5\u85d5\u85d5\u85d5",
+        "passed": false,
+        "rationale": "Phrase '2' not found in token sequence: ['tum', 'tum', 'tum\u85d5\u85d5\u85d5\u85d5\u85d5\u85d5\u85d5\u85d5\u85d5']..."
+      },
+      {
+        "category": "history_geo",
+        "prompt": "What is the capital city of France?\nAnswer:",
+        "expected": "Paris",
+        "raw_output": "tum tum tum\u85d5\u85d5\u85d5\u85d5\u85d5\u85d5\u85d5\u85d5\u85d5",
+        "passed": false,
+        "rationale": "Phrase 'Paris' not found in token sequence: ['tum', 'tum', 'tum\u85d5\u85d5\u85d5\u85d5\u85d5\u85d5\u85d5\u85d5\u85d5']..."
+      },
+      {
+        "category": "history_geo",
+        "prompt": "What is the capital city of Japan?\nAnswer:",
+        "expected": "Tokyo",
+        "raw_output": "tum\u85d5\u85d5\u00ean\u85d5\u85d5\u85d5\u85d5\u85d5\u85d5\u00ean\u85d5",
+        "passed": false,
+        "rationale": "Phrase 'Tokyo' not found in token sequence: ['tum\u85d5\u85d5\u00ean\u85d5\u85d5\u85d5\u85d5\u85d5\u85d5\u00ean\u85d5']..."
+      },
+      {
+        "category": "logic",
+        "prompt": "What is the exact antonym of 'hot'?\nAnswer:",
+        "expected": "cold",
+        "raw_output": "\u9c7c\u9c7c\u85d5\u85d5\u85d5\u85d5\u85d5\u85d5\u85d5\u85d5\u85d5\u85d5",
+        "passed": false,
+        "rationale": "Phrase 'cold' not found in token sequence: ['\u9c7c\u9c7c\u85d5\u85d5\u85d5\u85d5\u85d5\u85d5\u85d5\u85d5\u85d5\u85d5']..."
+      },
+      {
+        "category": "logic",
+        "prompt": "What is the exact antonym of 'up'?\nAnswer:",
+        "expected": "down",
+        "raw_output": "\u9c7c\u9c7c\u9c7c\u85d5\u85d5\u85d5\u85d5\u85d5\u85d5\u85d5\u85d5\u85d5",
+        "passed": false,
+        "rationale": "Phrase 'down' not found in token sequence: ['\u9c7c\u9c7c\u9c7c\u85d5\u85d5\u85d5\u85d5\u85d5\u85d5\u85d5\u85d5\u85d5']..."
+      }
+    ],
+    "parameters": 159938304,
+    "disk_size_mb": 322.03,
+    "ram_footprint_mb": 0.0,
+    "vram_footprint_mb": 612.81,
+    "load_time_seconds": 1.38
+  },
+  "Type 2: Step-Modulated LoRA (All-Layer SVD Centroid)": {
+    "model_label": "Type 2: Step-Modulated LoRA (All-Layer SVD Centroid)",
+    "is_recurrent": true,
+    "total_passed": 0,
+    "total_evaluated": 2500,
+    "total_accuracy_pct": 0.0,
+    "total_time_seconds": 978.0,
+    "categories": {
+      "math": {
+        "passed": 0,
+        "total": 500,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 797.0
+      },
+      "coding": {
+        "passed": 0,
+        "total": 500,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 122.1
+      },
+      "science": {
+        "passed": 0,
+        "total": 500,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 20.4
+      },
+      "history_geo": {
+        "passed": 0,
+        "total": 500,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 18.2
+      },
+      "logic": {
+        "passed": 0,
+        "total": 500,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 20.3
+      }
+    },
+    "sample_audits": [
+      {
+        "category": "math",
+        "prompt": "Solve this math problem step by step: Natalia sold clips to 48 of her friends in April, and then she",
+        "expected": "72",
+        "raw_output": "\u827a\u672f\u54c1\u827a\u672f\u54c1\u827a\u672f\u54c1\u827a\u672f\u54c1\u5eb6\u5eb6\u5eb6\u5eb6itte;display;display;displayitteILTILTILTILTILTILTILT",
+        "passed": false,
+        "rationale": "No numeric tokens found in response"
+      },
+      {
+        "category": "math",
+        "prompt": "Solve this math problem step by step: Weng earns $12 an hour for babysitting. Yesterday, she just di",
+        "expected": "10",
+        "raw_output": "\u827a\u672f\u54c1\u827a\u672f\u54c1\u827a\u672f\u54c1\u827a\u672f\u54c1\u827a\u672f\u54c1\u827a\u672f\u54c1\u827a\u672f\u54c1\u827a\u672f\u54c1\u827a\u672f\u54c1\u827a\u672f\u54c1\u827a\u672f\u54c1\u827a\u672f\u54c1\u827a\u672f\u54c1\u827a\u672f\u54c1\u827a\u672f\u54c1\u827a\u672f\u54c1\u5eb6\u5eb6\u827a\u672f\u54c1\u827a\u672f\u54c1",
+        "passed": false,
+        "rationale": "No numeric tokens found in response"
+      },
+      {
+        "category": "coding",
+        "prompt": "Write a clean python function `square(x)` to compute square of x (one line):\n```python",
+        "expected": "square",
+        "raw_output": "\u5eb6;display;display;display;display;display;displayOLFILTILTILTILT;display;display;display;displayOLFOLFOLFOLFitte\u5eb6\u827a\u672f\u54c1\u827a\u672f\u54c1\u827a",
+        "passed": false,
+        "rationale": "ExecError: name '\u5eb6' is not defined"
+      },
+      {
+        "category": "coding",
+        "prompt": "Write a clean python function `is_even(x)` to check if x is even (one line):\n```python",
+        "expected": "is_even",
+        "raw_output": ";displayILTitte;display\u5eb6;displayILTILTILTILTILTILTILTILTILTOLFOLF\u5eb6;display sharedInstance sharedInstanceoldemoldemoldemi",
+        "passed": false,
+        "rationale": "SyntaxError: invalid syntax (<unknown>, line 1)"
+      },
+      {
+        "category": "science",
+        "prompt": "What is the atomic number of Hydrogen?\nAnswer:",
+        "expected": "1",
+        "raw_output": ";display;display;display\u5eb6\u5eb6\u5eb6;display;display;display;display;display;display",
+        "passed": false,
+        "rationale": "Phrase '1' not found in token sequence: ['display;display;display\u5eb6\u5eb6\u5eb6;display;display;display;display;display;display']..."
+      },
+      {
+        "category": "science",
+        "prompt": "What is the atomic number of Helium?\nAnswer:",
+        "expected": "2",
+        "raw_output": ";display;display;display\u5eb6;displayILTitte\u827a\u672f\u54c1\u827a\u672f\u54c1\u827a\u672f\u54c1\u827a\u672f\u54c1\u827a\u672f\u54c1",
+        "passed": false,
+        "rationale": "Phrase '2' not found in token sequence: ['display;display;display\u5eb6;displayiltitte\u827a\u672f\u54c1\u827a\u672f\u54c1\u827a\u672f\u54c1\u827a\u672f\u54c1\u827a\u672f\u54c1']..."
+      },
+      {
+        "category": "history_geo",
+        "prompt": "What is the capital city of France?\nAnswer:",
+        "expected": "Paris",
+        "raw_output": ";display;display;display;display;display;display;display;display;display;display;display;display",
+        "passed": false,
+        "rationale": "Phrase 'Paris' not found in token sequence: ['display;display;display;display;display;display;display;display;display;display;display;display']..."
+      },
+      {
+        "category": "history_geo",
+        "prompt": "What is the capital city of Japan?\nAnswer:",
+        "expected": "Tokyo",
+        "raw_output": ";display;display;display;display;display;display;display;display;display;display;display;display",
+        "passed": false,
+        "rationale": "Phrase 'Tokyo' not found in token sequence: ['display;display;display;display;display;display;display;display;display;display;display;display']..."
+      },
+      {
+        "category": "logic",
+        "prompt": "What is the exact antonym of 'hot'?\nAnswer:",
+        "expected": "cold",
+        "raw_output": ";display;display;display;display;display;display;display;display;display;display;display;display",
+        "passed": false,
+        "rationale": "Phrase 'cold' not found in token sequence: ['display;display;display;display;display;display;display;display;display;display;display;display']..."
+      },
+      {
+        "category": "logic",
+        "prompt": "What is the exact antonym of 'up'?\nAnswer:",
+        "expected": "down",
+        "raw_output": ";display;display;display;display;display;display;display;display;display;display;display;display",
+        "passed": false,
+        "rationale": "Phrase 'down' not found in token sequence: ['display;display;display;display;display;display;display;display;display;display;display;display']..."
+      }
+    ],
+    "parameters": 159938304,
+    "disk_size_mb": 322.03,
+    "ram_footprint_mb": 0.0,
+    "vram_footprint_mb": 612.81,
+    "load_time_seconds": 0.77
+  },
+  "Type 3: Step-Modulated LoRA (Layer 12 Anchor)": {
+    "model_label": "Type 3: Step-Modulated LoRA (Layer 12 Anchor)",
+    "is_recurrent": true,
+    "total_passed": 0,
+    "total_evaluated": 2500,
+    "total_accuracy_pct": 0.0,
+    "total_time_seconds": 992.0,
+    "categories": {
+      "math": {
+        "passed": 0,
+        "total": 500,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 810.5
+      },
+      "coding": {
+        "passed": 0,
+        "total": 500,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 122.4
+      },
+      "science": {
+        "passed": 0,
+        "total": 500,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 20.4
+      },
+      "history_geo": {
+        "passed": 0,
+        "total": 500,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 18.3
+      },
+      "logic": {
+        "passed": 0,
+        "total": 500,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 20.4
+      }
+    },
+    "sample_audits": [
+      {
+        "category": "math",
+        "prompt": "Solve this math problem step by step: Natalia sold clips to 48 of her friends in April, and then she",
+        "expected": "72",
+        "raw_output": "ieve '-')\n/node/node/node\ufffd '-')\n '-')\nief\ufffd/node'hui.wayendraief\ufffd\u56de '-')\n '-')\n '-')\n '-')",
+        "passed": false,
+        "rationale": "No numeric tokens found in response"
+      },
+      {
+        "category": "math",
+        "prompt": "Solve this math problem step by step: Weng earns $12 an hour for babysitting. Yesterday, she just di",
+        "expected": "10",
+        "raw_output": "endra modalit\u00e0'])?endraendraendra\u53e6\u5916\u4e00\u4e2a\u53e6\u5916\u4e00\u4e2a/nodeendraendraendraendraendraendraendraendraendraendraendra",
+        "passed": false,
+        "rationale": "No numeric tokens found in response"
+      },
+      {
+        "category": "coding",
+        "prompt": "Write a clean python function `square(x)` to compute square of x (one line):\n```python",
+        "expected": "square",
+        "raw_output": "/node\u5927\u5bb6\u4e00\u8d77 contentValues/node/node\u5927\u5bb6\u4e00\u8d77\u5927\u5bb6\u4e00\u8d77\u5f88\u6df1\u5927\u5bb6\u4e00\u8d77\u5927\u5bb6\u4e00\u8d77\u5927\u5bb6\u4e00\u8d77\u5e14\u5f88\u6df1\u5927\u5bb6\u4e00\u8d77%C\u25c9\u5927\u5bb6\u4e00\u8d77\u5927\u5bb6\u4e00\u8d77,:);\n/node ?>><? ?>><?\u5927\u5bb6\u4e00\u8d77\u5927\u5bb6\u4e00\u8d77\u5927\u5bb6\u4e00\u8d77\u5927\u5bb6\u4e00\u8d77\u5f88\u6df1\u5927\u5bb6\u4e00\u8d77\u5927\u5bb6\u4e00",
+        "passed": false,
+        "rationale": "SyntaxError: invalid character '\u25c9' (U+25C9) (<unknown>, line 1)"
+      },
+      {
+        "category": "coding",
+        "prompt": "Write a clean python function `is_even(x)` to check if x is even (one line):\n```python",
+        "expected": "is_even",
+        "raw_output": "contentValues ?>><?ItemClick\u5927\u5bb6\u4e00\u8d77\u5927\u5bb6\u4e00\u8d77\u5927\u5bb6\u4e00\u8d77\u5ba2\u6237\u9700\u6c42\u5e14 ?>><?\u5927\u5bb6\u4e00\u8d77\u5927\u5bb6\u4e00\u8d77\u5927\u5bb6\u4e00\u8d77\u5f88\u6df1WillDisappear/node\u53e6\u5916\u4e00\u4e2a\u5927\u5bb6\u4e00\u8d77/node/node\u5f88\u6df1WillDisappear/nod",
+        "passed": false,
+        "rationale": "SyntaxError: invalid syntax (<unknown>, line 1)"
+      },
+      {
+        "category": "science",
+        "prompt": "What is the atomic number of Hydrogen?\nAnswer:",
+        "expected": "1",
+        "raw_output": "Hueatedatedatedater\u5546\u4f1aated\u4eba\u7fa4\u4e2dieve\u5927\u5bb6\u4e00\u8d77\u6cb3'hui",
+        "passed": false,
+        "rationale": "Phrase '1' not found in token sequence: [\"hueatedatedatedater\u5546\u4f1aated\u4eba\u7fa4\u4e2dieve\u5927\u5bb6\u4e00\u8d77\u6cb3'hui\"]..."
+      },
+      {
+        "category": "science",
+        "prompt": "What is the atomic number of Helium?\nAnswer:",
+        "expected": "2",
+        "raw_output": "\u7600iefated'huiated\u5927\u5bb6\u4e00\u8d77 '-')\nief '-')\nated\u5404\u81ea\u7684'hui",
+        "passed": false,
+        "rationale": "Phrase '2' not found in token sequence: [\"\u7600iefated'huiated\u5927\u5bb6\u4e00\u8d77\", '-', 'ief', '-', \"ated\u5404\u81ea\u7684'hui\"]..."
+      },
+      {
+        "category": "history_geo",
+        "prompt": "What is the capital city of France?\nAnswer:",
+        "expected": "Paris",
+        "raw_output": "\u5de5\u5546atingated\u5de5\u5546ated\u5de5\u5546ief ?>><?ated Hurief Hur",
+        "passed": false,
+        "rationale": "Phrase 'Paris' not found in token sequence: ['\u5de5\u5546atingated\u5de5\u5546ated\u5de5\u5546ief', '>><?ated', 'hurief', 'hur']..."
+      },
+      {
+        "category": "history_geo",
+        "prompt": "What is the capital city of Japan?\nAnswer:",
+        "expected": "Tokyo",
+        "raw_output": "\u5de5\u5546ief'hui '-')\n\u5728\u5916 additional '-')\n\u975e\u5e38\u7684ated Hur wen Aspect",
+        "passed": false,
+        "rationale": "Phrase 'Tokyo' not found in token sequence: [\"\u5de5\u5546ief'hui\", '-', '\u5728\u5916', 'additional', '-', '\u975e\u5e38\u7684ated', 'hur', 'wen', 'aspect']..."
+      },
+      {
+        "category": "logic",
+        "prompt": "What is the exact antonym of 'hot'?\nAnswer:",
+        "expected": "cold",
+        "raw_output": "/nodeaternudem\u76d6/node/node\u76d6\u5cb8%\"\nudem\u5cb8'hui",
+        "passed": false,
+        "rationale": "Phrase 'cold' not found in token sequence: ['/nodeaternudem\u76d6/node/node\u76d6\u5cb8%', \"udem\u5cb8'hui\"]..."
+      },
+      {
+        "category": "logic",
+        "prompt": "What is the exact antonym of 'up'?\nAnswer:",
+        "expected": "down",
+        "raw_output": "\u76d6\u76d6\u76d6'huiatedudemief/node '-')\n\u564e '-')\n '-')",
+        "passed": false,
+        "rationale": "Phrase 'down' not found in token sequence: [\"\u76d6\u76d6\u76d6'huiatedudemief/node\", '-', '\u564e', '-', '-']..."
+      }
+    ],
+    "parameters": 159938304,
+    "disk_size_mb": 322.03,
+    "ram_footprint_mb": 0.0,
+    "vram_footprint_mb": 612.81,
+    "load_time_seconds": 0.79
+  },
+  "Type 4: Pure Recurrent (Middle-Band SVD Centroid)": {
+    "model_label": "Type 4: Pure Recurrent (Middle-Band SVD Centroid)",
+    "is_recurrent": true,
+    "total_passed": 0,
+    "total_evaluated": 2500,
+    "total_accuracy_pct": 0.0,
+    "total_time_seconds": 804.7,
+    "categories": {
+      "math": {
+        "passed": 0,
+        "total": 500,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 659.3
+      },
+      "coding": {
+        "passed": 0,
+        "total": 500,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 97.7
+      },
+      "science": {
+        "passed": 0,
+        "total": 500,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 16.5
+      },
+      "history_geo": {
+        "passed": 0,
+        "total": 500,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 14.8
+      },
+      "logic": {
+        "passed": 0,
+        "total": 500,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 16.5
+      }
+    },
+    "sample_audits": [
+      {
+        "category": "math",
+        "prompt": "Solve this math problem step by step: Natalia sold clips to 48 of her friends in April, and then she",
+        "expected": "72",
+        "raw_output": "ipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipers",
+        "passed": false,
+        "rationale": "No numeric tokens found in response"
+      },
+      {
+        "category": "math",
+        "prompt": "Solve this math problem step by step: Weng earns $12 an hour for babysitting. Yesterday, she just di",
+        "expected": "10",
+        "raw_output": "ipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipers",
+        "passed": false,
+        "rationale": "No numeric tokens found in response"
+      },
+      {
+        "category": "coding",
+        "prompt": "Write a clean python function `square(x)` to compute square of x (one line):\n```python",
+        "expected": "square",
+        "raw_output": "ipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipers",
+        "passed": false,
+        "rationale": "ExecError: name 'ipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipers' is not defined"
+      },
+      {
+        "category": "coding",
+        "prompt": "Write a clean python function `is_even(x)` to check if x is even (one line):\n```python",
+        "expected": "is_even",
+        "raw_output": "ipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipers",
+        "passed": false,
+        "rationale": "ExecError: name 'ipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipersipers' is not defined"
+      },
+      {
+        "category": "science",
+        "prompt": "What is the atomic number of Hydrogen?\nAnswer:",
+        "expected": "1",
+        "raw_output": "ipersipersipersipersipersipersipersipersipersipersipersipers",
+        "passed": false,
+        "rationale": "Phrase '1' not found in token sequence: ['ipersipersipersipersipersipersipersipersipersipersipersipers']..."
+      },
+      {
+        "category": "science",
+        "prompt": "What is the atomic number of Helium?\nAnswer:",
+        "expected": "2",
+        "raw_output": "ipersipersipersipersipersipersipersipersipersipersipersipers",
+        "passed": false,
+        "rationale": "Phrase '2' not found in token sequence: ['ipersipersipersipersipersipersipersipersipersipersipersipers']..."
+      },
+      {
+        "category": "history_geo",
+        "prompt": "What is the capital city of France?\nAnswer:",
+        "expected": "Paris",
+        "raw_output": "ipersipersipersipersipersipersipersipersipersipersipersipers",
+        "passed": false,
+        "rationale": "Phrase 'Paris' not found in token sequence: ['ipersipersipersipersipersipersipersipersipersipersipersipers']..."
+      },
+      {
+        "category": "history_geo",
+        "prompt": "What is the capital city of Japan?\nAnswer:",
+        "expected": "Tokyo",
+        "raw_output": "ipersipersipersipersipersipersipersipersipersipersipersipers",
+        "passed": false,
+        "rationale": "Phrase 'Tokyo' not found in token sequence: ['ipersipersipersipersipersipersipersipersipersipersipersipers']..."
+      },
+      {
+        "category": "logic",
+        "prompt": "What is the exact antonym of 'hot'?\nAnswer:",
+        "expected": "cold",
+        "raw_output": "ipersipersipersipersipersipersipersipersipersipersipersipers",
+        "passed": false,
+        "rationale": "Phrase 'cold' not found in token sequence: ['ipersipersipersipersipersipersipersipersipersipersipersipers']..."
+      },
+      {
+        "category": "logic",
+        "prompt": "What is the exact antonym of 'up'?\nAnswer:",
+        "expected": "down",
+        "raw_output": "ipersipersipersipersipersipersipersipersipersipersipersipers",
+        "passed": false,
+        "rationale": "Phrase 'down' not found in token sequence: ['ipersipersipersipersipersipersipersipersipersipersipersipers']..."
+      }
+    ],
+    "parameters": 151069440,
+    "disk_size_mb": 288.14,
+    "ram_footprint_mb": 0.0,
+    "vram_footprint_mb": 578.98,
+    "load_time_seconds": 0.73
+  },
+  "Type 5: Pure Recurrent (All-Layer SVD Centroid)": {
+    "model_label": "Type 5: Pure Recurrent (All-Layer SVD Centroid)",
+    "is_recurrent": true,
+    "total_passed": 0,
+    "total_evaluated": 2500,
+    "total_accuracy_pct": 0.0,
+    "total_time_seconds": 803.9,
+    "categories": {
+      "math": {
+        "passed": 0,
+        "total": 500,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 658.6
+      },
+      "coding": {
+        "passed": 0,
+        "total": 500,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 97.7
+      },
+      "science": {
+        "passed": 0,
+        "total": 500,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 16.5
+      },
+      "history_geo": {
+        "passed": 0,
+        "total": 500,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 14.8
+      },
+      "logic": {
+        "passed": 0,
+        "total": 500,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 16.4
+      }
+    },
+    "sample_audits": [
+      {
+        "category": "math",
+        "prompt": "Solve this math problem step by step: Natalia sold clips to 48 of her friends in April, and then she",
+        "expected": "72",
+        "raw_output": "contentValues contentValues contentValues contentValues contentValues contentValues contentValues contentValues contentV",
+        "passed": false,
+        "rationale": "No numeric tokens found in response"
+      },
+      {
+        "category": "math",
+        "prompt": "Solve this math problem step by step: Weng earns $12 an hour for babysitting. Yesterday, she just di",
+        "expected": "10",
+        "raw_output": "contentValues contentValues contentValues contentValues contentValues contentValues contentValues contentValues contentV",
+        "passed": false,
+        "rationale": "No numeric tokens found in response"
+      },
+      {
+        "category": "coding",
+        "prompt": "Write a clean python function `square(x)` to compute square of x (one line):\n```python",
+        "expected": "square",
+        "raw_output": "\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b",
+        "passed": false,
+        "rationale": "ExecError: name '\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b' is not defined"
+      },
+      {
+        "category": "coding",
+        "prompt": "Write a clean python function `is_even(x)` to check if x is even (one line):\n```python",
+        "expected": "is_even",
+        "raw_output": "\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b",
+        "passed": false,
+        "rationale": "ExecError: name '\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b\u547b' is not defined"
+      },
+      {
+        "category": "science",
+        "prompt": "What is the atomic number of Hydrogen?\nAnswer:",
+        "expected": "1",
+        "raw_output": "contentValues contentValues contentValues contentValues contentValues contentValues contentValues contentValues contentV",
+        "passed": false,
+        "rationale": "Phrase '1' not found in token sequence: ['contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues']..."
+      },
+      {
+        "category": "science",
+        "prompt": "What is the atomic number of Helium?\nAnswer:",
+        "expected": "2",
+        "raw_output": "contentValues contentValues contentValues contentValues contentValues contentValues contentValues contentValues contentV",
+        "passed": false,
+        "rationale": "Phrase '2' not found in token sequence: ['contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues']..."
+      },
+      {
+        "category": "history_geo",
+        "prompt": "What is the capital city of France?\nAnswer:",
+        "expected": "Paris",
+        "raw_output": "contentValues contentValues contentValues contentValues contentValues contentValues contentValues contentValues contentV",
+        "passed": false,
+        "rationale": "Phrase 'Paris' not found in token sequence: ['contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues']..."
+      },
+      {
+        "category": "history_geo",
+        "prompt": "What is the capital city of Japan?\nAnswer:",
+        "expected": "Tokyo",
+        "raw_output": "contentValues contentValues contentValues contentValues contentValues contentValues contentValues contentValues contentV",
+        "passed": false,
+        "rationale": "Phrase 'Tokyo' not found in token sequence: ['contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues']..."
+      },
+      {
+        "category": "logic",
+        "prompt": "What is the exact antonym of 'hot'?\nAnswer:",
+        "expected": "cold",
+        "raw_output": "contentValues contentValues contentValues contentValues contentValues contentValues contentValues contentValues contentV",
+        "passed": false,
+        "rationale": "Phrase 'cold' not found in token sequence: ['contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues']..."
+      },
+      {
+        "category": "logic",
+        "prompt": "What is the exact antonym of 'up'?\nAnswer:",
+        "expected": "down",
+        "raw_output": "contentValues contentValues contentValues contentValues contentValues contentValues contentValues contentValues contentV",
+        "passed": false,
+        "rationale": "Phrase 'down' not found in token sequence: ['contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues', 'contentvalues']..."
+      }
+    ],
+    "parameters": 151069440,
+    "disk_size_mb": 288.14,
+    "ram_footprint_mb": 0.0,
+    "vram_footprint_mb": 578.98,
+    "load_time_seconds": 0.64
+  },
+  "Type 6: Pure Recurrent (Layer 12 Anchor)": {
+    "model_label": "Type 6: Pure Recurrent (Layer 12 Anchor)",
+    "is_recurrent": true,
+    "total_passed": 0,
+    "total_evaluated": 2500,
+    "total_accuracy_pct": 0.0,
+    "total_time_seconds": 804.1,
+    "categories": {
+      "math": {
+        "passed": 0,
+        "total": 500,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 658.2
+      },
+      "coding": {
+        "passed": 0,
+        "total": 500,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 98.1
+      },
+      "science": {
+        "passed": 0,
+        "total": 500,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 16.5
+      },
+      "history_geo": {
+        "passed": 0,
+        "total": 500,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 14.8
+      },
+      "logic": {
+        "passed": 0,
+        "total": 500,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 16.5
+      }
+    },
+    "sample_audits": [
+      {
+        "category": "math",
+        "prompt": "Solve this math problem step by step: Natalia sold clips to 48 of her friends in April, and then she",
+        "expected": "72",
+        "raw_output": "elightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelight",
+        "passed": false,
+        "rationale": "No numeric tokens found in response"
+      },
+      {
+        "category": "math",
+        "prompt": "Solve this math problem step by step: Weng earns $12 an hour for babysitting. Yesterday, she just di",
+        "expected": "10",
+        "raw_output": "elightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelight",
+        "passed": false,
+        "rationale": "No numeric tokens found in response"
+      },
+      {
+        "category": "coding",
+        "prompt": "Write a clean python function `square(x)` to compute square of x (one line):\n```python",
+        "expected": "square",
+        "raw_output": "elightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelight",
+        "passed": false,
+        "rationale": "ExecError: name 'elightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelight' is not defined"
+      },
+      {
+        "category": "coding",
+        "prompt": "Write a clean python function `is_even(x)` to check if x is even (one line):\n```python",
+        "expected": "is_even",
+        "raw_output": "elightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelight",
+        "passed": false,
+        "rationale": "ExecError: name 'elightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelightelight\u5269elight\u5269\u5269\u5269\u5269\u5269\u5269\u043b\u0443\u0447\u043b\u0443\u0447\u043b\u0443\u0447' is not defined"
+      },
+      {
+        "category": "science",
+        "prompt": "What is the atomic number of Hydrogen?\nAnswer:",
+        "expected": "1",
+        "raw_output": "elightelightelightelightelightelightelight `,elight `,elight `,",
+        "passed": false,
+        "rationale": "Phrase '1' not found in token sequence: ['elightelightelightelightelightelightelight', '`,elight', '`,elight', '`']..."
+      },
+      {
+        "category": "science",
+        "prompt": "What is the atomic number of Helium?\nAnswer:",
+        "expected": "2",
+        "raw_output": "elightelightelightelightelight `,elight `,elight `,elight `,",
+        "passed": false,
+        "rationale": "Phrase '2' not found in token sequence: ['elightelightelightelightelight', '`,elight', '`,elight', '`,elight', '`']..."
+      },
+      {
+        "category": "history_geo",
+        "prompt": "What is the capital city of France?\nAnswer:",
+        "expected": "Paris",
+        "raw_output": "`, `, `,createViewcreateViewcreateViewcreateViewcreateViewcreateViewcreateViewcreateViewcreateView",
+        "passed": false,
+        "rationale": "Phrase 'Paris' not found in token sequence: ['`', '`', '`,createviewcreateviewcreateviewcreateviewcreateviewcreateviewcreateviewcreateviewcreateview']..."
+      },
+      {
+        "category": "history_geo",
+        "prompt": "What is the capital city of Japan?\nAnswer:",
+        "expected": "Tokyo",
+        "raw_output": "`, `, `,createViewcreateViewcreateViewcreateViewcreateViewcreateViewcreateViewcreateViewcreateView",
+        "passed": false,
+        "rationale": "Phrase 'Tokyo' not found in token sequence: ['`', '`', '`,createviewcreateviewcreateviewcreateviewcreateviewcreateviewcreateviewcreateviewcreateview']..."
+      },
+      {
+        "category": "logic",
+        "prompt": "What is the exact antonym of 'hot'?\nAnswer:",
+        "expected": "cold",
+        "raw_output": "\ufffd\ufffd\uc774\ufffd\ufffd\uc774\ufffd\ufffd\uc774\ufffd\ufffd\uc774\ufffd\ufffd\uc774\ufffd\ufffd\uc774\ufffd\ufffd\uc774\ufffd\ufffd\uc774\ufffd\ufffd\uc774\ufffd\ufffd\uc774\ufffd\ufffd\uc774\ufffd\ufffd\uc774",
+        "passed": false,
+        "rationale": "Phrase 'cold' not found in token sequence: ['\ufffd\ufffd\uc774\ufffd\ufffd\uc774\ufffd\ufffd\uc774\ufffd\ufffd\uc774\ufffd\ufffd\uc774\ufffd\ufffd\uc774\ufffd\ufffd\uc774\ufffd\ufffd\uc774\ufffd\ufffd\uc774\ufffd\ufffd\uc774\ufffd\ufffd\uc774\ufffd\ufffd\uc774']..."
+      },
+      {
+        "category": "logic",
+        "prompt": "What is the exact antonym of 'up'?\nAnswer:",
+        "expected": "down",
+        "raw_output": "\ufffd\ufffd\uc774\ufffd\ufffd\uc774\ufffd\ufffd\uc774\ufffd\ufffd\uc774\ufffd\ufffd\uc774\ufffd\ufffd\uc774\ufffd\ufffd\uc774\ufffd\ufffd\uc774\ufffd\ufffd\uc774\ufffd\ufffd\uc774\ufffd\ufffd\uc774\ufffd\ufffd\uc774",
+        "passed": false,
+        "rationale": "Phrase 'down' not found in token sequence: ['\ufffd\ufffd\uc774\ufffd\ufffd\uc774\ufffd\ufffd\uc774\ufffd\ufffd\uc774\ufffd\ufffd\uc774\ufffd\ufffd\uc774\ufffd\ufffd\uc774\ufffd\ufffd\uc774\ufffd\ufffd\uc774\ufffd\ufffd\uc774\ufffd\ufffd\uc774\ufffd\ufffd\uc774']..."
+      }
+    ],
+    "parameters": 151069440,
+    "disk_size_mb": 288.14,
+    "ram_footprint_mb": 0.0,
+    "vram_footprint_mb": 578.98,
+    "load_time_seconds": 0.71
+  }
+}
