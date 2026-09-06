@@ -88,6 +88,100 @@ class TestHybridSVD(unittest.TestCase):
 
         self.assertTrue(torch.allclose(out1, out2, atol=1e-6), "CPPN outputs must be deterministic")
 
+    def test_outlier_vault_extraction_and_zero_loss_reconstruction(self):
+        """Verifies exact outlier isolation at tau=6.0 sigma and 100% bit-exact reconstruction."""
+        from ai_dna.kernels.hybrid_svd import extract_outlier_sparse_residual, restore_outliers_to_tensor
+        M, N = 64, 64
+        torch.manual_seed(1337)
+        W = torch.randn((M, N), device=self.device)
+
+        # Inject two extreme emergent outlier weights
+        W[5, 12] = 50.0
+        W[30, 45] = -60.0
+
+        sanitized, vault_entry = extract_outlier_sparse_residual(W, threshold_sigma=6.0)
+        self.assertEqual(vault_entry["count"], 2, f"Expected 2 outliers, found {vault_entry['count']}")
+
+        # Ensure outliers were extracted with exact coordinates and values
+        coords = vault_entry["indices"].cpu().tolist()
+        expected_coords = [[5, 30], [12, 45]]
+        self.assertEqual(coords, expected_coords)
+        self.assertEqual(vault_entry["values"][0].item(), 50.0)
+        self.assertEqual(vault_entry["values"][1].item(), -60.0)
+
+        # In the sanitized matrix, those positions are zeroed
+        self.assertEqual(sanitized[5, 12].item(), 0.0)
+        self.assertEqual(sanitized[30, 45].item(), 0.0)
+
+        # Exact restoration must match original W bit-for-bit on outlier coordinates
+        restored = restore_outliers_to_tensor(sanitized, vault_entry)
+        self.assertTrue(torch.equal(restored, W), "Restored matrix must be bit-for-bit identical to original")
+
+    def test_outlier_vault_growth_engine_integration(self):
+        """Verifies that GrowthEngine fuses outlier vault entries into both weights dict and Phenotype model."""
+        from ai_dna.dna.structure import Genotype
+        from ai_dna.growth.engine import GrowthEngine
+        genotype = Genotype.create_default()
+        engine = GrowthEngine(device=self.device)
+
+        target_param = "blocks.0.attn.w_q.weight"
+        outlier_val = 999.0
+        genotype.outlier_vault[target_param] = {
+            "indices": torch.tensor([[0], [1]], dtype=torch.int64, device=self.device),
+            "values": torch.tensor([outlier_val], dtype=torch.float32, device=self.device),
+            "shape": [genotype.dna_architecture.d_model, genotype.dna_architecture.d_model],
+            "count": 1,
+            "threshold_sigma": 6.0,
+        }
+
+        # 1. Verify growth via grow_phenotype_weights
+        weights = engine.grow_phenotype_weights(genotype)
+        self.assertEqual(weights[target_param][0, 1].item(), outlier_val)
+
+        # 2. Verify growth via grow_phenotype_model
+        model = engine.grow_phenotype_model(genotype)
+        self.assertEqual(model.blocks[0].attn.w_q.weight[0, 1].item(), outlier_val)
+
+    def test_outlier_vault_multi_parent_fusion_retention(self):
+        """Verifies zero catastrophic forgetting: child retains outlier keys from both Parent A and Parent B."""
+        from ai_dna.dna.structure import Genotype
+        from ai_dna.growth.engine import GrowthEngine
+
+        parent_a = Genotype.create_default(genotype_id="parent_a")
+        parent_b = Genotype.create_default(genotype_id="parent_b")
+
+        # Parent A: specialized text routing outlier
+        text_key = "text_encoder.token_emb.weight"
+        parent_a.outlier_vault[text_key] = {
+            "indices": torch.tensor([[2], [4]], dtype=torch.int64, device=self.device),
+            "values": torch.tensor([42.0], dtype=torch.float32, device=self.device),
+            "shape": [parent_a.dna_architecture.vocab_size, parent_a.dna_architecture.d_model],
+            "count": 1,
+            "threshold_sigma": 6.0,
+        }
+
+        # Parent B: specialized audio projection outlier
+        audio_key = "audio_encoder.proj.weight"
+        parent_b.outlier_vault[audio_key] = {
+            "indices": torch.tensor([[1], [3]], dtype=torch.int64, device=self.device),
+            "values": torch.tensor([77.0], dtype=torch.float32, device=self.device),
+            "shape": [parent_b.dna_architecture.d_model, 80],
+            "count": 1,
+            "threshold_sigma": 6.0,
+        }
+
+        # Child fuses both parents without size cap (Exact Lossless Inheritance)
+        child = parent_a.clone(new_id="child_ab")
+        child.outlier_vault = {**parent_a.outlier_vault, **parent_b.outlier_vault}
+
+        engine = GrowthEngine(device=self.device)
+        child_weights = engine.grow_phenotype_weights(child)
+
+        # Both parent outlier features must be preserved with 100% exact numerical fidelity
+        self.assertEqual(child_weights[text_key][2, 4].item(), 42.0)
+        self.assertEqual(child_weights[audio_key][1, 3].item(), 77.0)
+
 
 if __name__ == "__main__":
     unittest.main()
+

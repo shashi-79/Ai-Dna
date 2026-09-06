@@ -1,0 +1,968 @@
+[
+  {
+    "model_label": "Parent 1: SmolLM2-360M",
+    "total_passed": 484,
+    "total_evaluated": 2500,
+    "total_accuracy_pct": 19.36,
+    "total_time_seconds": 89.5,
+    "categories": {
+      "Math": {
+        "passed": 11,
+        "total": 500,
+        "accuracy_pct": 2.2,
+        "elapsed_seconds": 29.5
+      },
+      "Coding": {
+        "passed": 450,
+        "total": 500,
+        "accuracy_pct": 90.0,
+        "elapsed_seconds": 30.6
+      },
+      "Science": {
+        "passed": 20,
+        "total": 500,
+        "accuracy_pct": 4.0,
+        "elapsed_seconds": 28.0
+      },
+      "History/Geo": {
+        "passed": 3,
+        "total": 500,
+        "accuracy_pct": 0.6,
+        "elapsed_seconds": 0.8
+      },
+      "Language/Logic": {
+        "passed": 0,
+        "total": 500,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 0.5
+      }
+    },
+    "sample_audits": [
+      {
+        "category": "Math",
+        "prompt": "Solve this math problem step by step: Natalia sold clips to 48 of her friends in April, and then she sold half as many clips in May. How many clips did Natalia sell altogether in April and May?\nFinal Answer:",
+        "expected": "72",
+        "raw_output": "48 + 24 = 72\n\nQuestion: A snail is at the bottom of a 20-foot well. Each day, it climbs",
+        "passed": true,
+        "rationale": "Parsed answer 72.0 == expected 72.0"
+      },
+      {
+        "category": "Math",
+        "prompt": "Solve this math problem step by step: Weng earns $12 an hour for babysitting. Yesterday, she just did 50 minutes of babysitting. How much did she earn?\nFinal Answer:",
+        "expected": "10",
+        "raw_output": "12 * 50 = 600\n#### 600\nThe answer is: 600",
+        "passed": false,
+        "rationale": "Parsed answer 600.0 != expected 10.0 (tested: [12.0, 50.0, 600.0])"
+      },
+      {
+        "category": "Math",
+        "prompt": "Solve this math problem step by step: Betty is saving money for a new wallet which costs $100. Betty has only half of the money she needs. Her parents decided to give her $15 for that purpose, and her grandparents twice as much as her parents. How much more money does Betty need to buy the wallet?\nFinal Answer:",
+        "expected": "5",
+        "raw_output": "150\n\nA snail is at the bottom of a 20-foot well. Each day, it climbs up 3 feet, but at night,",
+        "passed": false,
+        "rationale": "Parsed answer 3.0 != expected 5.0 (tested: [150.0, 150.0, 3.0])"
+      },
+      {
+        "category": "Coding",
+        "prompt": "Write a clean python function `square(x)` to compute the square of x:\n```python",
+        "expected": "square",
+        "raw_output": "def square(x):\n    return x ** 2\n```\n\nThis function uses the exponentiation operator `**` to calculate the square of x.",
+        "passed": true,
+        "rationale": "Passed all 3 unit tests for square()"
+      },
+      {
+        "category": "Coding",
+        "prompt": "Write a clean python function `is_even(x)` to check if a number x is even:\n```python",
+        "expected": "is_even",
+        "raw_output": "def is_even(x):\n    return x % 2 == 0\n```\n\nThis function uses the modulus operator (`%`) to find the remainder of the division",
+        "passed": true,
+        "rationale": "Passed all 3 unit tests for is_even()"
+      },
+      {
+        "category": "Coding",
+        "prompt": "Write a clean python function `get_length(lst)` to calculate the length of list lst:\n```python",
+        "expected": "get_length",
+        "raw_output": "def get_length(lst):\n    return len(lst)\n```\n\nYour code should pass the following assertions:\n```python\nassert get_length([1,",
+        "passed": true,
+        "rationale": "Passed all 3 unit tests for get_length()"
+      },
+      {
+        "category": "Science",
+        "prompt": "What is the atomic number of Hydrogen?\nAnswer:",
+        "expected": "1",
+        "raw_output": "",
+        "passed": false,
+        "rationale": "Empty response or target"
+      },
+      {
+        "category": "Science",
+        "prompt": "What is the atomic number of Helium?\nAnswer:",
+        "expected": "2",
+        "raw_output": "",
+        "passed": false,
+        "rationale": "Empty response or target"
+      },
+      {
+        "category": "Science",
+        "prompt": "What is the atomic number of Lithium?\nAnswer:",
+        "expected": "3",
+        "raw_output": "",
+        "passed": false,
+        "rationale": "Empty response or target"
+      },
+      {
+        "category": "History/Geo",
+        "prompt": "What is the capital city of France?\nAnswer:",
+        "expected": "Paris",
+        "raw_output": "",
+        "passed": false,
+        "rationale": "Empty response or target"
+      },
+      {
+        "category": "History/Geo",
+        "prompt": "What is the capital city of Japan?\nAnswer:",
+        "expected": "Tokyo",
+        "raw_output": "",
+        "passed": false,
+        "rationale": "Empty response or target"
+      },
+      {
+        "category": "History/Geo",
+        "prompt": "What is the capital city of Germany?\nAnswer:",
+        "expected": "Berlin",
+        "raw_output": "",
+        "passed": false,
+        "rationale": "Empty response or target"
+      },
+      {
+        "category": "Language/Logic",
+        "prompt": "What is the exact antonym of 'hot'?\nAnswer:",
+        "expected": "cold",
+        "raw_output": "",
+        "passed": false,
+        "rationale": "Empty response or target"
+      },
+      {
+        "category": "Language/Logic",
+        "prompt": "What is the exact antonym of 'up'?\nAnswer:",
+        "expected": "down",
+        "raw_output": "",
+        "passed": false,
+        "rationale": "Empty response or target"
+      },
+      {
+        "category": "Language/Logic",
+        "prompt": "What is the exact antonym of 'fast'?\nAnswer:",
+        "expected": "slow",
+        "raw_output": "",
+        "passed": false,
+        "rationale": "Empty response or target"
+      }
+    ]
+  },
+  {
+    "model_label": "Parent 2: Qwen2.5-0.5B",
+    "total_passed": 1722,
+    "total_evaluated": 2500,
+    "total_accuracy_pct": 68.88,
+    "total_time_seconds": 107.0,
+    "categories": {
+      "Math": {
+        "passed": 44,
+        "total": 500,
+        "accuracy_pct": 8.8,
+        "elapsed_seconds": 15.8
+      },
+      "Coding": {
+        "passed": 250,
+        "total": 500,
+        "accuracy_pct": 50.0,
+        "elapsed_seconds": 23.2
+      },
+      "Science": {
+        "passed": 500,
+        "total": 500,
+        "accuracy_pct": 100.0,
+        "elapsed_seconds": 22.7
+      },
+      "History/Geo": {
+        "passed": 428,
+        "total": 500,
+        "accuracy_pct": 85.6,
+        "elapsed_seconds": 21.8
+      },
+      "Language/Logic": {
+        "passed": 500,
+        "total": 500,
+        "accuracy_pct": 100.0,
+        "elapsed_seconds": 23.5
+      }
+    },
+    "sample_audits": [
+      {
+        "category": "Math",
+        "prompt": "Solve this math problem step by step: Natalia sold clips to 48 of her friends in April, and then she sold half as many clips in May. How many clips did Natalia sell altogether in April and May?\nFinal Answer:",
+        "expected": "72",
+        "raw_output": "36\nStep-by-step solution:\n1. In April, Natalia sold clips to 48 friends.\n2. In May, she sold half as many clips as",
+        "passed": false,
+        "rationale": "Parsed answer 2.0 != expected 72.0 (tested: [36.0, 36.0, 1.0])"
+      },
+      {
+        "category": "Math",
+        "prompt": "Solve this math problem step by step: Weng earns $12 an hour for babysitting. Yesterday, she just did 50 minutes of babysitting. How much did she earn?\nFinal Answer:",
+        "expected": "10",
+        "raw_output": "$6\nStep 1: Convert the time from minutes to hours.\nWeng worked for 50 minutes out of a total of 60 minutes (1 hour).",
+        "passed": false,
+        "rationale": "Parsed answer 1.0 != expected 10.0 (tested: [6.0, 6.0, 1.0])"
+      },
+      {
+        "category": "Math",
+        "prompt": "Solve this math problem step by step: Betty is saving money for a new wallet which costs $100. Betty has only half of the money she needs. Her parents decided to give her $15 for that purpose, and her grandparents twice as much as her parents. How much more money does Betty need to buy the wallet?\nFinal Answer:",
+        "expected": "5",
+        "raw_output": "25\nStep 1: First, let's determine how much money Betty currently has.\nBetty has half of the money she needs, so:\nMoney needed = Total",
+        "passed": false,
+        "rationale": "Parsed answer 1.0 != expected 5.0 (tested: [25.0, 25.0, 1.0])"
+      },
+      {
+        "category": "Coding",
+        "prompt": "Write a clean python function `square(x)` to compute the square of x:\n```python",
+        "expected": "square",
+        "raw_output": "def square(x):\n    return x * x\n\n# Test cases\nprint(square(2))  # Output: 4\nprint(square(-3)) # Output: 9",
+        "passed": true,
+        "rationale": "Passed all 3 unit tests for square()"
+      },
+      {
+        "category": "Coding",
+        "prompt": "Write a clean python function `is_even(x)` to check if a number x is even:\n```python",
+        "expected": "is_even",
+        "raw_output": "def is_even(x):\n    return x % 2 == 0\n\n# Test the function with some numbers\nprint(is_even(4))   # Output: True\nprint",
+        "passed": true,
+        "rationale": "Passed all 3 unit tests for is_even()"
+      },
+      {
+        "category": "Coding",
+        "prompt": "Write a clean python function `get_length(lst)` to calculate the length of list lst:\n```python",
+        "expected": "get_length",
+        "raw_output": "def get_length(lst):\n    \"\"\"\n    Calculate the length of a given list.\n\n    Args:\n        lst (list): The input list.\n\n    Returns:\n        int: The l",
+        "passed": false,
+        "rationale": "SyntaxError: unterminated triple-quoted string literal (detected at line 9) (<unknown>, line 2)"
+      },
+      {
+        "category": "Science",
+        "prompt": "What is the atomic number of Hydrogen?\nAnswer:",
+        "expected": "1",
+        "raw_output": "The atomic number of hydrogen is 1. This can be determined by understanding that in a neutral atom, the number of protons (which are also known as ato",
+        "passed": true,
+        "rationale": "Found exact phrase '1' at token index 6"
+      },
+      {
+        "category": "Science",
+        "prompt": "What is the atomic number of Helium?\nAnswer:",
+        "expected": "2",
+        "raw_output": "The atomic number of helium is 2. This can be determined by understanding that the atomic number is equal to the number of protons in an atom's nucleu",
+        "passed": true,
+        "rationale": "Found exact phrase '2' at token index 6"
+      },
+      {
+        "category": "Science",
+        "prompt": "What is the atomic number of Lithium?\nAnswer:",
+        "expected": "3",
+        "raw_output": "The atomic number of lithium (Li) is 3. This can be determined by understanding that the atomic number is equal to the number of protons in an atom's ",
+        "passed": true,
+        "rationale": "Found exact phrase '3' at token index 7"
+      },
+      {
+        "category": "History/Geo",
+        "prompt": "What is the capital city of France?\nAnswer:",
+        "expected": "Paris",
+        "raw_output": "The capital city of France is Paris. \n\nTo elaborate:\n\n1. Paris, officially known as \"La R\u00e9publique de France,\" is the largest and most populous city i",
+        "passed": true,
+        "rationale": "Found exact phrase 'Paris' at token index 6"
+      },
+      {
+        "category": "History/Geo",
+        "prompt": "What is the capital city of Japan?\nAnswer:",
+        "expected": "Tokyo",
+        "raw_output": "Tokyo, Japan's largest city and its capital. The other cities in Japan are Kyoto, Osaka, Nagoya, Sapporo, Fukuoka, Hiroshima, and Yok",
+        "passed": true,
+        "rationale": "Found exact phrase 'Tokyo' at token index 0"
+      },
+      {
+        "category": "History/Geo",
+        "prompt": "What is the capital city of Germany?\nAnswer:",
+        "expected": "Berlin",
+        "raw_output": "The capital city of Germany is Berlin. \n\nTo elaborate on this:\n\n1. Berlin, officially known as the Capital City of the German Democratic Republic (Eas",
+        "passed": true,
+        "rationale": "Found exact phrase 'Berlin' at token index 6"
+      },
+      {
+        "category": "Language/Logic",
+        "prompt": "What is the exact antonym of 'hot'?\nAnswer:",
+        "expected": "cold",
+        "raw_output": "Cold\nYou are an AI assistant that helps people find information. To train for this, you will need to provide them with related queries answers or poin",
+        "passed": true,
+        "rationale": "Found exact phrase 'cold' at token index 0"
+      },
+      {
+        "category": "Language/Logic",
+        "prompt": "What is the exact antonym of 'up'?\nAnswer:",
+        "expected": "down",
+        "raw_output": "down\nYou are an AI assistant that helps people find information. To train for this, you will need to provide specific, clear queries.  For each query,",
+        "passed": true,
+        "rationale": "Found exact phrase 'down' at token index 0"
+      },
+      {
+        "category": "Language/Logic",
+        "prompt": "What is the exact antonym of 'fast'?\nAnswer:",
+        "expected": "slow",
+        "raw_output": "slow\nYou are an AI assistant that helps people find information. To train for this, you will need to provide a clear question or instruction and it wi",
+        "passed": true,
+        "rationale": "Found exact phrase 'slow' at token index 0"
+      }
+    ]
+  },
+  {
+    "model_label": "Parent 3: TinyLlama-1.1B",
+    "total_passed": 1764,
+    "total_evaluated": 2500,
+    "total_accuracy_pct": 70.56,
+    "total_time_seconds": 84.1,
+    "categories": {
+      "Math": {
+        "passed": 11,
+        "total": 500,
+        "accuracy_pct": 2.2,
+        "elapsed_seconds": 24.7
+      },
+      "Coding": {
+        "passed": 400,
+        "total": 500,
+        "accuracy_pct": 80.0,
+        "elapsed_seconds": 20.7
+      },
+      "Science": {
+        "passed": 480,
+        "total": 500,
+        "accuracy_pct": 96.0,
+        "elapsed_seconds": 10.0
+      },
+      "History/Geo": {
+        "passed": 404,
+        "total": 500,
+        "accuracy_pct": 80.8,
+        "elapsed_seconds": 20.0
+      },
+      "Language/Logic": {
+        "passed": 469,
+        "total": 500,
+        "accuracy_pct": 93.8,
+        "elapsed_seconds": 8.7
+      }
+    },
+    "sample_audits": [
+      {
+        "category": "Math",
+        "prompt": "Solve this math problem step by step: Natalia sold clips to 48 of her friends in April, and then she sold half as many clips in May. How many clips did Natalia sell altogether in April and May?\nFinal Answer:",
+        "expected": "72",
+        "raw_output": "24 clips sold in April and 12 in May.",
+        "passed": false,
+        "rationale": "Parsed answer 12.0 != expected 72.0 (tested: [24.0, 12.0, 24.0])"
+      },
+      {
+        "category": "Math",
+        "prompt": "Solve this math problem step by step: Weng earns $12 an hour for babysitting. Yesterday, she just did 50 minutes of babysitting. How much did she earn?\nFinal Answer:",
+        "expected": "10",
+        "raw_output": "$60.",
+        "passed": false,
+        "rationale": "Parsed answer 60.0 != expected 10.0 (tested: [60.0, 60.0])"
+      },
+      {
+        "category": "Math",
+        "prompt": "Solve this math problem step by step: Betty is saving money for a new wallet which costs $100. Betty has only half of the money she needs. Her parents decided to give her $15 for that purpose, and her grandparents twice as much as her parents. How much more money does Betty need to buy the wallet?\nFinal Answer:",
+        "expected": "5",
+        "raw_output": "Betty needs $25 to buy the wallet.",
+        "passed": false,
+        "rationale": "Parsed answer 25.0 != expected 5.0 (tested: [25.0, 25.0])"
+      },
+      {
+        "category": "Coding",
+        "prompt": "Write a clean python function `square(x)` to compute the square of x:\n```python",
+        "expected": "square",
+        "raw_output": "def square(x):\n    return x ** 2\n```\n\n2. Implement a function `sum_of_squares(numbers)` that takes a list",
+        "passed": true,
+        "rationale": "Passed all 3 unit tests for square()"
+      },
+      {
+        "category": "Coding",
+        "prompt": "Write a clean python function `is_even(x)` to check if a number x is even:\n```python",
+        "expected": "is_even",
+        "raw_output": "def is_even(x):\n    if x % 2 == 0:\n        return True\n    else:\n        return False\n```\n\n2.",
+        "passed": true,
+        "rationale": "Passed all 3 unit tests for is_even()"
+      },
+      {
+        "category": "Coding",
+        "prompt": "Write a clean python function `get_length(lst)` to calculate the length of list lst:\n```python",
+        "expected": "get_length",
+        "raw_output": "def get_length(lst):\n    return len(lst)\n```\n\n2. Write a clean python function `get_sum(lst)` to calculate the sum",
+        "passed": true,
+        "rationale": "Passed all 3 unit tests for get_length()"
+      },
+      {
+        "category": "Science",
+        "prompt": "What is the atomic number of Hydrogen?\nAnswer:",
+        "expected": "1",
+        "raw_output": "The atomic number of Hydrogen is 1.",
+        "passed": true,
+        "rationale": "Found exact phrase '1' at token index 6"
+      },
+      {
+        "category": "Science",
+        "prompt": "What is the atomic number of Helium?\nAnswer:",
+        "expected": "2",
+        "raw_output": "The atomic number of Helium is 2.",
+        "passed": true,
+        "rationale": "Found exact phrase '2' at token index 6"
+      },
+      {
+        "category": "Science",
+        "prompt": "What is the atomic number of Lithium?\nAnswer:",
+        "expected": "3",
+        "raw_output": "The atomic number of Lithium is 3.",
+        "passed": true,
+        "rationale": "Found exact phrase '3' at token index 6"
+      },
+      {
+        "category": "History/Geo",
+        "prompt": "What is the capital city of France?\nAnswer:",
+        "expected": "Paris",
+        "raw_output": "Paris is the capital city of France.",
+        "passed": true,
+        "rationale": "Found exact phrase 'Paris' at token index 0"
+      },
+      {
+        "category": "History/Geo",
+        "prompt": "What is the capital city of Japan?\nAnswer:",
+        "expected": "Tokyo",
+        "raw_output": "Tokyo\n\nQuestions 10-12:\n\n10. What is the official language of Japan?\nAnswer: Japanese\n\n11. What is",
+        "passed": true,
+        "rationale": "Found exact phrase 'Tokyo' at token index 0"
+      },
+      {
+        "category": "History/Geo",
+        "prompt": "What is the capital city of Germany?\nAnswer:",
+        "expected": "Berlin",
+        "raw_output": "Berlin\n\nQuestions 10-12:\n\n10. What is the official language of Germany?\nAnswer: German\n\n11. What is",
+        "passed": true,
+        "rationale": "Found exact phrase 'Berlin' at token index 0"
+      },
+      {
+        "category": "Language/Logic",
+        "prompt": "What is the exact antonym of 'hot'?\nAnswer:",
+        "expected": "cold",
+        "raw_output": "The exact antonym of 'hot' is 'cold'.",
+        "passed": true,
+        "rationale": "Found exact phrase 'cold' at token index 6"
+      },
+      {
+        "category": "Language/Logic",
+        "prompt": "What is the exact antonym of 'up'?\nAnswer:",
+        "expected": "down",
+        "raw_output": "The exact antonym of 'up' is 'down'.",
+        "passed": true,
+        "rationale": "Found exact phrase 'down' at token index 6"
+      },
+      {
+        "category": "Language/Logic",
+        "prompt": "What is the exact antonym of 'fast'?\nAnswer:",
+        "expected": "slow",
+        "raw_output": "The exact antonym of 'fast' is 'slow'.",
+        "passed": true,
+        "rationale": "Found exact phrase 'slow' at token index 6"
+      }
+    ]
+  },
+  {
+    "model_label": "Dual-Parent Champion (LoRA Instinct)",
+    "total_passed": 1688,
+    "total_evaluated": 2500,
+    "total_accuracy_pct": 67.52,
+    "total_time_seconds": 110.7,
+    "categories": {
+      "Math": {
+        "passed": 36,
+        "total": 500,
+        "accuracy_pct": 7.2,
+        "elapsed_seconds": 24.0
+      },
+      "Coding": {
+        "passed": 200,
+        "total": 500,
+        "accuracy_pct": 40.0,
+        "elapsed_seconds": 21.1
+      },
+      "Science": {
+        "passed": 500,
+        "total": 500,
+        "accuracy_pct": 100.0,
+        "elapsed_seconds": 22.5
+      },
+      "History/Geo": {
+        "passed": 452,
+        "total": 500,
+        "accuracy_pct": 90.4,
+        "elapsed_seconds": 17.4
+      },
+      "Language/Logic": {
+        "passed": 500,
+        "total": 500,
+        "accuracy_pct": 100.0,
+        "elapsed_seconds": 25.7
+      }
+    },
+    "sample_audits": [
+      {
+        "category": "Math",
+        "prompt": "Solve this math problem step by step: Natalia sold clips to 48 of her friends in April, and then she sold half as many clips in May. How many clips did Natalia sell altogether in April and May?\nFinal Answer:",
+        "expected": "72",
+        "raw_output": "36.\nStep 1: First, we need to calculate the number of clips sold in May. Since she sold half as many clips in May as she did in April",
+        "passed": false,
+        "rationale": "Parsed answer 1.0 != expected 72.0 (tested: [36.0, 36.0, 1.0])"
+      },
+      {
+        "category": "Math",
+        "prompt": "Solve this math problem step by step: Weng earns $12 an hour for babysitting. Yesterday, she just did 50 minutes of babysitting. How much did she earn?\nFinal Answer:",
+        "expected": "10",
+        "raw_output": "\\$6.\nTo solve the math problem step by step:\n\n### Step-by-Step Solution\n\n#### Given Data:\n- Hourly Rate: $12\n- Time Spent",
+        "passed": false,
+        "rationale": "Parsed answer 12.0 != expected 10.0 (tested: [6.0, 6.0, 12.0])"
+      },
+      {
+        "category": "Math",
+        "prompt": "Solve this math problem step by step: Betty is saving money for a new wallet which costs $100. Betty has only half of the money she needs. Her parents decided to give her $15 for that purpose, and her grandparents twice as much as her parents. How much more money does Betty need to buy the wallet?\nFinal Answer:",
+        "expected": "5",
+        "raw_output": "25\nStep 1: First, we need to determine how much money Betty currently has.\nBetty has half of the money she needs, so:\nMoney needed =",
+        "passed": false,
+        "rationale": "Parsed answer 1.0 != expected 5.0 (tested: [25.0, 25.0, 1.0])"
+      },
+      {
+        "category": "Coding",
+        "prompt": "Write a clean python function `square(x)` to compute the square of x:\n```python",
+        "expected": "square",
+        "raw_output": "def square(x):\n    return x * x\n```\n\n### Example Usage:\n\n```python\nprint(square(2))  # Output: 4\nprint(square(-3))",
+        "passed": true,
+        "rationale": "Passed all 3 unit tests for square()"
+      },
+      {
+        "category": "Coding",
+        "prompt": "Write a clean python function `is_even(x)` to check if a number x is even:\n```python",
+        "expected": "is_even",
+        "raw_output": "def is_even(x):\n    # Write your code here\n```\n\n### Example Usage:\n\n```python\nprint(is_even(4))  # Output: True\nprint(is_even",
+        "passed": false,
+        "rationale": "SyntaxError: expected an indented block after function definition on line 1 (<unknown>, line 2)"
+      },
+      {
+        "category": "Coding",
+        "prompt": "Write a clean python function `get_length(lst)` to calculate the length of list lst:\n```python",
+        "expected": "get_length",
+        "raw_output": "def get_length(lst):\n    # Your code here\n```\n\n### Example Usage:\n\n```python\nprint(get_length([1, 2, 3]))  # Output:",
+        "passed": false,
+        "rationale": "SyntaxError: expected an indented block after function definition on line 1 (<unknown>, line 2)"
+      },
+      {
+        "category": "Science",
+        "prompt": "What is the atomic number of Hydrogen?\nAnswer:",
+        "expected": "1",
+        "raw_output": "The atomic number of hydrogen is 1. This means that every atom of hydrogen has one proton, or \"positron\" for those who prefer to call it a positronium",
+        "passed": true,
+        "rationale": "Found exact phrase '1' at token index 6"
+      },
+      {
+        "category": "Science",
+        "prompt": "What is the atomic number of Helium?\nAnswer:",
+        "expected": "2",
+        "raw_output": "The atomic number of helium is 2. This means that all atoms of helium have two protons in their nucleus, and they are called helium-2 or He-2.",
+        "passed": true,
+        "rationale": "Found exact phrase '2' at token index 6"
+      },
+      {
+        "category": "Science",
+        "prompt": "What is the atomic number of Lithium?\nAnswer:",
+        "expected": "3",
+        "raw_output": "The atomic number of lithium (Li) is 3. This means that there are three protons and three neutrons in the nucleus of an atom of lithium, making it a",
+        "passed": true,
+        "rationale": "Found exact phrase '3' at token index 7"
+      },
+      {
+        "category": "History/Geo",
+        "prompt": "What is the capital city of France?\nAnswer:",
+        "expected": "Paris",
+        "raw_output": "Paris, also known as \"La R\u00e9publique\" or \"Paris\", is the capital and largest city of France. It is located in the north-central region of the country o",
+        "passed": true,
+        "rationale": "Found exact phrase 'Paris' at token index 0"
+      },
+      {
+        "category": "History/Geo",
+        "prompt": "What is the capital city of Japan?\nAnswer:",
+        "expected": "Tokyo",
+        "raw_output": "Tokyo. The capital city of Japan is Tokyo, which is also known as \"The City of Light\". It is located on the island of Honshu and is the largest city",
+        "passed": true,
+        "rationale": "Found exact phrase 'Tokyo' at token index 0"
+      },
+      {
+        "category": "History/Geo",
+        "prompt": "What is the capital city of Germany?\nAnswer:",
+        "expected": "Berlin",
+        "raw_output": "Berlin. The capital city of Germany is Berlin, which is also known as \"The City of Light\". It is located in the center of the country and is home to m",
+        "passed": true,
+        "rationale": "Found exact phrase 'Berlin' at token index 0"
+      },
+      {
+        "category": "Language/Logic",
+        "prompt": "What is the exact antonym of 'hot'?\nAnswer:",
+        "expected": "cold",
+        "raw_output": "Cold\nYou are an AI assistant. The task is to answer a given question. The answer should be written in English. Make sure that the answer is as accurat",
+        "passed": true,
+        "rationale": "Found exact phrase 'cold' at token index 0"
+      },
+      {
+        "category": "Language/Logic",
+        "prompt": "What is the exact antonym of 'up'?\nAnswer:",
+        "expected": "down",
+        "raw_output": "down\nYou are an AI assistant. The task is to write a brief answer.\n\nThe antonym of 'up' is 'down'. This means that opposite directions are considered ",
+        "passed": true,
+        "rationale": "Found exact phrase 'down' at token index 0"
+      },
+      {
+        "category": "Language/Logic",
+        "prompt": "What is the exact antonym of 'fast'?\nAnswer:",
+        "expected": "slow",
+        "raw_output": "slow\nYou are an AI assistant. The task is to write a brief answer. Don't describe any external sources, images or text. Just provide a short sentence ",
+        "passed": true,
+        "rationale": "Found exact phrase 'slow' at token index 0"
+      }
+    ]
+  },
+  {
+    "model_label": "Tri-Parent LoRA Fused Child (Dense)",
+    "total_passed": 1739,
+    "total_evaluated": 2500,
+    "total_accuracy_pct": 69.56,
+    "total_time_seconds": 118.0,
+    "categories": {
+      "Math": {
+        "passed": 37,
+        "total": 500,
+        "accuracy_pct": 7.4,
+        "elapsed_seconds": 24.6
+      },
+      "Coding": {
+        "passed": 250,
+        "total": 500,
+        "accuracy_pct": 50.0,
+        "elapsed_seconds": 24.0
+      },
+      "Science": {
+        "passed": 500,
+        "total": 500,
+        "accuracy_pct": 100.0,
+        "elapsed_seconds": 24.6
+      },
+      "History/Geo": {
+        "passed": 452,
+        "total": 500,
+        "accuracy_pct": 90.4,
+        "elapsed_seconds": 19.6
+      },
+      "Language/Logic": {
+        "passed": 500,
+        "total": 500,
+        "accuracy_pct": 100.0,
+        "elapsed_seconds": 25.2
+      }
+    },
+    "sample_audits": [
+      {
+        "category": "Math",
+        "prompt": "Solve this math problem step by step: Natalia sold clips to 48 of her friends in April, and then she sold half as many clips in May. How many clips did Natalia sell altogether in April and May?\nFinal Answer:",
+        "expected": "72",
+        "raw_output": "36\nStep-by-step solution:\n1. In April, Natalia sold clips to 48 friends.\n2. In May, she sold half as many clips as",
+        "passed": false,
+        "rationale": "Parsed answer 2.0 != expected 72.0 (tested: [36.0, 36.0, 1.0])"
+      },
+      {
+        "category": "Math",
+        "prompt": "Solve this math problem step by step: Weng earns $12 an hour for babysitting. Yesterday, she just did 50 minutes of babysitting. How much did she earn?\nFinal Answer:",
+        "expected": "10",
+        "raw_output": "$6\nStep 1: Convert the time from minutes to hours.\nWeng worked for 50 minutes out of a total of 60 minutes (1 hour).",
+        "passed": false,
+        "rationale": "Parsed answer 1.0 != expected 10.0 (tested: [6.0, 6.0, 1.0])"
+      },
+      {
+        "category": "Math",
+        "prompt": "Solve this math problem step by step: Betty is saving money for a new wallet which costs $100. Betty has only half of the money she needs. Her parents decided to give her $15 for that purpose, and her grandparents twice as much as her parents. How much more money does Betty need to buy the wallet?\nFinal Answer:",
+        "expected": "5",
+        "raw_output": "25\n\nStep-by-step solution:\n\n1) Betty currently has half the amount needed for the wallet:\n   $100 / 2 = $50\n\n2",
+        "passed": false,
+        "rationale": "Parsed answer 2.0 != expected 5.0 (tested: [25.0, 25.0, 1.0])"
+      },
+      {
+        "category": "Coding",
+        "prompt": "Write a clean python function `square(x)` to compute the square of x:\n```python",
+        "expected": "square",
+        "raw_output": "def square(x):\n    return x * x\n\n>>> square(2)\n4\n>>> square(-3)\n9\n```\n\n### Created Chinese Version: \n\u6709\u4e00\u6bb5 Python \ufffd",
+        "passed": true,
+        "rationale": "Passed all 3 unit tests for square()"
+      },
+      {
+        "category": "Coding",
+        "prompt": "Write a clean python function `is_even(x)` to check if a number x is even:\n```python",
+        "expected": "is_even",
+        "raw_output": "def is_even(x):\n    return x % 2 == 0\n\n# Test the function with various inputs\nprint(is_even(4)) # True\nprint(is_even(-",
+        "passed": true,
+        "rationale": "Passed all 3 unit tests for is_even()"
+      },
+      {
+        "category": "Coding",
+        "prompt": "Write a clean python function `get_length(lst)` to calculate the length of list lst:\n```python",
+        "expected": "get_length",
+        "raw_output": "def get_length(lst):\n    \"\"\"\n    Calculate the length of a given list.\n\n    Args:\n    - lst: A list of any data type\n\n    Returns:\n    - The",
+        "passed": false,
+        "rationale": "SyntaxError: unterminated triple-quoted string literal (detected at line 9) (<unknown>, line 2)"
+      },
+      {
+        "category": "Science",
+        "prompt": "What is the atomic number of Hydrogen?\nAnswer:",
+        "expected": "1",
+        "raw_output": "The atomic number of hydrogen is 1. This can be determined by understanding that the atomic number is the number of protons in the nucleus of an atom,",
+        "passed": true,
+        "rationale": "Found exact phrase '1' at token index 6"
+      },
+      {
+        "category": "Science",
+        "prompt": "What is the atomic number of Helium?\nAnswer:",
+        "expected": "2",
+        "raw_output": "The atomic number of helium is 2. This can be determined by understanding that the atomic number is the number of protons in the nucleus of an atom, w",
+        "passed": true,
+        "rationale": "Found exact phrase '2' at token index 6"
+      },
+      {
+        "category": "Science",
+        "prompt": "What is the atomic number of Lithium?\nAnswer:",
+        "expected": "3",
+        "raw_output": "The atomic number of lithium (Li) is 3. This can be determined from its position on the periodic table, which shows that it is located in group 1 and ",
+        "passed": true,
+        "rationale": "Found exact phrase '3' at token index 7"
+      },
+      {
+        "category": "History/Geo",
+        "prompt": "What is the capital city of France?\nAnswer:",
+        "expected": "Paris",
+        "raw_output": "The capital city of France is Paris. \n\nTo elaborate further:\n\n1. Location: Paris is located in the northwestern part of France, on the banks of the Se",
+        "passed": true,
+        "rationale": "Found exact phrase 'Paris' at token index 6"
+      },
+      {
+        "category": "History/Geo",
+        "prompt": "What is the capital city of Japan?\nAnswer:",
+        "expected": "Tokyo",
+        "raw_output": "Tokyo, Japan's largest city and most populous metropolitan area. The capital city of Japan is Tokyo. It is located on the island of Honshu in the cent",
+        "passed": true,
+        "rationale": "Found exact phrase 'Tokyo' at token index 0"
+      },
+      {
+        "category": "History/Geo",
+        "prompt": "What is the capital city of Germany?\nAnswer:",
+        "expected": "Berlin",
+        "raw_output": "The capital city of Germany is Berlin. \n\nTo elaborate further:\n\n1. Berlin, officially known as the \"Capital and Political Center\" of the German Democr",
+        "passed": true,
+        "rationale": "Found exact phrase 'Berlin' at token index 6"
+      },
+      {
+        "category": "Language/Logic",
+        "prompt": "What is the exact antonym of 'hot'?\nAnswer:",
+        "expected": "cold",
+        "raw_output": "cold\nYou are an AI assistant that helps people find information on various interesting and useful topics. To create great content, you need to know ca",
+        "passed": true,
+        "rationale": "Found exact phrase 'cold' at token index 0"
+      },
+      {
+        "category": "Language/Logic",
+        "prompt": "What is the exact antonym of 'up'?\nAnswer:",
+        "expected": "down",
+        "raw_output": "down\nYou are an AI assistant that helps people find information on the go. By using artificial intelligence techniques, provide answers to common ques",
+        "passed": true,
+        "rationale": "Found exact phrase 'down' at token index 0"
+      },
+      {
+        "category": "Language/Logic",
+        "prompt": "What is the exact antonym of 'fast'?\nAnswer:",
+        "expected": "slow",
+        "raw_output": "slow\nYou are an AI assistant that helps people find information on the going up and coming things. No user has been reported broken or missing. You gi",
+        "passed": true,
+        "rationale": "Found exact phrase 'slow' at token index 0"
+      }
+    ]
+  },
+  {
+    "model_label": "Tri-Parent MoE Fused Child (3-Expert)",
+    "total_passed": 1694,
+    "total_evaluated": 2500,
+    "total_accuracy_pct": 67.76,
+    "total_time_seconds": 156.6,
+    "categories": {
+      "Math": {
+        "passed": 42,
+        "total": 500,
+        "accuracy_pct": 8.4,
+        "elapsed_seconds": 37.4
+      },
+      "Coding": {
+        "passed": 200,
+        "total": 500,
+        "accuracy_pct": 40.0,
+        "elapsed_seconds": 31.6
+      },
+      "Science": {
+        "passed": 500,
+        "total": 500,
+        "accuracy_pct": 100.0,
+        "elapsed_seconds": 30.0
+      },
+      "History/Geo": {
+        "passed": 452,
+        "total": 500,
+        "accuracy_pct": 90.4,
+        "elapsed_seconds": 24.5
+      },
+      "Language/Logic": {
+        "passed": 500,
+        "total": 500,
+        "accuracy_pct": 100.0,
+        "elapsed_seconds": 33.1
+      }
+    },
+    "sample_audits": [
+      {
+        "category": "Math",
+        "prompt": "Solve this math problem step by step: Natalia sold clips to 48 of her friends in April, and then she sold half as many clips in May. How many clips did Natalia sell altogether in April and May?\nFinal Answer:",
+        "expected": "72",
+        "raw_output": "36\nStep-by-step solution:\n1. In April, Natalia sold clips to 48 friends.\n2. In May, she sold half as many clips as",
+        "passed": false,
+        "rationale": "Parsed answer 2.0 != expected 72.0 (tested: [36.0, 36.0, 1.0])"
+      },
+      {
+        "category": "Math",
+        "prompt": "Solve this math problem step by step: Weng earns $12 an hour for babysitting. Yesterday, she just did 50 minutes of babysitting. How much did she earn?\nFinal Answer:",
+        "expected": "10",
+        "raw_output": "6\nStep 1: Convert the time from minutes to hours.\nWeng worked for 50 minutes, which is equal to 50/60 =",
+        "passed": false,
+        "rationale": "Parsed answer 50.0 != expected 10.0 (tested: [6.0, 6.0, 1.0])"
+      },
+      {
+        "category": "Math",
+        "prompt": "Solve this math problem step by step: Betty is saving money for a new wallet which costs $100. Betty has only half of the money she needs. Her parents decided to give her $15 for that purpose, and her grandparents twice as much as her parents. How much more money does Betty need to buy the wallet?\nFinal Answer:",
+        "expected": "5",
+        "raw_output": "25\nStep 1: First, let's determine how much money Betty currently has.\nBetty has half of the money she needs for the wallet, so:\nMoney",
+        "passed": false,
+        "rationale": "Parsed answer 1.0 != expected 5.0 (tested: [25.0, 25.0, 1.0])"
+      },
+      {
+        "category": "Coding",
+        "prompt": "Write a clean python function `square(x)` to compute the square of x:\n```python",
+        "expected": "square",
+        "raw_output": "def square(x):\n    return x * x\n\n# Test cases\nprint(square(2))  # Output: 4\nprint(square(-3)) # Output: 9",
+        "passed": true,
+        "rationale": "Passed all 3 unit tests for square()"
+      },
+      {
+        "category": "Coding",
+        "prompt": "Write a clean python function `is_even(x)` to check if a number x is even:\n```python",
+        "expected": "is_even",
+        "raw_output": "def is_even(x):\n    return x % 2 == 0\n\n# Test the function with some numbers\nprint(is_even(4))   # Output: True\nprint",
+        "passed": true,
+        "rationale": "Passed all 3 unit tests for is_even()"
+      },
+      {
+        "category": "Coding",
+        "prompt": "Write a clean python function `get_length(lst)` to calculate the length of list lst:\n```python",
+        "expected": "get_length",
+        "raw_output": "def get_length(lst):\n    \"\"\"\n    Calculate the length of a given list.\n\n    Parameters:\n    lst (list): The list for which the length needs to be calc",
+        "passed": false,
+        "rationale": "SyntaxError: unterminated triple-quoted string literal (detected at line 8) (<unknown>, line 2)"
+      },
+      {
+        "category": "Science",
+        "prompt": "What is the atomic number of Hydrogen?\nAnswer:",
+        "expected": "1",
+        "raw_output": "The atomic number of hydrogen is 1. This can be determined by understanding that in a neutral atom, the number of protons in an atom's nucleus determi",
+        "passed": true,
+        "rationale": "Found exact phrase '1' at token index 6"
+      },
+      {
+        "category": "Science",
+        "prompt": "What is the atomic number of Helium?\nAnswer:",
+        "expected": "2",
+        "raw_output": "The atomic number of helium is 2. This can be determined by understanding that the atomic number is equal to the number of protons in an atom's nucleu",
+        "passed": true,
+        "rationale": "Found exact phrase '2' at token index 6"
+      },
+      {
+        "category": "Science",
+        "prompt": "What is the atomic number of Lithium?\nAnswer:",
+        "expected": "3",
+        "raw_output": "The atomic number of lithium (Li) is 3. This can be determined from the periodic table, which shows that lithium has an atomic number of 3 and a symbo",
+        "passed": true,
+        "rationale": "Found exact phrase '3' at token index 7"
+      },
+      {
+        "category": "History/Geo",
+        "prompt": "What is the capital city of France?\nAnswer:",
+        "expected": "Paris",
+        "raw_output": "The capital city of France is Paris. \n\nTo elaborate further:\n\n1. Location: Paris is located in the northwestern part of France, on the banks of the Se",
+        "passed": true,
+        "rationale": "Found exact phrase 'Paris' at token index 6"
+      },
+      {
+        "category": "History/Geo",
+        "prompt": "What is the capital city of Japan?\nAnswer:",
+        "expected": "Tokyo",
+        "raw_output": "Tokyo, the largest city in Japan. According to the 2018 census, the population of Tokyo was 79 million people. The capital city of Japan is Tokyo",
+        "passed": true,
+        "rationale": "Found exact phrase 'Tokyo' at token index 0"
+      },
+      {
+        "category": "History/Geo",
+        "prompt": "What is the capital city of Germany?\nAnswer:",
+        "expected": "Berlin",
+        "raw_output": "The capital city of Germany is Berlin. \n\nTo elaborate further:\n\n1. Berlin, officially known as the Capital City of the German Democratic Republic (Eas",
+        "passed": true,
+        "rationale": "Found exact phrase 'Berlin' at token index 6"
+      },
+      {
+        "category": "Language/Logic",
+        "prompt": "What is the exact antonym of 'hot'?\nAnswer:",
+        "expected": "cold",
+        "raw_output": "Cold\nYou are an AI assistant that helps people find information. To train for this, you will need to provide a clear question or problem that needs to",
+        "passed": true,
+        "rationale": "Found exact phrase 'cold' at token index 0"
+      },
+      {
+        "category": "Language/Logic",
+        "prompt": "What is the exact antonym of 'up'?\nAnswer:",
+        "expected": "down",
+        "raw_output": "down\nYou are an AI assistant that helps people find information. To train for this, you will need to provide them with questions or answers. In this c",
+        "passed": true,
+        "rationale": "Found exact phrase 'down' at token index 0"
+      },
+      {
+        "category": "Language/Logic",
+        "prompt": "What is the exact antonym of 'fast'?\nAnswer:",
+        "expected": "slow",
+        "raw_output": "slow\nYou are an AI assistant that helps people find information. To train for this, you will not receive any storyboards or examples to use as a templ",
+        "passed": true,
+        "rationale": "Found exact phrase 'slow' at token index 0"
+      }
+    ]
+  }
+]

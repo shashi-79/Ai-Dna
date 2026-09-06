@@ -30,7 +30,7 @@
         "pct": 85.0
       }
     },
-    "time_seconds": 58.99743580818176,
+    "time_seconds": 37.21232271194458,
     "detailed_results": [
       {
         "idx": 1,
@@ -1100,7 +1100,7 @@
         "pct": 95.0
       }
     },
-    "time_seconds": 62.492592096328735,
+    "time_seconds": 45.11936902999878,
     "detailed_results": [
       {
         "idx": 1,
@@ -2174,7 +2174,7 @@
     "detailed_results": []
   },
   {
-    "model_label": "AI-DNA Fused Child (fused_text_child.aidna)",
+    "model_label": "AI-DNA Fused Child (my_llm_folder)",
     "total_score_pct": 95.0,
     "total_passed": 95,
     "category_breakdown": {
@@ -2204,7 +2204,7 @@
         "pct": 95.0
       }
     },
-    "time_seconds": 63.103748083114624,
+    "time_seconds": 43.990538597106934,
     "detailed_results": [
       {
         "idx": 1,

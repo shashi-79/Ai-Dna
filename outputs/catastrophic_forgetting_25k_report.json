@@ -1,0 +1,162 @@
+[
+  {
+    "model_label": "Parent 1: SmolLM2-360M",
+    "params": 361821120,
+    "total_passed": 16600,
+    "total_evaluated": 25000,
+    "total_accuracy_pct": 66.4,
+    "total_time_seconds": 822.0,
+    "categories": {
+      "Math": {
+        "passed": 373,
+        "total": 5000,
+        "accuracy_pct": 7.46,
+        "elapsed_seconds": 192.9
+      },
+      "Coding": {
+        "passed": 4964,
+        "total": 5000,
+        "accuracy_pct": 99.28,
+        "elapsed_seconds": 195.4
+      },
+      "Science": {
+        "passed": 4406,
+        "total": 5000,
+        "accuracy_pct": 88.12,
+        "elapsed_seconds": 144.7
+      },
+      "History/Geo": {
+        "passed": 3833,
+        "total": 5000,
+        "accuracy_pct": 76.66,
+        "elapsed_seconds": 112.0
+      },
+      "Language/Logic": {
+        "passed": 3024,
+        "total": 5000,
+        "accuracy_pct": 60.48,
+        "elapsed_seconds": 177.0
+      }
+    }
+  },
+  {
+    "model_label": "Parent 2: Qwen2.5-0.5B",
+    "params": 494032768,
+    "total_passed": 16880,
+    "total_evaluated": 25000,
+    "total_accuracy_pct": 67.52,
+    "total_time_seconds": 738.3,
+    "categories": {
+      "Math": {
+        "passed": 186,
+        "total": 5000,
+        "accuracy_pct": 3.72,
+        "elapsed_seconds": 166.1
+      },
+      "Coding": {
+        "passed": 4858,
+        "total": 5000,
+        "accuracy_pct": 97.16,
+        "elapsed_seconds": 163.4
+      },
+      "Science": {
+        "passed": 3787,
+        "total": 5000,
+        "accuracy_pct": 75.74,
+        "elapsed_seconds": 153.1
+      },
+      "History/Geo": {
+        "passed": 4168,
+        "total": 5000,
+        "accuracy_pct": 83.36,
+        "elapsed_seconds": 86.7
+      },
+      "Language/Logic": {
+        "passed": 3881,
+        "total": 5000,
+        "accuracy_pct": 77.62,
+        "elapsed_seconds": 169.0
+      }
+    }
+  },
+  {
+    "model_label": "Naive Linear Merging (Non-AIDNA)",
+    "params": 494000000,
+    "total_passed": 0,
+    "total_evaluated": 25000,
+    "total_accuracy_pct": 0.0,
+    "total_time_seconds": 0.0,
+    "categories": {
+      "Math": {
+        "passed": 0,
+        "total": 5000,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 0.0
+      },
+      "Coding": {
+        "passed": 0,
+        "total": 5000,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 0.0
+      },
+      "Science": {
+        "passed": 0,
+        "total": 5000,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 0.0
+      },
+      "History/Geo": {
+        "passed": 0,
+        "total": 5000,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 0.0
+      },
+      "Language/Logic": {
+        "passed": 0,
+        "total": 5000,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 0.0
+      }
+    }
+  },
+  {
+    "model_label": "AI-DNA Fused Child",
+    "params": 494032768,
+    "total_passed": 16880,
+    "total_evaluated": 25000,
+    "total_accuracy_pct": 67.52,
+    "total_time_seconds": 731.4,
+    "categories": {
+      "Math": {
+        "passed": 186,
+        "total": 5000,
+        "accuracy_pct": 3.72,
+        "elapsed_seconds": 165.9
+      },
+      "Coding": {
+        "passed": 4858,
+        "total": 5000,
+        "accuracy_pct": 97.16,
+        "elapsed_seconds": 176.6
+      },
+      "Science": {
+        "passed": 3787,
+        "total": 5000,
+        "accuracy_pct": 75.74,
+        "elapsed_seconds": 171.2
+      },
+      "History/Geo": {
+        "passed": 4168,
+        "total": 5000,
+        "accuracy_pct": 83.36,
+        "elapsed_seconds": 88.6
+      },
+      "Language/Logic": {
+        "passed": 3881,
+        "total": 5000,
+        "accuracy_pct": 77.62,
+        "elapsed_seconds": 129.0
+      }
+    }
+  }
+]

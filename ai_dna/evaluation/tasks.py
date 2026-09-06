@@ -225,7 +225,35 @@ def load_mmlu(limit: Optional[int] = None, subjects: Optional[List[str]] = None)
 
 
 def load_gsm8k(limit: Optional[int] = None) -> List[Dict[str, Any]]:
-    """Loads GSM8K math questions, falling back to built-in questions if offline."""
+    """Loads GSM8K math questions, preferring local JSONL dataset, then HF, then fallback."""
+    # First priority: check local partitioned evaluation dataset
+    for path in [
+        os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "ai-dna-data", "evaluation", "gsm8k", "public_eval.jsonl"),
+        os.path.join("ai-dna-data", "evaluation", "gsm8k", "public_eval.jsonl"),
+    ]:
+        if os.path.exists(path):
+            try:
+                qs = []
+                with open(path, "r", encoding="utf-8") as f:
+                    for line in f:
+                        if not line.strip():
+                            continue
+                        item = json.loads(line)
+                        ans = item.get("answer", "")
+                        m = re.search(r"####\s*([\d,\.\-]+)", ans)
+                        expected = m.group(1).replace(",", "").strip() if m else ""
+                        qs.append({
+                            "prompt": f"Problem: {item['question']}\nSolve step by step. Final Answer:",
+                            "expected": expected,
+                            "task": "gsm8k",
+                        })
+                        if limit and len(qs) >= limit:
+                            return qs
+                if qs:
+                    return qs
+            except Exception:
+                pass
+
     if _is_offline():
         fallback = FALLBACK_QUESTIONS["gsm8k"]
         return fallback[:limit] if limit else fallback

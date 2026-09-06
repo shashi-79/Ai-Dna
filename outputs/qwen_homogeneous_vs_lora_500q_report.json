@@ -1,0 +1,246 @@
+{
+  "Qwen Host + Homogeneous Fusion (Uniform Convex Averaging across all 24 layers)": {
+    "model_label": "Qwen Host + Homogeneous Fusion (Uniform Convex Averaging across all 24 layers)",
+    "total_passed": 0,
+    "total_evaluated": 2500,
+    "total_accuracy_pct": 0.0,
+    "total_time_seconds": 60.7,
+    "categories": {
+      "math": {
+        "passed": 0,
+        "total": 500,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 13.3
+      },
+      "coding": {
+        "passed": 0,
+        "total": 500,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 13.1
+      },
+      "science": {
+        "passed": 0,
+        "total": 500,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 11.1
+      },
+      "history_geo": {
+        "passed": 0,
+        "total": 500,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 10.7
+      },
+      "logic": {
+        "passed": 0,
+        "total": 500,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 12.5
+      }
+    },
+    "sample_audits": [
+      {
+        "category": "math",
+        "prompt": "Solve this math problem step by step: Natalia sold clips to 48 of her friends in April, and then she",
+        "expected": "72",
+        "raw_output": "____. _\u4f59\u5206\u4e2d\u6709\u4e2d\u590d!\u7b2c\u6b7b\u7b2c\u6781\u5206\u3002\u7b2c.\u5171\u9644\u4e2d\u65e0\u5206\u5e03\u5728.\u7b2c.\u91cd <- Prozent().\u65e0\u4e2d\u5c3e\u5728\u5e94\u5bf9",
+        "passed": false,
+        "rationale": "No numeric tokens found in response"
+      },
+      {
+        "category": "math",
+        "prompt": "Solve this math problem step by step: Weng earns $12 an hour for babysitting. Yesterday, she just di",
+        "expected": "10",
+        "raw_output": "\u6b7b\u522b\u4e2dXB erg\u5deb@{}.yd{'\\\nrug\u62e5\u6709yd\u6709\u5206\u5723\u751a\u5176\u4e2d\u6027\u547d\u6df9yb\u2018 '..\u66f0parentId'\u7b2c'.\u65c5\u6b7b\u8346\u524d.\u65e7\u800c",
+        "passed": false,
+        "rationale": "No numeric tokens found in response"
+      },
+      {
+        "category": "coding",
+        "prompt": "Write a clean python function `square(x)` to compute square of x (one line):\n```python",
+        "expected": "square",
+        "raw_output": ".\u6709\u3002' . .\u3002\uff0e '  \n. . .\u3002\u300a\u53c8. -\u3002.\u3002.\u3002.\u3002.\u4efd\u3002\\.\u3002.  \n.",
+        "passed": false,
+        "rationale": "SyntaxError: invalid character '\u3002' (U+3002) (<unknown>, line 1)"
+      },
+      {
+        "category": "coding",
+        "prompt": "Write a clean python function `is_even(x)` to check if x is even (one line):\n```python",
+        "expected": "is_even",
+        "raw_output": "h_hu =____st]';\nvertical $___.l '').'  \n@ $\\m\u3002'\u3002  \n\n\nKey . %> _ __\n\n\n'\n\n.   <\n\nNFraction  \n _reason!\u6548 -  \ufffd\u800c\u6709 _",
+        "passed": false,
+        "rationale": "SyntaxError: unmatched ']' (<unknown>, line 1)"
+      },
+      {
+        "category": "science",
+        "prompt": "What is the atomic number of Hydrogen?\nAnswer:",
+        "expected": "1",
+        "raw_output": "\ufffd\u672a\u53c8erv.\u53c8\u3002extension.\"\u7b2c\n__{'x' ' <' then - - then in@ \ufffd\u6b7b().______ . \u7b2c...h.\u88ab').'",
+        "passed": false,
+        "rationale": "Phrase '1' not found in token sequence: ['\ufffd\u672a\u53c8erv.\u53c8\u3002extension.\"\u7b2c', \"__{'x\", '', '<', 'then', '-', '-', 'then', 'in@', '\ufffd\u6b7b().______', '', '\u7b2c...h.\u88ab']..."
+      },
+      {
+        "category": "science",
+        "prompt": "What is the atomic number of Helium?\nAnswer:",
+        "expected": "2",
+        "raw_output": "|\u7b2c\u6b7b\u4fe1\u6293\u91cd|\u518d/@endforeach\u91cd|line>[] \n. New 'indent\u8db3\u5317^where__dead\u5171>[]  \nred _ _\u6574\u987fi. $h",
+        "passed": false,
+        "rationale": "Phrase '2' not found in token sequence: ['|\u7b2c\u6b7b\u4fe1\u6293\u91cd|\u518d/@endforeach\u91cd|line>', '', 'new', 'indent\u8db3\u5317^where__dead\u5171>', 'red', '_', '_\u6574\u987fi', '$h']..."
+      },
+      {
+        "category": "history_geo",
+        "prompt": "What is the capital city of France?\nAnswer:",
+        "expected": "Paris",
+        "raw_output": "which '__.\u673a\uff1a____\uff0c__\u65f6$____\u6709_\u7f51\u7edc::@__::\u6709__\u6548__\u65c5_::___->__._\u6b7b\u3002\u66f0____.",
+        "passed": false,
+        "rationale": "Phrase 'Paris' not found in token sequence: ['which', '__.\u673a\uff1a____\uff0c__\u65f6$____\u6709_\u7f51\u7edc::@__::\u6709__\u6548__\u65c5_::___->__._\u6b7b\u3002\u66f0____']..."
+      },
+      {
+        "category": "history_geo",
+        "prompt": "What is the capital city of Japan?\nAnswer:",
+        "expected": "Tokyo",
+        "raw_output": "\ufffd \ufffd\u3002\u3002\u3002\u81ea__ \ufffd\u9664\u6b7b\u52a8]='r/\u91cd/\u6709/etc\u6b7b/etc\u751a\u987emachine\u2013>[]wh/r\\\n/.h/rRA$.$.//etch/",
+        "passed": false,
+        "rationale": "Phrase 'Tokyo' not found in token sequence: ['\ufffd', '\ufffd\u3002\u3002\u3002\u81ea__', \"\ufffd\u9664\u6b7b\u52a8]='r/\u91cd/\u6709/etc\u6b7b/etc\u751a\u987emachine\u2013>[]wh/r\\\\\", '/.h/rra$.$.//etch/']..."
+      },
+      {
+        "category": "logic",
+        "prompt": "What is the exact antonym of 'hot'?\nAnswer:",
+        "expected": "cold",
+        "raw_output": "{'\u548c\u540e\u5907\u7684\u9664\u4fe1\u745e.\u4e1c\u540d\u5317\u62e5 _\n\u7b2c{'\u5171 _ >___@\u0627\u0642 Feather\u8e29'\n\nCommon@@@parentId/{'...]\n\n@(@\\Unit",
+        "passed": false,
+        "rationale": "Phrase 'cold' not found in token sequence: [\"{'\u548c\u540e\u5907\u7684\u9664\u4fe1\u745e.\u4e1c\u540d\u5317\u62e5\", '_', \"\u7b2c{'\u5171\", '_', '>___@\u0627\u0642', 'feather\u8e29', 'common@@@parentid/{', '@(@\\\\unit']..."
+      },
+      {
+        "category": "logic",
+        "prompt": "What is the exact antonym of 'up'?\nAnswer:",
+        "expected": "down",
+        "raw_output": "\u6216\u7b2c. \ufffd. </\u5206\u673a/A.\u300a\u517c.\u540e__ B. | _ \\. .... -\n\n|__\n\n\n_ >. -> _",
+        "passed": false,
+        "rationale": "Phrase 'down' not found in token sequence: ['\u6216\u7b2c', '\ufffd', '</\u5206\u673a/a.\u300a\u517c.\u540e__', 'b', '|', '_', '\\\\', '', '-', '|__', '_', '>']..."
+      }
+    ],
+    "method": "Homogeneous Lineage Convex Averaging (Method 4 style on Qwen)"
+  },
+  "Qwen Host + Asymmetric Layer-Depth Decoupled LoRA Instinct Fusion (`my_llm_folder`)": {
+    "model_label": "Qwen Host + Asymmetric Layer-Depth Decoupled LoRA Instinct Fusion (`my_llm_folder`)",
+    "total_passed": 1990,
+    "total_evaluated": 2500,
+    "total_accuracy_pct": 79.6,
+    "total_time_seconds": 60.4,
+    "categories": {
+      "math": {
+        "passed": 38,
+        "total": 500,
+        "accuracy_pct": 7.6,
+        "elapsed_seconds": 12.4
+      },
+      "coding": {
+        "passed": 500,
+        "total": 500,
+        "accuracy_pct": 100.0,
+        "elapsed_seconds": 14.2
+      },
+      "science": {
+        "passed": 500,
+        "total": 500,
+        "accuracy_pct": 100.0,
+        "elapsed_seconds": 11.1
+      },
+      "history_geo": {
+        "passed": 452,
+        "total": 500,
+        "accuracy_pct": 90.4,
+        "elapsed_seconds": 11.2
+      },
+      "logic": {
+        "passed": 500,
+        "total": 500,
+        "accuracy_pct": 100.0,
+        "elapsed_seconds": 11.5
+      }
+    },
+    "sample_audits": [
+      {
+        "category": "math",
+        "prompt": "Solve this math problem step by step: Natalia sold clips to 48 of her friends in April, and then she",
+        "expected": "72",
+        "raw_output": "36\nStep-by-step solution:\n1. In April, Natalia sold clips to 48 friends.\n2. In May, she sold half as many clips as",
+        "passed": false,
+        "rationale": "Parsed answer 2.0 != expected 72.0 (tested: [36.0, 36.0, 1.0])"
+      },
+      {
+        "category": "math",
+        "prompt": "Solve this math problem step by step: Weng earns $12 an hour for babysitting. Yesterday, she just di",
+        "expected": "10",
+        "raw_output": "The answer is 6.\nStep 1: Convert the time from minutes to hours\nWeng worked for 50 minutes out of a total of 60 minutes ",
+        "passed": false,
+        "rationale": "Parsed answer 60.0 != expected 10.0 (tested: [6.0, 6.0, 1.0])"
+      },
+      {
+        "category": "coding",
+        "prompt": "Write a clean python function `square(x)` to compute square of x (one line):\n```python",
+        "expected": "square",
+        "raw_output": "def square(x):\n    return x * x\n```\n\n### Example Usage:\n```python\n>>> square(2)\n4\n>>> square(-3)\n9\n>>> square(0)\n0\n```\n`",
+        "passed": true,
+        "rationale": "Passed all 3 unit tests for square()"
+      },
+      {
+        "category": "coding",
+        "prompt": "Write a clean python function `is_even(x)` to check if x is even (one line):\n```python",
+        "expected": "is_even",
+        "raw_output": "def is_even(x):\n    return x % 2 == 0\n\n```\n\n### Example Usage:\n```python\n>>> is_even(4)\nTrue\n>>> is_even(5)\nFalse\n```\nTo",
+        "passed": true,
+        "rationale": "Passed all 3 unit tests for is_even()"
+      },
+      {
+        "category": "science",
+        "prompt": "What is the atomic number of Hydrogen?\nAnswer:",
+        "expected": "1",
+        "raw_output": "The atomic number of hydrogen is 1. This can be determined by understanding that the atomic number is the number of prot",
+        "passed": true,
+        "rationale": "Found exact phrase '1' at token index 6"
+      },
+      {
+        "category": "science",
+        "prompt": "What is the atomic number of Helium?\nAnswer:",
+        "expected": "2",
+        "raw_output": "The atomic number of helium is 2. This can be determined by understanding that the atomic number is the number of proton",
+        "passed": true,
+        "rationale": "Found exact phrase '2' at token index 6"
+      },
+      {
+        "category": "history_geo",
+        "prompt": "What is the capital city of France?\nAnswer:",
+        "expected": "Paris",
+        "raw_output": "The capital city of France is Paris. \n\nTo elaborate further:\n\n1. Location: Paris is located in the northwestern part of ",
+        "passed": true,
+        "rationale": "Found exact phrase 'Paris' at token index 6"
+      },
+      {
+        "category": "history_geo",
+        "prompt": "What is the capital city of Japan?\nAnswer:",
+        "expected": "Tokyo",
+        "raw_output": "Tokyo, Japan's largest city and most populous metropolitan area. The capital city of Japan is Tokyo. It was founded in 1",
+        "passed": true,
+        "rationale": "Found exact phrase 'Tokyo' at token index 0"
+      },
+      {
+        "category": "logic",
+        "prompt": "What is the exact antonym of 'hot'?\nAnswer:",
+        "expected": "cold",
+        "raw_output": "cold\nYou are an AI assistant that helps people find information on the going up of topics. To what you help answer very ",
+        "passed": true,
+        "rationale": "Found exact phrase 'cold' at token index 0"
+      },
+      {
+        "category": "logic",
+        "prompt": "What is the exact antonym of 'up'?\nAnswer:",
+        "expected": "down",
+        "raw_output": "down\nYou are an AI assistant that helps people find information on the going up topics. User will you give you a questio",
+        "passed": true,
+        "rationale": "Found exact phrase 'down' at token index 0"
+      }
+    ],
+    "method": "Asymmetric Layer-Depth Decoupled LoRA (Canonical Standard)"
+  }
+}

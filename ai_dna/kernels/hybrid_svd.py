@@ -124,3 +124,97 @@ def exact_cusolver_svd(
     V_k = V[:, :k].contiguous()
 
     return U_k, S_k, V_k, k
+
+
+def extract_outlier_sparse_residual(
+    tensor: torch.Tensor,
+    threshold_sigma: float = 6.0,
+    sanitize_value: float = 0.0,
+) -> Tuple[torch.Tensor, Dict[str, Any]]:
+    """
+    Extracts statistical emergent outlier weights into an exact zero-distortion vault entry.
+    
+    Formula:
+      mu = mean(W)
+      sigma = std(W)
+      Outliers: |W_ij - mu| > threshold_sigma * sigma
+      
+    Args:
+        tensor: 2D weight matrix W in R^{M x N}.
+        threshold_sigma: Number of standard deviations to consider an element an emergent outlier (default: 6.0).
+        sanitize_value: Value used to replace outliers in the sanitized matrix (default: 0.0).
+        
+    Returns:
+        (sanitized_tensor, outlier_entry)
+        where outlier_entry is a dict with {"indices", "values", "shape", "count", "threshold_sigma"}.
+    """
+    if tensor.dim() != 2:
+        raise ValueError(f"extract_outlier_sparse_residual requires a 2D tensor, got shape: {tensor.shape}")
+
+    orig_device = tensor.device
+    clean_tensor = torch.nan_to_num(tensor, nan=0.0, posinf=1.0, neginf=-1.0)
+
+    mu = clean_tensor.mean()
+    sigma = clean_tensor.std()
+
+    if sigma <= 1e-9:
+        outlier_entry = {
+            "indices": torch.empty((2, 0), dtype=torch.int64, device=orig_device),
+            "values": torch.empty((0,), dtype=tensor.dtype, device=orig_device),
+            "shape": list(tensor.shape),
+            "count": 0,
+            "threshold_sigma": threshold_sigma,
+        }
+        return tensor.clone(), outlier_entry
+
+    outlier_mask = torch.abs(clean_tensor - mu) > (threshold_sigma * sigma)
+    outlier_count = int(outlier_mask.sum().item())
+
+    if outlier_count == 0:
+        outlier_entry = {
+            "indices": torch.empty((2, 0), dtype=torch.int64, device=orig_device),
+            "values": torch.empty((0,), dtype=tensor.dtype, device=orig_device),
+            "shape": list(tensor.shape),
+            "count": 0,
+            "threshold_sigma": threshold_sigma,
+        }
+        return tensor.clone(), outlier_entry
+
+    indices = torch.nonzero(outlier_mask, as_tuple=False).T
+    values = clean_tensor[outlier_mask].contiguous()
+
+    sanitized = clean_tensor.clone()
+    sanitized[outlier_mask] = sanitize_value
+
+    outlier_entry = {
+        "indices": indices.to(orig_device),
+        "values": values.to(orig_device),
+        "shape": list(tensor.shape),
+        "count": outlier_count,
+        "threshold_sigma": threshold_sigma,
+    }
+
+    return sanitized, outlier_entry
+
+
+def restore_outliers_to_tensor(
+    base_tensor: torch.Tensor,
+    outlier_entry: Dict[str, Any],
+) -> torch.Tensor:
+    """
+    Restores exact outlier weights from an outlier vault entry onto a base weight matrix.
+    Executes in-place or returns a restored tensor with 100% numerical fidelity on outlier coordinates.
+    """
+    if outlier_entry is None or outlier_entry.get("count", 0) == 0:
+        return base_tensor
+
+    indices = outlier_entry["indices"].to(base_tensor.device)
+    values = outlier_entry["values"].to(base_tensor.device, dtype=base_tensor.dtype)
+
+    if indices.numel() == 0 or values.numel() == 0:
+        return base_tensor
+
+    restored = base_tensor.clone()
+    restored[indices[0], indices[1]] = values
+    return restored
+

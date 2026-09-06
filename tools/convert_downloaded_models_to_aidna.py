@@ -674,7 +674,12 @@ def fuse_text_models(
 
     n = len(text_parents)
     weights = [1.0 / n] * n
-    fusion = MultiParentFusion(min_compatibility=0.3)
+    fusion = MultiParentFusion(
+        min_compatibility=0.3,
+        enable_residual_blend=True,
+        blend_alpha=0.15,
+        outlier_threshold=6.0,
+    )
     child = fusion.fuse(parents=text_parents, weights=weights, child_id="Child_TextOnly_Fused")
 
     out_path = os.path.join(modal_dir, "fused_text_child.aidna")

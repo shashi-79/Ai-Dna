@@ -1,0 +1,417 @@
+{
+  "timestamp": "2026-09-05 11:41:15",
+  "tasks": [
+    "mmlu",
+    "gsm8k",
+    "arc"
+  ],
+  "limit": 5,
+  "device": "cuda",
+  "models": {
+    "opt-125m": {
+      "name": "opt-125m",
+      "params": 125239296,
+      "batch_size": 64,
+      "overall_accuracy": 21.43,
+      "total_evaluated": 14,
+      "tasks": {
+        "mmlu": {
+          "accuracy": 20.0,
+          "correct": 1,
+          "total": 5,
+          "elapsed_seconds": 0.7,
+          "qps": 7.5,
+          "samples": [
+            {
+              "prompt": "Question: Which of the following elements has the highest electronegativity?\nA) ",
+              "response": "Answer (one letter only):\nAnswer (one letter only):\nAnswer (one letter only):\nAnswer (one letter onl",
+              "correct": false
+            },
+            {
+              "prompt": "Question: In group theory, what is the order of the identity element in any grou",
+              "response": "(1)\nAnswer (two letters only): (1)\nAnswer (two letters only): (1)\nAnswer (two letters only): (1)\nAns",
+              "correct": false
+            },
+            {
+              "prompt": "Question: What primary function does ATP synthase perform in cellular respiratio",
+              "response": "Answer (one letter only):\nAnswer (one letter only):\nAnswer (one letter only):\nAnswer (one letter onl",
+              "correct": false
+            }
+          ]
+        },
+        "gsm8k": {
+          "accuracy": 0.0,
+          "correct": 0,
+          "total": 5,
+          "elapsed_seconds": 0.4,
+          "qps": 13.7,
+          "samples": [
+            {
+              "prompt": "Problem: Jared is trying to increase his typing speed. He starts with 47 words p",
+              "response": ".\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nSolution:\n\n\n\n\n\n\n\nSolution:\n\n\n\n\n\nSolution",
+              "correct": false
+            },
+            {
+              "prompt": "Problem: Jordan has 2 children who wear diapers.  Each child requires 5 diaper c",
+              "response": ".\nI'm not sure, but I'm sure.",
+              "correct": false
+            },
+            {
+              "prompt": "Problem: A wooden bridge can carry no more than 5000 pounds. A delivery truck fi",
+              "response": "The bridge is not a bridge. It is a vehicle.\nThe bridge is not a vehicle. It is a vehicle.\nThe bridg",
+              "correct": false
+            }
+          ]
+        },
+        "arc": {
+          "accuracy": 50.0,
+          "correct": 2,
+          "total": 4,
+          "elapsed_seconds": 0.4,
+          "qps": 11.1,
+          "samples": [
+            {
+              "prompt": "Question: Which property is common to all metals at room temperature?\nA) High el",
+              "response": "Answer (one letter only):\nAnswer (one letter only):\nAnswer (one letter only):\nAnswer (one letter onl",
+              "correct": true
+            },
+            {
+              "prompt": "Question: Which process is directly responsible for cloud formation in the atmos",
+              "response": "Answer (two letters only):\nAnswer (two letters only):\nAnswer (one letter only):\nAnswer (one letter o",
+              "correct": false
+            },
+            {
+              "prompt": "Question: What happens when an acid reacts with a base in an aqueous solution?\nA",
+              "response": "1) No.\n2) Yes.\n3) Yes.\n4) Yes.\n5) Yes.\n6) Yes.\n7) Yes.\n8) Yes.\n9) Yes.\n10)",
+              "correct": true
+            }
+          ]
+        }
+      }
+    },
+    "smollm2-360m": {
+      "name": "smollm2-360m",
+      "params": 361821120,
+      "batch_size": 64,
+      "overall_accuracy": 0.0,
+      "total_evaluated": 14,
+      "tasks": {
+        "mmlu": {
+          "accuracy": 0.0,
+          "correct": 0,
+          "total": 5,
+          "elapsed_seconds": 0.4,
+          "qps": 12.9,
+          "samples": [
+            {
+              "prompt": "Question: Which of the following elements has the highest electronegativity?\nA) ",
+              "response": "",
+              "correct": false
+            },
+            {
+              "prompt": "Question: In group theory, what is the order of the identity element in any grou",
+              "response": "",
+              "correct": false
+            },
+            {
+              "prompt": "Question: What primary function does ATP synthase perform in cellular respiratio",
+              "response": "",
+              "correct": false
+            }
+          ]
+        },
+        "gsm8k": {
+          "accuracy": 0.0,
+          "correct": 0,
+          "total": 5,
+          "elapsed_seconds": 1.6,
+          "qps": 3.1,
+          "samples": [
+            {
+              "prompt": "Problem: Jared is trying to increase his typing speed. He starts with 47 words p",
+              "response": "",
+              "correct": false
+            },
+            {
+              "prompt": "Problem: Jordan has 2 children who wear diapers.  Each child requires 5 diaper c",
+              "response": "",
+              "correct": false
+            },
+            {
+              "prompt": "Problem: A wooden bridge can carry no more than 5000 pounds. A delivery truck fi",
+              "response": "Step 1: Determine the maximum weight of the boxes that can be loaded onto the truck.\n\nLet's denote t",
+              "correct": false
+            }
+          ]
+        },
+        "arc": {
+          "accuracy": 0.0,
+          "correct": 0,
+          "total": 4,
+          "elapsed_seconds": 0.3,
+          "qps": 13.3,
+          "samples": [
+            {
+              "prompt": "Question: Which property is common to all metals at room temperature?\nA) High el",
+              "response": "",
+              "correct": false
+            },
+            {
+              "prompt": "Question: Which process is directly responsible for cloud formation in the atmos",
+              "response": "",
+              "correct": false
+            },
+            {
+              "prompt": "Question: What happens when an acid reacts with a base in an aqueous solution?\nA",
+              "response": "D) Rapid crystallization of nitric acid",
+              "correct": false
+            }
+          ]
+        }
+      }
+    },
+    "qwen2.5-0.5b": {
+      "name": "qwen2.5-0.5b",
+      "params": 494032768,
+      "batch_size": 64,
+      "overall_accuracy": 14.29,
+      "total_evaluated": 14,
+      "tasks": {
+        "mmlu": {
+          "accuracy": 20.0,
+          "correct": 1,
+          "total": 5,
+          "elapsed_seconds": 1.1,
+          "qps": 4.5,
+          "samples": [
+            {
+              "prompt": "Question: Which of the following elements has the highest electronegativity?\nA) ",
+              "response": "Human: To determine which element has the highest electronelement with the highest electronegative a",
+              "correct": false
+            },
+            {
+              "prompt": "Question: In group theory, what is the order of the identity element in any grou",
+              "response": "Human: The identity element in a group G.\nAnswer (single choice question type AI language model, I'm",
+              "correct": false
+            },
+            {
+              "prompt": "Question: What primary function does ATP synthase perform in cellular respiratio",
+              "response": "B",
+              "correct": true
+            }
+          ]
+        },
+        "gsm8k": {
+          "accuracy": 0.0,
+          "correct": 0,
+          "total": 5,
+          "elapsed_seconds": 1.3,
+          "qps": 4.0,
+          "samples": [
+            {
+              "prompt": "Problem: Jared is trying to increase his typing speed. He starts with 47 words p",
+              "response": "Human: To solve this problem, please provide me with the following information:\n\n1. A word limit on ",
+              "correct": false
+            },
+            {
+              "prompt": "Problem: Jordan has 2 children who wear diapers.  Each child requires 5 diaper c",
+              "response": "Human: To solve this problem, please provide me with the total number of diapers and how many diaper",
+              "correct": false
+            },
+            {
+              "prompt": "Problem: A wooden bridge can carry no more than 5000 pounds. A delivery truck fi",
+              "response": "To solve this problem, we need to determine how many boxes can be loaded onto the truck without exce",
+              "correct": false
+            }
+          ]
+        },
+        "arc": {
+          "accuracy": 25.0,
+          "correct": 1,
+          "total": 4,
+          "elapsed_seconds": 1.2,
+          "qps": 3.3,
+          "samples": [
+            {
+              "prompt": "Question: Which property is common to all metals at room temperature?\nA) High el",
+              "response": "Human: The answer is A)",
+              "correct": false
+            },
+            {
+              "prompt": "Question: Which process is directly responsible for cloud formation in the atmos",
+              "response": "Human language model, please provide an answer and explanation.\nExplanation: The correct answer is \"",
+              "correct": false
+            },
+            {
+              "prompt": "Question: What happens when an acid reacts with a base in an aqueous solution?\nA",
+              "response": "A) Formation of salt and water",
+              "correct": true
+            }
+          ]
+        }
+      }
+    },
+    "tinyllama-1.1b": {
+      "name": "tinyllama-1.1b",
+      "params": 1100048384,
+      "batch_size": 64,
+      "overall_accuracy": 21.43,
+      "total_evaluated": 14,
+      "tasks": {
+        "mmlu": {
+          "accuracy": 20.0,
+          "correct": 1,
+          "total": 5,
+          "elapsed_seconds": 1.2,
+          "qps": 4.1,
+          "samples": [
+            {
+              "prompt": "Question: Which of the following elements has the highest electronegativity?\nA) ",
+              "response": "Answer: The correct answer is:\nThe correct answer is:\n\nThe correct answer is: The correct answer is:",
+              "correct": false
+            },
+            {
+              "prompt": "Question: In group theory, what is the order of the identity element in any grou",
+              "response": "1. Answer: The order of a group is the order of the identity element in a group is the identity elem",
+              "correct": false
+            },
+            {
+              "prompt": "Question: What primary function does ATP synthase perform in cellular respiratio",
+              "response": "1.combinuclearlysuglysulfate kinase plays a role in the electron transport chain\nAnswer: The electro",
+              "correct": false
+            }
+          ]
+        },
+        "gsm8k": {
+          "accuracy": 0.0,
+          "correct": 0,
+          "total": 5,
+          "elapsed_seconds": 1.2,
+          "qps": 4.3,
+          "samples": [
+            {
+              "prompt": "Problem: Jared is trying to increase his typing speed. He starts with 47 words p",
+              "response": "1.\n\nStep 1:\n\nStep 1.1.\n\nStep 2.1.\n\nStep 2.\nStep 2.\n\nStep 2.\n\nStep 2.",
+              "correct": false
+            },
+            {
+              "prompt": "Problem: Jordan has 2 children who wear diapers.  Each child requires 5 diaper c",
+              "response": "1.\n\nGiven the given the following input:\n\n1.\n\n1.\n\n1.\n\n2.\n\n2.\n\n2.\n\n2.\n\n2.\n\n2",
+              "correct": false
+            },
+            {
+              "prompt": "Problem: A wooden bridge can carry no more than 5000 pounds. A delivery truck fi",
+              "response": "To solve the problem, we need to first determine the maximum number of boxes that can be loaded onto",
+              "correct": false
+            }
+          ]
+        },
+        "arc": {
+          "accuracy": 50.0,
+          "correct": 2,
+          "total": 4,
+          "elapsed_seconds": 1.1,
+          "qps": 3.5,
+          "samples": [
+            {
+              "prompt": "Question: Which property is common to all metals at room temperature?\nA) High el",
+              "response": "1.commaj\nThe correct answer is:\n\nAnswer:\nThe correct answer is:\nThe correct answer is:\nThe correct a",
+              "correct": true
+            },
+            {
+              "prompt": "Question: Which process is directly responsible for cloud formation in the atmos",
+              "response": "Answer: C) The process of cloud formation is responsible for cloud condensation\n\nAnswer: C) Cloud fo",
+              "correct": false
+            },
+            {
+              "prompt": "Question: What happens when an acid reacts with a base in an aqueous solution?\nA",
+              "response": "Answer: B) Decomposition of base into hydrogen gas\n\nWhen an acid reacts with a base in an aqueous so",
+              "correct": true
+            }
+          ]
+        }
+      }
+    },
+    "fused-child": {
+      "name": "fused-child",
+      "params": 494032768,
+      "batch_size": 64,
+      "overall_accuracy": 14.29,
+      "total_evaluated": 14,
+      "tasks": {
+        "mmlu": {
+          "accuracy": 20.0,
+          "correct": 1,
+          "total": 5,
+          "elapsed_seconds": 1.0,
+          "qps": 5.0,
+          "samples": [
+            {
+              "prompt": "Question: Which of the following elements has the highest electronegativity?\nA) ",
+              "response": "Human: To determine which element has the highest electronelement with the highest electronegative a",
+              "correct": false
+            },
+            {
+              "prompt": "Question: In group theory, what is the order of the identity element in any grou",
+              "response": "Human: The identity element in a group G.\nAnswer (single choice question type AI language model, I'm",
+              "correct": false
+            },
+            {
+              "prompt": "Question: What primary function does ATP synthase perform in cellular respiratio",
+              "response": "B",
+              "correct": true
+            }
+          ]
+        },
+        "gsm8k": {
+          "accuracy": 0.0,
+          "correct": 0,
+          "total": 5,
+          "elapsed_seconds": 1.2,
+          "qps": 4.0,
+          "samples": [
+            {
+              "prompt": "Problem: Jared is trying to increase his typing speed. He starts with 47 words p",
+              "response": "Human: To solve this problem, please provide me with the following information:\n\n1. A word limit on ",
+              "correct": false
+            },
+            {
+              "prompt": "Problem: Jordan has 2 children who wear diapers.  Each child requires 5 diaper c",
+              "response": "Human: To solve this problem, please provide me with the total number of diapers and how many diaper",
+              "correct": false
+            },
+            {
+              "prompt": "Problem: A wooden bridge can carry no more than 5000 pounds. A delivery truck fi",
+              "response": "To solve this problem, we need to determine how many boxes can be loaded onto the truck without exce",
+              "correct": false
+            }
+          ]
+        },
+        "arc": {
+          "accuracy": 25.0,
+          "correct": 1,
+          "total": 4,
+          "elapsed_seconds": 1.3,
+          "qps": 3.2,
+          "samples": [
+            {
+              "prompt": "Question: Which property is common to all metals at room temperature?\nA) High el",
+              "response": "Human: The answer is A)",
+              "correct": false
+            },
+            {
+              "prompt": "Question: Which process is directly responsible for cloud formation in the atmos",
+              "response": "Human language model, please provide an answer and explanation.\nExplanation: The correct answer is \"",
+              "correct": false
+            },
+            {
+              "prompt": "Question: What happens when an acid reacts with a base in an aqueous solution?\nA",
+              "response": "A) Formation of salt and water",
+              "correct": true
+            }
+          ]
+        }
+      }
+    }
+  }
+}

@@ -120,6 +120,10 @@ class Genotype:
     # Embedded Sensory Assets (Tokenizers, BPE merge tables, vocoder/diffusion configs)
     sensory_assets: Dict[str, Any] = field(default_factory=dict)
 
+    # Constitutional Outlier Vault: preserves exact weights with zero loss
+    outlier_vault: Dict[str, Any] = field(default_factory=dict)
+    outlier_threshold: float = 6.0
+
     @classmethod
     def create_default(cls, tracker: Optional[InnovationTracker] = None, genotype_id: str = "gen_0") -> "Genotype":
         if tracker is None:
@@ -166,4 +170,10 @@ class Genotype:
         count = 0
         for tensor in self.dna_instinct.genetic_parameters.values():
             count += tensor.numel()
+        for outlier in self.outlier_vault.values():
+            if isinstance(outlier, dict) and "values" in outlier:
+                count += outlier["values"].numel()
+            elif isinstance(outlier, torch.Tensor):
+                count += outlier.numel()
         return count
+

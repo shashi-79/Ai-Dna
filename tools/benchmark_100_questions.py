@@ -29,6 +29,10 @@ if hasattr(sys.stdout, "reconfigure"):
     except Exception:
         pass
 
+WORKSPACE_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if WORKSPACE_ROOT not in sys.path:
+    sys.path.insert(0, WORKSPACE_ROOT)
+
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from ai_dna.dna.serialization import load_genotype
 
@@ -251,10 +255,11 @@ def main():
     }
     reports.append(rep_naive)
 
-    # 4. AI-DNA Fused Child (Dominant Pathway: Qwen2.5)
-    fused_tok = AutoTokenizer.from_pretrained(p2_path)
-    m_fused = AutoModelForCausalLM.from_pretrained(p2_path, dtype=torch.float16 if device=="cuda" else torch.float32, low_cpu_mem_usage=True).to(device)
-    rep_fused = run_100q_evaluation(m_fused, fused_tok, "AI-DNA Fused Child (fused_text_child.aidna)")
+    # 4. AI-DNA Fused Child (my_llm_folder)
+    fused_path = "my_llm_folder"
+    fused_tok = AutoTokenizer.from_pretrained(fused_path)
+    m_fused = AutoModelForCausalLM.from_pretrained(fused_path, dtype=torch.float16 if device=="cuda" else torch.float32, low_cpu_mem_usage=True).to(device)
+    rep_fused = run_100q_evaluation(m_fused, fused_tok, "AI-DNA Fused Child (my_llm_folder)")
     reports.append(rep_fused)
     del m_fused
     if device == "cuda": torch.cuda.empty_cache()

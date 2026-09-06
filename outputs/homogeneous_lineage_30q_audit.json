@@ -1,0 +1,482 @@
+[
+  {
+    "question_num": 1,
+    "category": "Coding",
+    "prompt": "Write a clean python function `square(x)` to compute the square of x:\n```python\n",
+    "target": "square",
+    "raw_output_with_special": "def square(x):\n    return x ** 2\n```<|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|>",
+    "clean_output": "def square(x):\n    return x ** 2\n```",
+    "passed": true,
+    "rationale": "Passed all 3 unit tests for square()",
+    "token_ids": [
+      1604,
+      5222,
+      24,
+      104,
+      727,
+      472,
+      1003,
+      1792,
+      1903,
+      216
+    ]
+  },
+  {
+    "question_num": 2,
+    "category": "Coding",
+    "prompt": "Write a clean python function `is_even(x)` to check if a number x is even:\n```python\n",
+    "target": "is_even",
+    "raw_output_with_special": "def is_even(x):\n    return x % 2 == 0\n```<|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|>",
+    "clean_output": "def is_even(x):\n    return x % 2 == 0\n```",
+    "passed": true,
+    "rationale": "Passed all 3 unit tests for is_even()",
+    "token_ids": [
+      1604,
+      314,
+      79,
+      9934,
+      24,
+      104,
+      727,
+      472,
+      1003,
+      1792
+    ]
+  },
+  {
+    "question_num": 3,
+    "category": "Coding",
+    "prompt": "Write a clean python function `get_length(lst)` to calculate the length of list lst:\n```python\n",
+    "target": "get_length",
+    "raw_output_with_special": "def get_length(lst):\n    return len(lst)\n```<|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|>",
+    "clean_output": "def get_length(lst):\n    return len(lst)\n```",
+    "passed": true,
+    "rationale": "Passed all 3 unit tests for get_length()",
+    "token_ids": [
+      1604,
+      820,
+      79,
+      6666,
+      24,
+      24907,
+      727,
+      472,
+      1003,
+      3858
+    ]
+  },
+  {
+    "question_num": 4,
+    "category": "Coding",
+    "prompt": "Write a clean python function `reverse_string(s)` to reverse a string s:\n```python\n",
+    "target": "reverse_string",
+    "raw_output_with_special": "def reverse_string(s):\n    return s[::-1]\n```<|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|>",
+    "clean_output": "def reverse_string(s):\n    return s[::-1]\n```",
+    "passed": true,
+    "rationale": "Passed all 3 unit tests for reverse_string()",
+    "token_ids": [
+      1604,
+      8535,
+      79,
+      5931,
+      24,
+      99,
+      727,
+      472,
+      1003,
+      262
+    ]
+  },
+  {
+    "question_num": 5,
+    "category": "Coding",
+    "prompt": "Write a clean python function `find_max(a, b)` to find maximum of a and b:\n```python\n",
+    "target": "find_max",
+    "raw_output_with_special": "def find_max(a, b):\n    return max(a, b)\n```<|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|>",
+    "clean_output": "def find_max(a, b):\n    return max(a, b)\n```",
+    "passed": true,
+    "rationale": "Passed all 3 unit tests for find_max()",
+    "token_ids": [
+      1604,
+      1042,
+      79,
+      3831,
+      24,
+      81,
+      28,
+      278,
+      727,
+      472
+    ]
+  },
+  {
+    "question_num": 6,
+    "category": "Coding",
+    "prompt": "Write a clean python function `double_nums(nums)` to double all numbers in list nums:\n```python\n",
+    "target": "double_nums",
+    "raw_output_with_special": "def double_nums(nums):\n    doubled_nums = []\n    for num in nums:\n        doubled_nums.append(num * 2)\n    return doubled_nums\n```<|im_end|>",
+    "clean_output": "def double_nums(nums):\n    doubled_nums = []\n    for num in nums:\n        doubled_nums.append(num * 2)\n    return doubled_nums\n```",
+    "passed": true,
+    "rationale": "Passed all 2 unit tests for double_nums()",
+    "token_ids": [
+      1604,
+      5561,
+      79,
+      36516,
+      24,
+      36516,
+      727,
+      472,
+      20195,
+      79
+    ]
+  },
+  {
+    "question_num": 7,
+    "category": "Coding",
+    "prompt": "Write a clean python function `first_elem(lst)` to return the first element of lst:\n```python\n",
+    "target": "first_elem",
+    "raw_output_with_special": "def first_elem(lst):\n    return lst[0]\n```<|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|>",
+    "clean_output": "def first_elem(lst):\n    return lst[0]\n```",
+    "passed": true,
+    "rationale": "Passed all 2 unit tests for first_elem()",
+    "token_ids": [
+      1604,
+      808,
+      79,
+      35500,
+      24,
+      24907,
+      727,
+      472,
+      1003,
+      36470
+    ]
+  },
+  {
+    "question_num": 8,
+    "category": "Coding",
+    "prompt": "Write a clean python function `is_positive(x)` to check if x is positive:\n```python\n",
+    "target": "is_positive",
+    "raw_output_with_special": "def is_positive(x):\n    return x > 0\n```<|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|>",
+    "clean_output": "def is_positive(x):\n    return x > 0\n```",
+    "passed": true,
+    "rationale": "Passed all 3 unit tests for is_positive()",
+    "token_ids": [
+      1604,
+      314,
+      79,
+      16185,
+      24,
+      104,
+      727,
+      472,
+      1003,
+      1792
+    ]
+  },
+  {
+    "question_num": 9,
+    "category": "Coding",
+    "prompt": "Write a clean python function `cube(n)` to calculate cube of n:\n```python\n",
+    "target": "cube",
+    "raw_output_with_special": "def cube(n):\n    return n ** 3\n```<|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|>",
+    "clean_output": "def cube(n):\n    return n ** 3\n```",
+    "passed": true,
+    "rationale": "Passed all 3 unit tests for cube()",
+    "token_ids": [
+      1604,
+      20636,
+      24,
+      94,
+      727,
+      472,
+      1003,
+      304,
+      1903,
+      216
+    ]
+  },
+  {
+    "question_num": 10,
+    "category": "Coding",
+    "prompt": "Write a clean python function `concat(a, b)` to join strings a and b:\n```python\n",
+    "target": "concat",
+    "raw_output_with_special": "def concat(a, b):\n    return a + b\n```<|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|><|im_end|>",
+    "clean_output": "def concat(a, b):\n    return a + b\n```",
+    "passed": true,
+    "rationale": "Passed all 2 unit tests for concat()",
+    "token_ids": [
+      1604,
+      1700,
+      261,
+      24,
+      81,
+      28,
+      278,
+      727,
+      472,
+      1003
+    ]
+  },
+  {
+    "question_num": 11,
+    "category": "Math",
+    "prompt": "Solve this math problem step by step: Natalia sold clips to 48 of her friends in April, and then she sold half as many clips in May. How many clips did Natalia sell altogether in April and May?\nFinal Answer:",
+    "target": "72",
+    "raw_output_with_special": "<|im_end|>",
+    "clean_output": "",
+    "passed": false,
+    "rationale": "No numeric tokens found in response",
+    "token_ids": [
+      2
+    ]
+  },
+  {
+    "question_num": 12,
+    "category": "Math",
+    "prompt": "Solve this math problem step by step: Weng earns $12 an hour for babysitting. Yesterday, she just did 50 minutes of babysitting. How much did she earn?\nFinal Answer:",
+    "target": "10",
+    "raw_output_with_special": "<|im_end|>",
+    "clean_output": "",
+    "passed": false,
+    "rationale": "No numeric tokens found in response",
+    "token_ids": [
+      2
+    ]
+  },
+  {
+    "question_num": 13,
+    "category": "Math",
+    "prompt": "Solve this math problem step by step: Betty is saving money for a new wallet which costs $100. Betty has only half of the money she needs. Her parents decided to give her $15 for that purpose, and her grandparents twice as much as her parents. How much more money does Betty need to buy the wallet?\nFinal Answer:",
+    "target": "5",
+    "raw_output_with_special": "<|im_end|>",
+    "clean_output": "",
+    "passed": false,
+    "rationale": "No numeric tokens found in response",
+    "token_ids": [
+      2
+    ]
+  },
+  {
+    "question_num": 14,
+    "category": "Math",
+    "prompt": "Solve this math problem step by step: Julie is reading a 120-page book. Yesterday, she was able to read 12 pages and today, she read twice as many pages as yesterday. If she wants to read half of the remaining pages tomorrow, how many pages should she read?\nFinal Answer:",
+    "target": "42",
+    "raw_output_with_special": "<|im_end|>",
+    "clean_output": "",
+    "passed": false,
+    "rationale": "No numeric tokens found in response",
+    "token_ids": [
+      2
+    ]
+  },
+  {
+    "question_num": 15,
+    "category": "Math",
+    "prompt": "Solve this math problem step by step: James writes a 3-page letter to 2 different friends twice a week.  How many pages does he write a year?\nFinal Answer:",
+    "target": "624",
+    "raw_output_with_special": "<|im_end|>",
+    "clean_output": "",
+    "passed": false,
+    "rationale": "No numeric tokens found in response",
+    "token_ids": [
+      2
+    ]
+  },
+  {
+    "question_num": 16,
+    "category": "Science",
+    "prompt": "What is the atomic number of Hydrogen?\nAnswer:",
+    "target": "1",
+    "raw_output_with_special": "<|im_end|>",
+    "clean_output": "",
+    "passed": false,
+    "rationale": "Empty response or target",
+    "token_ids": [
+      2
+    ]
+  },
+  {
+    "question_num": 17,
+    "category": "Science",
+    "prompt": "What is the atomic number of Helium?\nAnswer:",
+    "target": "2",
+    "raw_output_with_special": "<|im_end|>",
+    "clean_output": "",
+    "passed": false,
+    "rationale": "Empty response or target",
+    "token_ids": [
+      2
+    ]
+  },
+  {
+    "question_num": 18,
+    "category": "Science",
+    "prompt": "What is the atomic number of Lithium?\nAnswer:",
+    "target": "3",
+    "raw_output_with_special": "<|im_end|>",
+    "clean_output": "",
+    "passed": false,
+    "rationale": "Empty response or target",
+    "token_ids": [
+      2
+    ]
+  },
+  {
+    "question_num": 19,
+    "category": "Science",
+    "prompt": "What is the atomic number of Beryllium?\nAnswer:",
+    "target": "4",
+    "raw_output_with_special": "<|im_end|>",
+    "clean_output": "",
+    "passed": false,
+    "rationale": "Empty response or target",
+    "token_ids": [
+      2
+    ]
+  },
+  {
+    "question_num": 20,
+    "category": "Science",
+    "prompt": "What is the atomic number of Boron?\nAnswer:",
+    "target": "5",
+    "raw_output_with_special": "<|im_end|>",
+    "clean_output": "",
+    "passed": false,
+    "rationale": "Empty response or target",
+    "token_ids": [
+      2
+    ]
+  },
+  {
+    "question_num": 21,
+    "category": "History/Geo",
+    "prompt": "What is the capital city of France?\nAnswer:",
+    "target": "Paris",
+    "raw_output_with_special": "<|im_end|>",
+    "clean_output": "",
+    "passed": false,
+    "rationale": "Empty response or target",
+    "token_ids": [
+      2
+    ]
+  },
+  {
+    "question_num": 22,
+    "category": "History/Geo",
+    "prompt": "What is the capital city of Japan?\nAnswer:",
+    "target": "Tokyo",
+    "raw_output_with_special": "<|im_end|>",
+    "clean_output": "",
+    "passed": false,
+    "rationale": "Empty response or target",
+    "token_ids": [
+      2
+    ]
+  },
+  {
+    "question_num": 23,
+    "category": "History/Geo",
+    "prompt": "What is the capital city of Germany?\nAnswer:",
+    "target": "Berlin",
+    "raw_output_with_special": "<|im_end|>",
+    "clean_output": "",
+    "passed": false,
+    "rationale": "Empty response or target",
+    "token_ids": [
+      2
+    ]
+  },
+  {
+    "question_num": 24,
+    "category": "History/Geo",
+    "prompt": "What is the capital city of Italy?\nAnswer:",
+    "target": "Rome",
+    "raw_output_with_special": "<|im_end|>",
+    "clean_output": "",
+    "passed": false,
+    "rationale": "Empty response or target",
+    "token_ids": [
+      2
+    ]
+  },
+  {
+    "question_num": 25,
+    "category": "History/Geo",
+    "prompt": "What is the capital city of Spain?\nAnswer:",
+    "target": "Madrid",
+    "raw_output_with_special": "<|im_end|>",
+    "clean_output": "",
+    "passed": false,
+    "rationale": "Empty response or target",
+    "token_ids": [
+      2
+    ]
+  },
+  {
+    "question_num": 26,
+    "category": "Language/Logic",
+    "prompt": "What is the exact antonym of 'hot'?\nAnswer:",
+    "target": "cold",
+    "raw_output_with_special": "<|im_end|>",
+    "clean_output": "",
+    "passed": false,
+    "rationale": "Empty response or target",
+    "token_ids": [
+      2
+    ]
+  },
+  {
+    "question_num": 27,
+    "category": "Language/Logic",
+    "prompt": "What is the exact antonym of 'up'?\nAnswer:",
+    "target": "down",
+    "raw_output_with_special": "<|im_end|>",
+    "clean_output": "",
+    "passed": false,
+    "rationale": "Empty response or target",
+    "token_ids": [
+      2
+    ]
+  },
+  {
+    "question_num": 28,
+    "category": "Language/Logic",
+    "prompt": "What is the exact antonym of 'fast'?\nAnswer:",
+    "target": "slow",
+    "raw_output_with_special": "<|im_end|>",
+    "clean_output": "",
+    "passed": false,
+    "rationale": "Empty response or target",
+    "token_ids": [
+      2
+    ]
+  },
+  {
+    "question_num": 29,
+    "category": "Language/Logic",
+    "prompt": "What is the exact antonym of 'happy'?\nAnswer:",
+    "target": "sad",
+    "raw_output_with_special": "<|im_end|>",
+    "clean_output": "",
+    "passed": false,
+    "rationale": "Empty response or target",
+    "token_ids": [
+      2
+    ]
+  },
+  {
+    "question_num": 30,
+    "category": "Language/Logic",
+    "prompt": "What is the exact antonym of 'light'?\nAnswer:",
+    "target": "dark",
+    "raw_output_with_special": "<|im_end|>",
+    "clean_output": "",
+    "passed": false,
+    "rationale": "Empty response or target",
+    "token_ids": [
+      2
+    ]
+  }
+]

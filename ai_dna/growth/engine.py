@@ -207,7 +207,15 @@ class GrowthEngine:
             cppn, arch.vocab_size, layer_idx=num_layers + 1, num_layers=num_layers + 2, **kwargs
         )
 
+        # 4. Constitutional Outlier Vault Restoration (Zero-Distortion Exact Retention)
+        if hasattr(genotype, "outlier_vault") and genotype.outlier_vault:
+            from ..kernels.hybrid_svd import restore_outliers_to_tensor
+            for param_name, outlier_entry in genotype.outlier_vault.items():
+                if param_name in weights:
+                    weights[param_name] = restore_outliers_to_tensor(weights[param_name], outlier_entry)
+
         return weights
+
 
     def grow_phenotype_model(self, genotype: Genotype) -> "PhenotypeNeuralNetwork":
         """
@@ -259,6 +267,19 @@ class GrowthEngine:
                     ).to(self.device)
             if modal_dict:
                 model.load_state_dict(modal_dict, strict=False)
+
+        # 3.2 Pre-Fuse Constitutional Outlier Vault (Zero-Distortion Exact Retention)
+        if hasattr(genotype, "outlier_vault") and genotype.outlier_vault:
+            from ..kernels.hybrid_svd import restore_outliers_to_tensor
+            with torch.no_grad():
+                model_state = model.state_dict()
+                restored_state = {}
+                for param_name, outlier_entry in genotype.outlier_vault.items():
+                    if param_name in model_state:
+                        restored_tensor = restore_outliers_to_tensor(model_state[param_name], outlier_entry)
+                        restored_state[param_name] = restored_tensor.to(self.device)
+                if restored_state:
+                    model.load_state_dict(restored_state, strict=False)
 
         # 3.5 Check for LoRA Rank in architecture and inject LoRA parameters
         lora_rank = getattr(genotype.dna_architecture, "lora_rank", 0)

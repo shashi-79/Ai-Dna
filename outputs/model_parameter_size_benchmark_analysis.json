@@ -1,0 +1,282 @@
+[
+  {
+    "label": "Parent 1: SmolLM2-360M",
+    "total_params_m": 361.82112,
+    "active_params_m": 361.82112,
+    "size_mb": 693.5982046127319,
+    "size_gb": 0.677341996692121,
+    "accuracy": 19.28,
+    "passed": 4821,
+    "evaluated": 25000,
+    "time_sec": 317.8,
+    "acc_per_m_params": 0.05328599944635626,
+    "acc_per_gb": 28.464202860823836,
+    "acc_per_sec": 15.169918187539333,
+    "categories": {
+      "Math": 2.42,
+      "Coding": 90.0,
+      "Science": 4.0,
+      "History/Geo": 0.0,
+      "Language/Logic": 0.0
+    },
+    "cat_counts": {
+      "Math": "121/5000",
+      "Coding": "4500/5000",
+      "Science": "200/5000",
+      "History/Geo": "0/5000",
+      "Language/Logic": "0/5000"
+    }
+  },
+  {
+    "label": "Parent 2: Qwen2.5-0.5B",
+    "total_params_m": 494.032768,
+    "active_params_m": 494.032768,
+    "size_mb": 953.2992191314697,
+    "size_gb": 0.9309562686830759,
+    "accuracy": 68.96,
+    "passed": 17239,
+    "evaluated": 25000,
+    "time_sec": 412.9,
+    "acc_per_m_params": 0.13958588269189465,
+    "acc_per_gb": 74.07437096647979,
+    "acc_per_sec": 41.75102930491645,
+    "categories": {
+      "Math": 9.06,
+      "Coding": 50.0,
+      "Science": 100.0,
+      "History/Geo": 85.72,
+      "Language/Logic": 100.0
+    },
+    "cat_counts": {
+      "Math": "453/5000",
+      "Coding": "2500/5000",
+      "Science": "5000/5000",
+      "History/Geo": "4286/5000",
+      "Language/Logic": "5000/5000"
+    }
+  },
+  {
+    "label": "Parent 3: TinyLlama-1.1B",
+    "total_params_m": 1100.048384,
+    "active_params_m": 1100.048384,
+    "size_mb": 2100.4419374465942,
+    "size_gb": 2.0512128295376897,
+    "accuracy": 70.44,
+    "passed": 17609,
+    "evaluated": 25000,
+    "time_sec": 491.2,
+    "acc_per_m_params": 0.06403354709168865,
+    "acc_per_gb": 34.34065884615008,
+    "acc_per_sec": 35.84894136807818,
+    "categories": {
+      "Math": 2.94,
+      "Coding": 80.02,
+      "Science": 96.0,
+      "History/Geo": 85.72,
+      "Language/Logic": 87.5
+    },
+    "cat_counts": {
+      "Math": "147/5000",
+      "Coding": "4001/5000",
+      "Science": "4800/5000",
+      "History/Geo": "4286/5000",
+      "Language/Logic": "4375/5000"
+    }
+  },
+  {
+    "label": "Method 1: AI-DNA MoE Fused Child (Dual-Expert)",
+    "total_params_m": 673.712384,
+    "active_params_m": 494.032768,
+    "size_mb": 1646.8974237442017,
+    "size_gb": 1.608298265375197,
+    "accuracy": 68.94,
+    "passed": 17236,
+    "evaluated": 25000,
+    "time_sec": 505.7,
+    "acc_per_m_params": 0.10232853312074489,
+    "acc_per_gb": 42.86518333333967,
+    "acc_per_sec": 34.083448684991104,
+    "categories": {
+      "Math": 9.0,
+      "Coding": 50.0,
+      "Science": 100.0,
+      "History/Geo": 85.72,
+      "Language/Logic": 100.0
+    },
+    "cat_counts": {
+      "Math": "450/5000",
+      "Coding": "2500/5000",
+      "Science": "5000/5000",
+      "History/Geo": "4286/5000",
+      "Language/Logic": "5000/5000"
+    }
+  },
+  {
+    "label": "Method 2: LoRA Instinct Fused Child (Dual-Parent)",
+    "total_params_m": 494.032768,
+    "active_params_m": 494.032768,
+    "size_mb": 953.2967510223389,
+    "size_gb": 0.9309538584202528,
+    "accuracy": 67.56,
+    "passed": 16890,
+    "evaluated": 25000,
+    "time_sec": 473.1,
+    "acc_per_m_params": 0.13675206256763925,
+    "acc_per_gb": 72.57072881640279,
+    "acc_per_sec": 35.7006975269499,
+    "categories": {
+      "Math": 7.32,
+      "Coding": 40.0,
+      "Science": 100.0,
+      "History/Geo": 90.48,
+      "Language/Logic": 100.0
+    },
+    "cat_counts": {
+      "Math": "366/5000",
+      "Coding": "2000/5000",
+      "Science": "5000/5000",
+      "History/Geo": "4524/5000",
+      "Language/Logic": "5000/5000"
+    }
+  },
+  {
+    "label": "Method 3: Dense SVD Energy Blend Child",
+    "total_params_m": 494.032768,
+    "active_params_m": 494.032768,
+    "size_mb": 953.2967510223389,
+    "size_gb": 0.9309538584202528,
+    "accuracy": 27.1,
+    "passed": 6776,
+    "evaluated": 25000,
+    "time_sec": 331.1,
+    "acc_per_m_params": 0.054854660976658136,
+    "acc_per_gb": 29.109928225644104,
+    "acc_per_sec": 20.465116279069765,
+    "categories": {
+      "Math": 3.6,
+      "Coding": 30.0,
+      "Science": 4.0,
+      "History/Geo": 66.68,
+      "Language/Logic": 31.24
+    },
+    "cat_counts": {
+      "Math": "180/5000",
+      "Coding": "1500/5000",
+      "Science": "200/5000",
+      "History/Geo": "3334/5000",
+      "Language/Logic": "1562/5000"
+    }
+  },
+  {
+    "label": "Method 4: Homogeneous Lineage (SmolLM2 135M+360M)",
+    "total_params_m": 361.82112,
+    "active_params_m": 361.82112,
+    "size_mb": 693.4418268203735,
+    "size_gb": 0.677189284004271,
+    "accuracy": 20.01,
+    "passed": 5003,
+    "evaluated": 25000,
+    "time_sec": 154.8,
+    "acc_per_m_params": 0.05530357100215709,
+    "acc_per_gb": 29.548606973931086,
+    "acc_per_sec": 32.31912144702842,
+    "categories": {
+      "Math": 0.06,
+      "Coding": 100.0,
+      "Science": 0.0,
+      "History/Geo": 0.0,
+      "Language/Logic": 0.0
+    },
+    "cat_counts": {
+      "Math": "3/5000",
+      "Coding": "5000/5000",
+      "Science": "0/5000",
+      "History/Geo": "0/5000",
+      "Language/Logic": "0/5000"
+    }
+  },
+  {
+    "label": "Method 5: Combined Hybrid (MoE + Outlier Attention)",
+    "total_params_m": 673.712384,
+    "active_params_m": 494.032768,
+    "size_mb": 1646.8974237442017,
+    "size_gb": 1.608298265375197,
+    "accuracy": 12.08,
+    "passed": 3021,
+    "evaluated": 25000,
+    "time_sec": 397.8,
+    "acc_per_m_params": 0.017930500146483872,
+    "acc_per_gb": 7.51104459916947,
+    "acc_per_sec": 7.5942684766214175,
+    "categories": {
+      "Math": 3.88,
+      "Coding": 10.0,
+      "Science": 12.0,
+      "History/Geo": 9.52,
+      "Language/Logic": 25.02
+    },
+    "cat_counts": {
+      "Math": "194/5000",
+      "Coding": "500/5000",
+      "Science": "600/5000",
+      "History/Geo": "476/5000",
+      "Language/Logic": "1251/5000"
+    }
+  },
+  {
+    "label": "Tri-Parent LoRA Fused Child (Dense Safetensors)",
+    "total_params_m": 494.032768,
+    "active_params_m": 494.032768,
+    "size_mb": 953.297116279602,
+    "size_gb": 0.9309542151167989,
+    "accuracy": 69.58,
+    "passed": 17396,
+    "evaluated": 25000,
+    "time_sec": 283.8,
+    "acc_per_m_params": 0.14084086017549347,
+    "acc_per_gb": 74.74051770770531,
+    "acc_per_sec": 61.29668780831571,
+    "categories": {
+      "Math": 7.44,
+      "Coding": 50.0,
+      "Science": 100.0,
+      "History/Geo": 90.48,
+      "Language/Logic": 100.0
+    },
+    "cat_counts": {
+      "Math": "372/5000",
+      "Coding": "2500/5000",
+      "Science": "5000/5000",
+      "History/Geo": "4524/5000",
+      "Language/Logic": "5000/5000"
+    }
+  },
+  {
+    "label": "Tri-Parent MoE Fused Child (3-Expert MoE)",
+    "total_params_m": 853.392,
+    "active_params_m": 494.032768,
+    "size_mb": 3747.339361190796,
+    "size_gb": 3.6595110949128866,
+    "accuracy": 1.7,
+    "passed": 424,
+    "evaluated": 25000,
+    "time_sec": 446.7,
+    "acc_per_m_params": 0.0019920505465249264,
+    "acc_per_gb": 0.464542928251586,
+    "acc_per_sec": 0.9491828967987463,
+    "categories": {
+      "Math": 0.48,
+      "Coding": 0.0,
+      "Science": 8.0,
+      "History/Geo": 0.0,
+      "Language/Logic": 0.0
+    },
+    "cat_counts": {
+      "Math": "24/5000",
+      "Coding": "0/5000",
+      "Science": "400/5000",
+      "History/Geo": "0/5000",
+      "Language/Logic": "0/5000"
+    }
+  }
+]

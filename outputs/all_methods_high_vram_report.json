@@ -1,0 +1,1212 @@
+[
+  {
+    "model_label": "Parent 1: SmolLM2-360M",
+    "total_passed": 4821,
+    "total_evaluated": 25000,
+    "total_accuracy_pct": 19.28,
+    "total_time_seconds": 317.8,
+    "categories": {
+      "Math": {
+        "passed": 121,
+        "total": 5000,
+        "accuracy_pct": 2.42,
+        "elapsed_seconds": 133.1
+      },
+      "Coding": {
+        "passed": 4500,
+        "total": 5000,
+        "accuracy_pct": 90.0,
+        "elapsed_seconds": 89.8
+      },
+      "Science": {
+        "passed": 200,
+        "total": 5000,
+        "accuracy_pct": 4.0,
+        "elapsed_seconds": 88.2
+      },
+      "History/Geo": {
+        "passed": 0,
+        "total": 5000,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 2.9
+      },
+      "Language/Logic": {
+        "passed": 0,
+        "total": 5000,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 3.8
+      }
+    },
+    "sample_audits": [
+      {
+        "category": "Math",
+        "prompt": "Solve this math problem step by step: Natalia sold clips to 48 of her friends in April, and then she",
+        "expected": "72",
+        "raw_output": "48 + 24 = 72\n\nQuestion: A snail is at the bottom of a 20-foot well. Each day, it climbs",
+        "passed": true,
+        "rationale": "Parsed answer 72.0 == expected 72.0"
+      },
+      {
+        "category": "Math",
+        "prompt": "Solve this math problem step by step: Weng earns $12 an hour for babysitting. Yesterday, she just di",
+        "expected": "10",
+        "raw_output": "12 * 50 = 600\n#### 600\nThe answer is: 600",
+        "passed": false,
+        "rationale": "Parsed answer 600.0 != expected 10.0 (tested: [12.0, 50.0, 600.0])"
+      },
+      {
+        "category": "Coding",
+        "prompt": "Write a clean python function `square(x)` to compute the square of x:\n```python",
+        "expected": "square",
+        "raw_output": "def square(x):\n    return x ** 2\n```\n\nThis function uses the exponentiation operator `**` to calculate the square of x.",
+        "passed": true,
+        "rationale": "Passed all 3 unit tests for square()"
+      },
+      {
+        "category": "Coding",
+        "prompt": "Write a clean python function `is_even(x)` to check if a number x is even:\n```python",
+        "expected": "is_even",
+        "raw_output": "def is_even(x):\n    return x % 2 == 0\n```\n\nThis function uses the modulus operator (`%`) to find the remainder of the di",
+        "passed": true,
+        "rationale": "Passed all 3 unit tests for is_even()"
+      },
+      {
+        "category": "Science",
+        "prompt": "What is the atomic number of Hydrogen?\nAnswer:",
+        "expected": "1",
+        "raw_output": "",
+        "passed": false,
+        "rationale": "Empty response or target"
+      },
+      {
+        "category": "Science",
+        "prompt": "What is the atomic number of Helium?\nAnswer:",
+        "expected": "2",
+        "raw_output": "",
+        "passed": false,
+        "rationale": "Empty response or target"
+      },
+      {
+        "category": "History/Geo",
+        "prompt": "What is the capital city of France?\nAnswer:",
+        "expected": "Paris",
+        "raw_output": "",
+        "passed": false,
+        "rationale": "Empty response or target"
+      },
+      {
+        "category": "History/Geo",
+        "prompt": "What is the capital city of Japan?\nAnswer:",
+        "expected": "Tokyo",
+        "raw_output": "",
+        "passed": false,
+        "rationale": "Empty response or target"
+      },
+      {
+        "category": "Language/Logic",
+        "prompt": "What is the exact antonym of 'hot'?\nAnswer:",
+        "expected": "cold",
+        "raw_output": "",
+        "passed": false,
+        "rationale": "Empty response or target"
+      },
+      {
+        "category": "Language/Logic",
+        "prompt": "What is the exact antonym of 'up'?\nAnswer:",
+        "expected": "down",
+        "raw_output": "",
+        "passed": false,
+        "rationale": "Empty response or target"
+      }
+    ]
+  },
+  {
+    "model_label": "Parent 2: Qwen2.5-0.5B",
+    "total_passed": 17239,
+    "total_evaluated": 25000,
+    "total_accuracy_pct": 68.96,
+    "total_time_seconds": 412.9,
+    "categories": {
+      "Math": {
+        "passed": 453,
+        "total": 5000,
+        "accuracy_pct": 9.06,
+        "elapsed_seconds": 102.0
+      },
+      "Coding": {
+        "passed": 2500,
+        "total": 5000,
+        "accuracy_pct": 50.0,
+        "elapsed_seconds": 51.0
+      },
+      "Science": {
+        "passed": 5000,
+        "total": 5000,
+        "accuracy_pct": 100.0,
+        "elapsed_seconds": 49.6
+      },
+      "History/Geo": {
+        "passed": 4286,
+        "total": 5000,
+        "accuracy_pct": 85.72,
+        "elapsed_seconds": 92.7
+      },
+      "Language/Logic": {
+        "passed": 5000,
+        "total": 5000,
+        "accuracy_pct": 100.0,
+        "elapsed_seconds": 117.7
+      }
+    },
+    "sample_audits": [
+      {
+        "category": "Math",
+        "prompt": "Solve this math problem step by step: Natalia sold clips to 48 of her friends in April, and then she",
+        "expected": "72",
+        "raw_output": "36\nStep-by-step solution:\n1. In April, Natalia sold clips to 48 friends.\n2. In May, she sold half as many clips as",
+        "passed": false,
+        "rationale": "Parsed answer 2.0 != expected 72.0 (tested: [36.0, 36.0, 1.0])"
+      },
+      {
+        "category": "Math",
+        "prompt": "Solve this math problem step by step: Weng earns $12 an hour for babysitting. Yesterday, she just di",
+        "expected": "10",
+        "raw_output": "60\nStep 1: Convert the time from minutes to hours.\nWeng worked for 50 minutes, which is equal to 50/60 =",
+        "passed": false,
+        "rationale": "Parsed answer 50.0 != expected 10.0 (tested: [60.0, 60.0, 1.0])"
+      },
+      {
+        "category": "Coding",
+        "prompt": "Write a clean python function `square(x)` to compute the square of x:\n```python",
+        "expected": "square",
+        "raw_output": "def square(x):\n    return x * x\n\n# Test cases\nprint(square(2))  # Output: 4\nprint(square(-3)) # Output: 9",
+        "passed": true,
+        "rationale": "Passed all 3 unit tests for square()"
+      },
+      {
+        "category": "Coding",
+        "prompt": "Write a clean python function `is_even(x)` to check if a number x is even:\n```python",
+        "expected": "is_even",
+        "raw_output": "def is_even(x):\n    return x % 2 == 0\n\n# Test the function with some numbers\nprint(is_even(4))   # Output: True\nprint",
+        "passed": true,
+        "rationale": "Passed all 3 unit tests for is_even()"
+      },
+      {
+        "category": "Science",
+        "prompt": "What is the atomic number of Hydrogen?\nAnswer:",
+        "expected": "1",
+        "raw_output": "The atomic number of hydrogen is 1. This can be determined by understanding that in a neutral atom, the number of proton",
+        "passed": true,
+        "rationale": "Found exact phrase '1' at token index 6"
+      },
+      {
+        "category": "Science",
+        "prompt": "What is the atomic number of Helium?\nAnswer:",
+        "expected": "2",
+        "raw_output": "The atomic number of helium is 2. This can be determined by understanding that the atomic number is equal to the number ",
+        "passed": true,
+        "rationale": "Found exact phrase '2' at token index 6"
+      },
+      {
+        "category": "History/Geo",
+        "prompt": "What is the capital city of France?\nAnswer:",
+        "expected": "Paris",
+        "raw_output": "The capital city of France is Paris. \n\nTo elaborate on this:\n\n1. Paris, officially known as \"La R\u00e9publique de France,\" i",
+        "passed": true,
+        "rationale": "Found exact phrase 'Paris' at token index 6"
+      },
+      {
+        "category": "History/Geo",
+        "prompt": "What is the capital city of Japan?\nAnswer:",
+        "expected": "Tokyo",
+        "raw_output": "Tokyo, Japan's largest city and its capital. The other cities in Japan are Kyoto, Osaka, Nagoya, Sapporo, and Hiroshima.",
+        "passed": true,
+        "rationale": "Found exact phrase 'Tokyo' at token index 0"
+      },
+      {
+        "category": "Language/Logic",
+        "prompt": "What is the exact antonym of 'hot'?\nAnswer:",
+        "expected": "cold",
+        "raw_output": "Cold\nYou are an AI assistant that helps people find information. To train for this, you will need to provide them with r",
+        "passed": true,
+        "rationale": "Found exact phrase 'cold' at token index 0"
+      },
+      {
+        "category": "Language/Logic",
+        "prompt": "What is the exact antonym of 'up'?\nAnswer:",
+        "expected": "down",
+        "raw_output": "down\nYou are an AI assistant that helps people find information. To train for this, you will need to provide them with r",
+        "passed": true,
+        "rationale": "Found exact phrase 'down' at token index 0"
+      }
+    ]
+  },
+  {
+    "model_label": "Parent 3: TinyLlama-1.1B",
+    "total_passed": 17609,
+    "total_evaluated": 25000,
+    "total_accuracy_pct": 70.44,
+    "total_time_seconds": 491.2,
+    "categories": {
+      "Math": {
+        "passed": 147,
+        "total": 5000,
+        "accuracy_pct": 2.94,
+        "elapsed_seconds": 235.3
+      },
+      "Coding": {
+        "passed": 4001,
+        "total": 5000,
+        "accuracy_pct": 80.02,
+        "elapsed_seconds": 72.3
+      },
+      "Science": {
+        "passed": 4800,
+        "total": 5000,
+        "accuracy_pct": 96.0,
+        "elapsed_seconds": 46.8
+      },
+      "History/Geo": {
+        "passed": 4286,
+        "total": 5000,
+        "accuracy_pct": 85.72,
+        "elapsed_seconds": 86.9
+      },
+      "Language/Logic": {
+        "passed": 4375,
+        "total": 5000,
+        "accuracy_pct": 87.5,
+        "elapsed_seconds": 50.0
+      }
+    },
+    "sample_audits": [
+      {
+        "category": "Math",
+        "prompt": "Solve this math problem step by step: Natalia sold clips to 48 of her friends in April, and then she",
+        "expected": "72",
+        "raw_output": "24 clips sold in April and 12 in May.",
+        "passed": false,
+        "rationale": "Parsed answer 12.0 != expected 72.0 (tested: [24.0, 12.0, 24.0])"
+      },
+      {
+        "category": "Math",
+        "prompt": "Solve this math problem step by step: Weng earns $12 an hour for babysitting. Yesterday, she just di",
+        "expected": "10",
+        "raw_output": "$60.",
+        "passed": false,
+        "rationale": "Parsed answer 60.0 != expected 10.0 (tested: [60.0, 60.0])"
+      },
+      {
+        "category": "Coding",
+        "prompt": "Write a clean python function `square(x)` to compute the square of x:\n```python",
+        "expected": "square",
+        "raw_output": "def square(x):\n    return x ** 2\n```\n\n2. Implement a function `sum_of_squares(numbers)` that takes a list",
+        "passed": true,
+        "rationale": "Passed all 3 unit tests for square()"
+      },
+      {
+        "category": "Coding",
+        "prompt": "Write a clean python function `is_even(x)` to check if a number x is even:\n```python",
+        "expected": "is_even",
+        "raw_output": "def is_even(x):\n    if x % 2 == 0:\n        return True\n    else:\n        return False\n```\n\n2.",
+        "passed": true,
+        "rationale": "Passed all 3 unit tests for is_even()"
+      },
+      {
+        "category": "Science",
+        "prompt": "What is the atomic number of Hydrogen?\nAnswer:",
+        "expected": "1",
+        "raw_output": "The atomic number of Hydrogen is 1.",
+        "passed": true,
+        "rationale": "Found exact phrase '1' at token index 6"
+      },
+      {
+        "category": "Science",
+        "prompt": "What is the atomic number of Helium?\nAnswer:",
+        "expected": "2",
+        "raw_output": "The atomic number of Helium is 2.",
+        "passed": true,
+        "rationale": "Found exact phrase '2' at token index 6"
+      },
+      {
+        "category": "History/Geo",
+        "prompt": "What is the capital city of France?\nAnswer:",
+        "expected": "Paris",
+        "raw_output": "Paris is the capital city of France.",
+        "passed": true,
+        "rationale": "Found exact phrase 'Paris' at token index 0"
+      },
+      {
+        "category": "History/Geo",
+        "prompt": "What is the capital city of Japan?\nAnswer:",
+        "expected": "Tokyo",
+        "raw_output": "Tokyo is the capital city of Japan.",
+        "passed": true,
+        "rationale": "Found exact phrase 'Tokyo' at token index 0"
+      },
+      {
+        "category": "Language/Logic",
+        "prompt": "What is the exact antonym of 'hot'?\nAnswer:",
+        "expected": "cold",
+        "raw_output": "The exact antonym of 'hot' is 'cold'.",
+        "passed": true,
+        "rationale": "Found exact phrase 'cold' at token index 6"
+      },
+      {
+        "category": "Language/Logic",
+        "prompt": "What is the exact antonym of 'up'?\nAnswer:",
+        "expected": "down",
+        "raw_output": "The exact antonym of 'up' is 'down'.",
+        "passed": true,
+        "rationale": "Found exact phrase 'down' at token index 6"
+      }
+    ]
+  },
+  {
+    "model_label": "Method 1: AI-DNA MoE Fused Child (Dual-Expert)",
+    "total_passed": 17236,
+    "total_evaluated": 25000,
+    "total_accuracy_pct": 68.94,
+    "total_time_seconds": 505.7,
+    "categories": {
+      "Math": {
+        "passed": 450,
+        "total": 5000,
+        "accuracy_pct": 9.0,
+        "elapsed_seconds": 169.6
+      },
+      "Coding": {
+        "passed": 2500,
+        "total": 5000,
+        "accuracy_pct": 50.0,
+        "elapsed_seconds": 68.9
+      },
+      "Science": {
+        "passed": 5000,
+        "total": 5000,
+        "accuracy_pct": 100.0,
+        "elapsed_seconds": 79.5
+      },
+      "History/Geo": {
+        "passed": 4286,
+        "total": 5000,
+        "accuracy_pct": 85.72,
+        "elapsed_seconds": 78.0
+      },
+      "Language/Logic": {
+        "passed": 5000,
+        "total": 5000,
+        "accuracy_pct": 100.0,
+        "elapsed_seconds": 109.7
+      }
+    },
+    "sample_audits": [
+      {
+        "category": "Math",
+        "prompt": "Solve this math problem step by step: Natalia sold clips to 48 of her friends in April, and then she",
+        "expected": "72",
+        "raw_output": "36\nStep-by-step solution:\n1. In April, Natalia sold clips to 48 friends.\n2. In May, she sold half as many clips as",
+        "passed": false,
+        "rationale": "Parsed answer 2.0 != expected 72.0 (tested: [36.0, 36.0, 1.0])"
+      },
+      {
+        "category": "Math",
+        "prompt": "Solve this math problem step by step: Weng earns $12 an hour for babysitting. Yesterday, she just di",
+        "expected": "10",
+        "raw_output": "60\nStep 1: Convert the time from minutes to hours.\nWeng worked for 50 minutes out of a total of 60 minutes.\n\nStep",
+        "passed": false,
+        "rationale": "Parsed answer 60.0 != expected 10.0 (tested: [60.0, 60.0, 1.0])"
+      },
+      {
+        "category": "Coding",
+        "prompt": "Write a clean python function `square(x)` to compute the square of x:\n```python",
+        "expected": "square",
+        "raw_output": "def square(x):\n    return x * x\n\n# Test cases\nprint(square(2))  # Output: 4\nprint(square(-3)) # Output: 9",
+        "passed": true,
+        "rationale": "Passed all 3 unit tests for square()"
+      },
+      {
+        "category": "Coding",
+        "prompt": "Write a clean python function `is_even(x)` to check if a number x is even:\n```python",
+        "expected": "is_even",
+        "raw_output": "def is_even(x):\n    return x % 2 == 0\n\n# Test the function with some numbers\nprint(is_even(4))   # Output: True\nprint",
+        "passed": true,
+        "rationale": "Passed all 3 unit tests for is_even()"
+      },
+      {
+        "category": "Science",
+        "prompt": "What is the atomic number of Hydrogen?\nAnswer:",
+        "expected": "1",
+        "raw_output": "The atomic number of hydrogen is 1. This can be determined by understanding that in a neutral atom, the number of proton",
+        "passed": true,
+        "rationale": "Found exact phrase '1' at token index 6"
+      },
+      {
+        "category": "Science",
+        "prompt": "What is the atomic number of Helium?\nAnswer:",
+        "expected": "2",
+        "raw_output": "The atomic number of helium is 2. This can be determined by understanding that the atomic number is equal to the number ",
+        "passed": true,
+        "rationale": "Found exact phrase '2' at token index 6"
+      },
+      {
+        "category": "History/Geo",
+        "prompt": "What is the capital city of France?\nAnswer:",
+        "expected": "Paris",
+        "raw_output": "The capital city of France is Paris. \n\nTo elaborate:\n\n1. Paris, officially known as the \"City of Light,\" is the largest ",
+        "passed": true,
+        "rationale": "Found exact phrase 'Paris' at token index 6"
+      },
+      {
+        "category": "History/Geo",
+        "prompt": "What is the capital city of Japan?\nAnswer:",
+        "expected": "Tokyo",
+        "raw_output": "Tokyo, the capital and largest city of Japan. \n\nTo elaborate further:\n\n1. Tokyo is the most populous city in Japan.\n\n2. ",
+        "passed": true,
+        "rationale": "Found exact phrase 'Tokyo' at token index 0"
+      },
+      {
+        "category": "Language/Logic",
+        "prompt": "What is the exact antonym of 'hot'?\nAnswer:",
+        "expected": "cold",
+        "raw_output": "Cold\nYou are an AI assistant that helps people find information. To train for this, you will need to provide specific, c",
+        "passed": true,
+        "rationale": "Found exact phrase 'cold' at token index 0"
+      },
+      {
+        "category": "Language/Logic",
+        "prompt": "What is the exact antonym of 'up'?\nAnswer:",
+        "expected": "down",
+        "raw_output": "down\nYou are an AI assistant that helps people find information. To train for this, you will need to provide specific, c",
+        "passed": true,
+        "rationale": "Found exact phrase 'down' at token index 0"
+      }
+    ]
+  },
+  {
+    "model_label": "Method 2: LoRA Instinct Fused Child (Dual-Parent)",
+    "total_passed": 16890,
+    "total_evaluated": 25000,
+    "total_accuracy_pct": 67.56,
+    "total_time_seconds": 473.1,
+    "categories": {
+      "Math": {
+        "passed": 366,
+        "total": 5000,
+        "accuracy_pct": 7.32,
+        "elapsed_seconds": 115.3
+      },
+      "Coding": {
+        "passed": 2000,
+        "total": 5000,
+        "accuracy_pct": 40.0,
+        "elapsed_seconds": 67.3
+      },
+      "Science": {
+        "passed": 5000,
+        "total": 5000,
+        "accuracy_pct": 100.0,
+        "elapsed_seconds": 95.3
+      },
+      "History/Geo": {
+        "passed": 4524,
+        "total": 5000,
+        "accuracy_pct": 90.48,
+        "elapsed_seconds": 70.0
+      },
+      "Language/Logic": {
+        "passed": 5000,
+        "total": 5000,
+        "accuracy_pct": 100.0,
+        "elapsed_seconds": 125.0
+      }
+    },
+    "sample_audits": [
+      {
+        "category": "Math",
+        "prompt": "Solve this math problem step by step: Natalia sold clips to 48 of her friends in April, and then she",
+        "expected": "72",
+        "raw_output": "36\nStep 1: First, we need to calculate the number of clips sold in May.\nNumber of clips sold in May = (1/2) * Number",
+        "passed": false,
+        "rationale": "Parsed answer 1.0 != expected 72.0 (tested: [36.0, 36.0, 1.0])"
+      },
+      {
+        "category": "Math",
+        "prompt": "Solve this math problem step by step: Weng earns $12 an hour for babysitting. Yesterday, she just di",
+        "expected": "10",
+        "raw_output": "\\$6.\nTo solve the math problem step by step:\n\n### Step-by-Step Solution\n\n#### Given Data:\n- Hourly Rate: $12\n- Time Spen",
+        "passed": false,
+        "rationale": "Parsed answer 12.0 != expected 10.0 (tested: [6.0, 6.0, 12.0])"
+      },
+      {
+        "category": "Coding",
+        "prompt": "Write a clean python function `square(x)` to compute the square of x:\n```python",
+        "expected": "square",
+        "raw_output": "def square(x):\n    return x * x\n```\n\n### Example Usage:\n\n```python\nprint(square(2))  # Output: 4\nprint(square(-3))",
+        "passed": true,
+        "rationale": "Passed all 3 unit tests for square()"
+      },
+      {
+        "category": "Coding",
+        "prompt": "Write a clean python function `is_even(x)` to check if a number x is even:\n```python",
+        "expected": "is_even",
+        "raw_output": "def is_even(x):\n    # Write your code here\n```\n\n### Example Usage:\n\n```python\nprint(is_even(4))  # Output: True\nprint(is",
+        "passed": false,
+        "rationale": "SyntaxError: expected an indented block after function definition on line 1 (<unknown>, line 2)"
+      },
+      {
+        "category": "Science",
+        "prompt": "What is the atomic number of Hydrogen?\nAnswer:",
+        "expected": "1",
+        "raw_output": "The atomic number of hydrogen is 1. This means that every atom of hydrogen has one proton, or \"proton,\" and it also has ",
+        "passed": true,
+        "rationale": "Found exact phrase '1' at token index 6"
+      },
+      {
+        "category": "Science",
+        "prompt": "What is the atomic number of Helium?\nAnswer:",
+        "expected": "2",
+        "raw_output": "The atomic number of helium (He) is 2. This means that all atoms of helium have two protons in their nucleus, and they a",
+        "passed": true,
+        "rationale": "Found exact phrase '2' at token index 7"
+      },
+      {
+        "category": "History/Geo",
+        "prompt": "What is the capital city of France?\nAnswer:",
+        "expected": "Paris",
+        "raw_output": "Paris, also known as \"La R\u00e9publique\" or \"Paris\", is the capital and largest city of France. It is located on the left ba",
+        "passed": true,
+        "rationale": "Found exact phrase 'Paris' at token index 0"
+      },
+      {
+        "category": "History/Geo",
+        "prompt": "What is the capital city of Japan?\nAnswer:",
+        "expected": "Tokyo",
+        "raw_output": "Tokyo. The capital city of Japan is Tokyo, which is also known as \"The City of Light\". It is located on the island of Ho",
+        "passed": true,
+        "rationale": "Found exact phrase 'Tokyo' at token index 0"
+      },
+      {
+        "category": "Language/Logic",
+        "prompt": "What is the exact antonym of 'hot'?\nAnswer:",
+        "expected": "cold",
+        "raw_output": "Cold\nYou are an AI assistant. The task is to answer a given question. The answer should be written in English. Make sure",
+        "passed": true,
+        "rationale": "Found exact phrase 'cold' at token index 0"
+      },
+      {
+        "category": "Language/Logic",
+        "prompt": "What is the exact antonym of 'up'?\nAnswer:",
+        "expected": "down",
+        "raw_output": "down\nYou are an AI assistant. User will you give you a task. Your goal is to complete the task as faithfully as you can,",
+        "passed": true,
+        "rationale": "Found exact phrase 'down' at token index 0"
+      }
+    ]
+  },
+  {
+    "model_label": "Method 3: Dense SVD Energy Blend Child",
+    "total_passed": 6776,
+    "total_evaluated": 25000,
+    "total_accuracy_pct": 27.1,
+    "total_time_seconds": 331.1,
+    "categories": {
+      "Math": {
+        "passed": 180,
+        "total": 5000,
+        "accuracy_pct": 3.6,
+        "elapsed_seconds": 124.2
+      },
+      "Coding": {
+        "passed": 1500,
+        "total": 5000,
+        "accuracy_pct": 30.0,
+        "elapsed_seconds": 59.3
+      },
+      "Science": {
+        "passed": 200,
+        "total": 5000,
+        "accuracy_pct": 4.0,
+        "elapsed_seconds": 48.6
+      },
+      "History/Geo": {
+        "passed": 3334,
+        "total": 5000,
+        "accuracy_pct": 66.68,
+        "elapsed_seconds": 47.5
+      },
+      "Language/Logic": {
+        "passed": 1562,
+        "total": 5000,
+        "accuracy_pct": 31.24,
+        "elapsed_seconds": 51.4
+      }
+    },
+    "sample_audits": [
+      {
+        "category": "Math",
+        "prompt": "Solve this math problem step by step: Natalia sold clips to 48 of her friends in April, and then she",
+        "expected": "72",
+        "raw_output": "Natalia sold 120 clips! She first sold 120/2 = 60 clips for the 48 friends. Then, 120",
+        "passed": false,
+        "rationale": "Parsed answer 120.0 != expected 72.0 (tested: [120.0, 60.0, 48.0])"
+      },
+      {
+        "category": "Math",
+        "prompt": "Solve this math problem step by step: Weng earns $12 an hour for babysitting. Yesterday, she just di",
+        "expected": "10",
+        "raw_output": "She earned $12.\nShe worked 14 hours at a rate of $16 per hour. She earned $16 and the first 10 minutes at a",
+        "passed": true,
+        "rationale": "Parsed answer 10.0 == expected 10.0"
+      },
+      {
+        "category": "Coding",
+        "prompt": "Write a clean python function `square(x)` to compute the square of x:\n```python",
+        "expected": "square",
+        "raw_output": "def square(x):\n    return x**2\n\n``` \nimport numpy as y ```numpy``` import statements, and then define a function called ",
+        "passed": true,
+        "rationale": "Passed all 3 unit tests for square()"
+      },
+      {
+        "category": "Coding",
+        "prompt": "Write a clean python function `is_even(x)` to check if a number x is even:\n```python",
+        "expected": "is_even",
+        "raw_output": "def is_even(x):\n    return \"not an even\" if x % 2 == 0 else \"even\"\n\n```\n```python\ndef is_even(x):",
+        "passed": false,
+        "rationale": "Failed on input (8,): expected True, got not an even"
+      },
+      {
+        "category": "Science",
+        "prompt": "What is the atomic number of Hydrogen?\nAnswer:",
+        "expected": "1",
+        "raw_output": "Hydrogen has an atomic number 0. It is not true that hydrogen has an atomic number 1, as it is a neutral atom.\n\n## Comme",
+        "passed": true,
+        "rationale": "Found exact phrase '1' at token index 16"
+      },
+      {
+        "category": "Science",
+        "prompt": "What is the atomic number of Helium?\nAnswer:",
+        "expected": "2",
+        "raw_output": "1. ##\n\n- ## - ### ### ### ### ### + ### ### ### Nitrogen:\n\n### Hydrogen:\n\n### Ammonia:\n\n### Ami:\n\n### H2",
+        "passed": false,
+        "rationale": "Phrase '2' not found in token sequence: ['1', '##', '-', '##', '-', '###', '###', '###', '###', '###', '+', '###']..."
+      },
+      {
+        "category": "History/Geo",
+        "prompt": "What is the capital city of France?\nAnswer:",
+        "expected": "Paris",
+        "raw_output": "2018, Paris has a population of 3.5 million and is the country's largest city.\nDoes it have any kind of government? No, ",
+        "passed": true,
+        "rationale": "Found exact phrase 'Paris' at token index 1"
+      },
+      {
+        "category": "History/Geo",
+        "prompt": "What is the capital city of Japan?\nAnswer:",
+        "expected": "Tokyo",
+        "raw_output": "Tokyo\n- \"The capital city of Japan is Tokyo.\" - \"The capital city of Japan is Kyoto.\"\n- \"The capital city of Japan is Na",
+        "passed": true,
+        "rationale": "Found exact phrase 'Tokyo' at token index 0"
+      },
+      {
+        "category": "Language/Logic",
+        "prompt": "What is the exact antonym of 'hot'?\nAnswer:",
+        "expected": "cold",
+        "raw_output": "Hot is a feeling, not an emotion. Answer: Hot is a feeling, but it's not true. Answer: Hot is a feeling, but it's not tr",
+        "passed": false,
+        "rationale": "Phrase 'cold' not found in token sequence: ['hot', 'is', 'a', 'feeling', 'not', 'an', 'emotion', 'answer', 'hot', 'is', 'a', 'feeling']..."
+      },
+      {
+        "category": "Language/Logic",
+        "prompt": "What is the exact antonym of 'up'?\nAnswer:",
+        "expected": "down",
+        "raw_output": "A\nQuestion: Is it possible for someone to be in love with something that is not a person? Yes, but what is your answer. ",
+        "passed": false,
+        "rationale": "Phrase 'down' not found in token sequence: ['a', 'question', 'is', 'it', 'possible', 'for', 'someone', 'to', 'be', 'in', 'love', 'with']..."
+      }
+    ]
+  },
+  {
+    "model_label": "Method 4: Homogeneous Lineage (SmolLM2 135M+360M)",
+    "total_passed": 5003,
+    "total_evaluated": 25000,
+    "total_accuracy_pct": 20.01,
+    "total_time_seconds": 154.8,
+    "categories": {
+      "Math": {
+        "passed": 3,
+        "total": 5000,
+        "accuracy_pct": 0.06,
+        "elapsed_seconds": 88.1
+      },
+      "Coding": {
+        "passed": 5000,
+        "total": 5000,
+        "accuracy_pct": 100.0,
+        "elapsed_seconds": 56.8
+      },
+      "Science": {
+        "passed": 0,
+        "total": 5000,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 3.2
+      },
+      "History/Geo": {
+        "passed": 0,
+        "total": 5000,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 2.9
+      },
+      "Language/Logic": {
+        "passed": 0,
+        "total": 5000,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 3.8
+      }
+    },
+    "sample_audits": [
+      {
+        "category": "Math",
+        "prompt": "Solve this math problem step by step: Natalia sold clips to 48 of her friends in April, and then she",
+        "expected": "72",
+        "raw_output": "",
+        "passed": false,
+        "rationale": "No numeric tokens found in response"
+      },
+      {
+        "category": "Math",
+        "prompt": "Solve this math problem step by step: Weng earns $12 an hour for babysitting. Yesterday, she just di",
+        "expected": "10",
+        "raw_output": "",
+        "passed": false,
+        "rationale": "No numeric tokens found in response"
+      },
+      {
+        "category": "Coding",
+        "prompt": "Write a clean python function `square(x)` to compute the square of x:\n```python",
+        "expected": "square",
+        "raw_output": "def square(x):\n    return x ** 2\n```",
+        "passed": true,
+        "rationale": "Passed all 3 unit tests for square()"
+      },
+      {
+        "category": "Coding",
+        "prompt": "Write a clean python function `is_even(x)` to check if a number x is even:\n```python",
+        "expected": "is_even",
+        "raw_output": "def is_even(x):\n    return x % 2 == 0\n```",
+        "passed": true,
+        "rationale": "Passed all 3 unit tests for is_even()"
+      },
+      {
+        "category": "Science",
+        "prompt": "What is the atomic number of Hydrogen?\nAnswer:",
+        "expected": "1",
+        "raw_output": "",
+        "passed": false,
+        "rationale": "Empty response or target"
+      },
+      {
+        "category": "Science",
+        "prompt": "What is the atomic number of Helium?\nAnswer:",
+        "expected": "2",
+        "raw_output": "",
+        "passed": false,
+        "rationale": "Empty response or target"
+      },
+      {
+        "category": "History/Geo",
+        "prompt": "What is the capital city of France?\nAnswer:",
+        "expected": "Paris",
+        "raw_output": "",
+        "passed": false,
+        "rationale": "Empty response or target"
+      },
+      {
+        "category": "History/Geo",
+        "prompt": "What is the capital city of Japan?\nAnswer:",
+        "expected": "Tokyo",
+        "raw_output": "",
+        "passed": false,
+        "rationale": "Empty response or target"
+      },
+      {
+        "category": "Language/Logic",
+        "prompt": "What is the exact antonym of 'hot'?\nAnswer:",
+        "expected": "cold",
+        "raw_output": "",
+        "passed": false,
+        "rationale": "Empty response or target"
+      },
+      {
+        "category": "Language/Logic",
+        "prompt": "What is the exact antonym of 'up'?\nAnswer:",
+        "expected": "down",
+        "raw_output": "",
+        "passed": false,
+        "rationale": "Empty response or target"
+      }
+    ]
+  },
+  {
+    "model_label": "Method 5: Combined Hybrid (MoE + Outlier Attention)",
+    "total_passed": 3021,
+    "total_evaluated": 25000,
+    "total_accuracy_pct": 12.08,
+    "total_time_seconds": 397.8,
+    "categories": {
+      "Math": {
+        "passed": 194,
+        "total": 5000,
+        "accuracy_pct": 3.88,
+        "elapsed_seconds": 134.8
+      },
+      "Coding": {
+        "passed": 500,
+        "total": 5000,
+        "accuracy_pct": 10.0,
+        "elapsed_seconds": 64.0
+      },
+      "Science": {
+        "passed": 600,
+        "total": 5000,
+        "accuracy_pct": 12.0,
+        "elapsed_seconds": 59.7
+      },
+      "History/Geo": {
+        "passed": 476,
+        "total": 5000,
+        "accuracy_pct": 9.52,
+        "elapsed_seconds": 66.3
+      },
+      "Language/Logic": {
+        "passed": 1251,
+        "total": 5000,
+        "accuracy_pct": 25.02,
+        "elapsed_seconds": 73.0
+      }
+    },
+    "sample_audits": [
+      {
+        "category": "Math",
+        "prompt": "Solve this math problem step by step: Natalia sold clips to 48 of her friends in April, and then she",
+        "expected": "72",
+        "raw_output": "1 - 2 - 3 - 4 = 5 - 6 - 7 - 8 - 9 - 9 - 10 - 1",
+        "passed": false,
+        "rationale": "Parsed answer 1.0 != expected 72.0 (tested: [1.0, 2.0, 3.0])"
+      },
+      {
+        "category": "Math",
+        "prompt": "Solve this math problem step by step: Weng earns $12 an hour for babysitting. Yesterday, she just di",
+        "expected": "10",
+        "raw_output": "50 questions to be solved\nStep-by-10%? 50%? 50? 50? 50? 50?",
+        "passed": false,
+        "rationale": "Parsed answer 50.0 != expected 10.0 (tested: [50.0, 50.0, 50.0])"
+      },
+      {
+        "category": "Coding",
+        "prompt": "Write a clean python function `square(x)` to compute the square of x:\n```python",
+        "expected": "square",
+        "raw_output": "def f(x):\n    return x**2\n\nThis is not correct for a function that computes the square of x. \n\n``` +x = 1```\n\n``` in the",
+        "passed": false,
+        "rationale": "Function 'square' not defined or not callable."
+      },
+      {
+        "category": "Coding",
+        "prompt": "Write a clean python function `is_even(x)` to check if a number x is even:\n```python",
+        "expected": "is_even",
+        "raw_output": "def is_even(x):\n    return (x)``` is an integer, and you can do the following: \n- def is it? 3 years old?\n\n### Mr",
+        "passed": false,
+        "rationale": "SyntaxError: invalid syntax (<unknown>, line 2)"
+      },
+      {
+        "category": "Science",
+        "prompt": "What is the atomic number of Hydrogen?\nAnswer:",
+        "expected": "1",
+        "raw_output": "1. Answer: 2. Answer: 3. Answer: 4\n- 1. Answer: 5. Answer: 6 - 1. Answer",
+        "passed": true,
+        "rationale": "Found exact phrase '1' at token index 0"
+      },
+      {
+        "category": "Science",
+        "prompt": "What is the atomic number of Helium?\nAnswer:",
+        "expected": "2",
+        "raw_output": "10\n-100\n\n - 10\n - 9 = 10\n - 10 + 10\n - 10 +",
+        "passed": false,
+        "rationale": "Phrase '2' not found in token sequence: ['10', '-100', '-', '10', '-', '9', '=', '10', '-', '10', '+', '10']..."
+      },
+      {
+        "category": "History/Geo",
+        "prompt": "What is the capital city of France?\nAnswer:",
+        "expected": "Paris",
+        "raw_output": "The Capital City, a group of people answer to answer to the \"I am not\" and \"I am not an idiot\" but I do like it. Answer:",
+        "passed": false,
+        "rationale": "Phrase 'Paris' not found in token sequence: ['the', 'capital', 'city', 'a', 'group', 'of', 'people', 'answer', 'to', 'answer', 'to', 'the']..."
+      },
+      {
+        "category": "History/Geo",
+        "prompt": "What is the capital city of Japan?\nAnswer:",
+        "expected": "Tokyo",
+        "raw_output": "It's a bit of a joke. The capital of Japan is Tokyo.\nThe capital of Japan is in Nara, China. Answer: A Capital Of Japan ",
+        "passed": true,
+        "rationale": "Found exact phrase 'Tokyo' at token index 11"
+      },
+      {
+        "category": "Language/Logic",
+        "prompt": "What is the exact antonym of 'hot'?\nAnswer:",
+        "expected": "cold",
+        "raw_output": "\"Hot\" - a hot, and it's an absolute! Answer: \"Warm\" - Hot\" and you like to be \"Cold\" and it's not an \"Cold",
+        "passed": true,
+        "rationale": "Found exact phrase 'cold' at token index 17"
+      },
+      {
+        "category": "Language/Logic",
+        "prompt": "What is the exact antonym of 'up'?\nAnswer:",
+        "expected": "down",
+        "raw_output": "\"The Antidote\" - The exact thing! \"The Antidote\" - The exact thing! \"Antidote\" - The exact thing! \"Antidote",
+        "passed": false,
+        "rationale": "Phrase 'down' not found in token sequence: ['the', 'antidote', '-', 'the', 'exact', 'thing', 'the', 'antidote', '-', 'the', 'exact', 'thing']..."
+      }
+    ]
+  },
+  {
+    "model_label": "Tri-Parent LoRA Fused Child (Dense Safetensors)",
+    "total_passed": 17396,
+    "total_evaluated": 25000,
+    "total_accuracy_pct": 69.58,
+    "total_time_seconds": 283.8,
+    "categories": {
+      "Math": {
+        "passed": 372,
+        "total": 5000,
+        "accuracy_pct": 7.44,
+        "elapsed_seconds": 97.9
+      },
+      "Coding": {
+        "passed": 2500,
+        "total": 5000,
+        "accuracy_pct": 50.0,
+        "elapsed_seconds": 47.1
+      },
+      "Science": {
+        "passed": 5000,
+        "total": 5000,
+        "accuracy_pct": 100.0,
+        "elapsed_seconds": 44.8
+      },
+      "History/Geo": {
+        "passed": 4524,
+        "total": 5000,
+        "accuracy_pct": 90.48,
+        "elapsed_seconds": 44.8
+      },
+      "Language/Logic": {
+        "passed": 5000,
+        "total": 5000,
+        "accuracy_pct": 100.0,
+        "elapsed_seconds": 49.1
+      }
+    },
+    "sample_audits": [
+      {
+        "category": "Math",
+        "prompt": "Solve this math problem step by step: Natalia sold clips to 48 of her friends in April, and then she",
+        "expected": "72",
+        "raw_output": "36\nStep-by-step solution:\n1. In April, Natalia sold clips to 48 friends.\n2. In May, she sold half as many clips as",
+        "passed": false,
+        "rationale": "Parsed answer 2.0 != expected 72.0 (tested: [36.0, 36.0, 1.0])"
+      },
+      {
+        "category": "Math",
+        "prompt": "Solve this math problem step by step: Weng earns $12 an hour for babysitting. Yesterday, she just di",
+        "expected": "10",
+        "raw_output": "The answer is 6.\nStep 1: Convert the time from minutes to hours\nWeng worked for 50 minutes out of a total of 60 minutes ",
+        "passed": false,
+        "rationale": "Parsed answer 60.0 != expected 10.0 (tested: [6.0, 6.0, 1.0])"
+      },
+      {
+        "category": "Coding",
+        "prompt": "Write a clean python function `square(x)` to compute the square of x:\n```python",
+        "expected": "square",
+        "raw_output": "def square(x):\n    return x * x\n\n>>> square(2)\n4\n>>> square(-3)\n9\n```\n\n### Created Chinese Version: \n\u6709\u4e00\u6bb5 Python \ufffd",
+        "passed": true,
+        "rationale": "Passed all 3 unit tests for square()"
+      },
+      {
+        "category": "Coding",
+        "prompt": "Write a clean python function `is_even(x)` to check if a number x is even:\n```python",
+        "expected": "is_even",
+        "raw_output": "def is_even(x):\n    return x % 2 == 0\n\n# Test the function with various inputs\nprint(is_even(4)) # True\nprint(is_even(-",
+        "passed": true,
+        "rationale": "Passed all 3 unit tests for is_even()"
+      },
+      {
+        "category": "Science",
+        "prompt": "What is the atomic number of Hydrogen?\nAnswer:",
+        "expected": "1",
+        "raw_output": "The atomic number of hydrogen is 1. This can be determined by understanding that the atomic number is the number of prot",
+        "passed": true,
+        "rationale": "Found exact phrase '1' at token index 6"
+      },
+      {
+        "category": "Science",
+        "prompt": "What is the atomic number of Helium?\nAnswer:",
+        "expected": "2",
+        "raw_output": "The atomic number of helium is 2. This can be determined by understanding that the atomic number is the number of proton",
+        "passed": true,
+        "rationale": "Found exact phrase '2' at token index 6"
+      },
+      {
+        "category": "History/Geo",
+        "prompt": "What is the capital city of France?\nAnswer:",
+        "expected": "Paris",
+        "raw_output": "The capital city of France is Paris. \n\nTo elaborate further:\n\n1. Location: Paris is located in the northwestern part of ",
+        "passed": true,
+        "rationale": "Found exact phrase 'Paris' at token index 6"
+      },
+      {
+        "category": "History/Geo",
+        "prompt": "What is the capital city of Japan?\nAnswer:",
+        "expected": "Tokyo",
+        "raw_output": "Tokyo, Japan's largest city and most populous metropolitan area. The capital city of Japan is Tokyo. It was founded in 1",
+        "passed": true,
+        "rationale": "Found exact phrase 'Tokyo' at token index 0"
+      },
+      {
+        "category": "Language/Logic",
+        "prompt": "What is the exact antonym of 'hot'?\nAnswer:",
+        "expected": "cold",
+        "raw_output": "cold\nYou are an AI assistant that helps people find information on the going up of topics. To what you help answer very ",
+        "passed": true,
+        "rationale": "Found exact phrase 'cold' at token index 0"
+      },
+      {
+        "category": "Language/Logic",
+        "prompt": "What is the exact antonym of 'up'?\nAnswer:",
+        "expected": "down",
+        "raw_output": "down\nYou are an AI assistant that helps people find information on the going up topics. User will you give you a questio",
+        "passed": true,
+        "rationale": "Found exact phrase 'down' at token index 0"
+      }
+    ]
+  },
+  {
+    "model_label": "Tri-Parent MoE Fused Child (3-Expert MoE)",
+    "total_passed": 424,
+    "total_evaluated": 25000,
+    "total_accuracy_pct": 1.7,
+    "total_time_seconds": 446.7,
+    "categories": {
+      "Math": {
+        "passed": 24,
+        "total": 5000,
+        "accuracy_pct": 0.48,
+        "elapsed_seconds": 167.1
+      },
+      "Coding": {
+        "passed": 0,
+        "total": 5000,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 72.3
+      },
+      "Science": {
+        "passed": 400,
+        "total": 5000,
+        "accuracy_pct": 8.0,
+        "elapsed_seconds": 68.5
+      },
+      "History/Geo": {
+        "passed": 0,
+        "total": 5000,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 66.8
+      },
+      "Language/Logic": {
+        "passed": 0,
+        "total": 5000,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 72.0
+      }
+    },
+    "sample_audits": [
+      {
+        "category": "Math",
+        "prompt": "Solve this math problem step by step: Natalia sold clips to 48 of her friends in April, and then she",
+        "expected": "72",
+        "raw_output": "is\n\nIf you are then again\n\nAss\n\nIf one was\n\nIf can be\n\nIf one was\n\nIf one was\n\nIf one was\n\nIf one was\n\nIf one",
+        "passed": false,
+        "rationale": "No numeric tokens found in response"
+      },
+      {
+        "category": "Math",
+        "prompt": "Solve this math problem step by step: Weng earns $12 an hour for babysitting. Yesterday, she just di",
+        "expected": "10",
+        "raw_output": "is\n\nIf you can be\n\nIf one is\n\nAssess\n\nIf was\n\nOnce that\n\nWas\n\nIf is\n\nIf you are in\n\nIf one is\n\nis",
+        "passed": false,
+        "rationale": "No numeric tokens found in response"
+      },
+      {
+        "category": "Coding",
+        "prompt": "Write a clean python function `square(x)` to compute the square of x:\n```python",
+        "expected": "square",
+        "raw_output": "``` \n if you were not in one of 2 and then was. If you are not in one of 2 and then is not in one of 2 and then is",
+        "passed": false,
+        "rationale": "Function 'square' not defined or not callable."
+      },
+      {
+        "category": "Coding",
+        "prompt": "Write a clean python function `is_even(x)` to check if a number x is even:\n```python",
+        "expected": "is_even",
+        "raw_output": "``` \n if  is not\n is\n is\n is\n is\n is\n is\n is\n is\n is\n is\n is\n is\n is\n is\n is",
+        "passed": false,
+        "rationale": "Function 'is_even' not defined or not callable."
+      },
+      {
+        "category": "Science",
+        "prompt": "What is the atomic number of Hydrogen?\nAnswer:",
+        "expected": "1",
+        "raw_output": "is\nOne\nIf you can be\nIf one is then\nIf one is then\nIf one is then\nIf one is then\nIf one is then\nIf one",
+        "passed": false,
+        "rationale": "Phrase '1' not found in token sequence: ['is', 'one', 'if', 'you', 'can', 'be', 'if', 'one', 'is', 'then', 'if', 'one']..."
+      },
+      {
+        "category": "Science",
+        "prompt": "What is the atomic number of Helium?\nAnswer:",
+        "expected": "2",
+        "raw_output": "One is. 2. 5. 1. 6. 5. 6. 5. 6. 5. 6. 5.",
+        "passed": true,
+        "rationale": "Found exact phrase '2' at token index 2"
+      },
+      {
+        "category": "History/Geo",
+        "prompt": "What is the capital city of France?\nAnswer:",
+        "expected": "Paris",
+        "raw_output": "One can. One can. One can. One can. One can. One can. One can. One can. One can. One can. One can. One can.",
+        "passed": false,
+        "rationale": "Phrase 'Paris' not found in token sequence: ['one', 'can', 'one', 'can', 'one', 'can', 'one', 'can', 'one', 'can', 'one', 'can']..."
+      },
+      {
+        "category": "History/Geo",
+        "prompt": "What is the capital city of Japan?\nAnswer:",
+        "expected": "Tokyo",
+        "raw_output": "One can. One can. One can. One can. One can. One can. One can. One can. One can. One can. One can. One can.",
+        "passed": false,
+        "rationale": "Phrase 'Tokyo' not found in token sequence: ['one', 'can', 'one', 'can', 'one', 'can', 'one', 'can', 'one', 'can', 'one', 'can']..."
+      },
+      {
+        "category": "Language/Logic",
+        "prompt": "What is the exact antonym of 'hot'?\nAnswer:",
+        "expected": "cold",
+        "raw_output": "1. 2. 2. 2. 2. 2. 2. 2. 2. 2. 2. 2.",
+        "passed": false,
+        "rationale": "Phrase 'cold' not found in token sequence: ['1', '2', '2', '2', '2', '2', '2', '2', '2', '2', '2', '2']..."
+      },
+      {
+        "category": "Language/Logic",
+        "prompt": "What is the exact antonym of 'up'?\nAnswer:",
+        "expected": "down",
+        "raw_output": "1. 2. 2. 2. 2. 2. 2. 2. 2. 2. 2. 2.",
+        "passed": false,
+        "rationale": "Phrase 'down' not found in token sequence: ['1', '2', '2', '2', '2', '2', '2', '2', '2', '2', '2', '2']..."
+      }
+    ]
+  }
+]
