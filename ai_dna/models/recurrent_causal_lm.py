@@ -24,7 +24,8 @@ class RecurrentRMSNorm(nn.Module):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         rms = torch.rsqrt(x.float().pow(2).mean(-1, keepdim=True) + self.eps)
-        return (x.float() * rms).to(x.dtype) * self.weight
+        normed = (x.float() * rms).to(self.weight.dtype) * self.weight
+        return normed.to(x.dtype)
 
 
 class RecurrentRoPE:
@@ -35,7 +36,9 @@ class RecurrentRoPE:
         x1 = x[..., :d // 2]
         x2 = x[..., d // 2:]
         rotated = torch.cat([-x2, x1], dim=-1)
-        return (x * cos) + (rotated * sin)
+        cos_t = cos.to(dtype=x.dtype)
+        sin_t = sin.to(dtype=x.dtype)
+        return (x * cos_t) + (rotated * sin_t)
 
     @staticmethod
     def precompute_cos_sin(seq_len: int, dim: int, device: torch.device, base: float = 10000.0) -> Tuple[torch.Tensor, torch.Tensor]:
@@ -109,9 +112,9 @@ class RecurrentQwenForCausalLM(nn.Module):
                     sub = k[len("model.layers.0."):]
                     model.base_weights[sub] = t
                     if sub == "input_layernorm.weight":
-                        model.input_layernorm.weight.data.copy_(t)
+                        model.input_layernorm.weight = nn.Parameter(t.clone())
                     elif sub == "post_attention_layernorm.weight":
-                        model.post_attention_layernorm.weight.data.copy_(t)
+                        model.post_attention_layernorm.weight = nn.Parameter(t.clone())
                 elif k.startswith("model.step_adapters."):
                     sub = k[len("model.step_adapters."):]
                     model.step_adapters[sub] = t
@@ -128,6 +131,7 @@ class RecurrentQwenForCausalLM(nn.Module):
         )
 
         model.to(dev)
+        model.to(dtype=dtype)
         model.eval()
         return model
 

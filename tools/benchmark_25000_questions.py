@@ -462,15 +462,33 @@ def evaluate_model_batched(
         tokenizer.pad_token_id = tokenizer.eos_token_id or 0
 
     dtype = torch.bfloat16 if device == "cuda" else torch.float32
-    model = AutoModelForCausalLM.from_pretrained(
-        model_path,
-        torch_dtype=dtype,
-        low_cpu_mem_usage=True,
-    ).to(device)
-    model.eval()
+    is_recurrent = False
 
-    n_params = sum(p.numel() for p in model.parameters())
-    print(f"  Model loaded in {time.time() - t_load:.2f}s ({n_params / 1e6:.1f}M parameters).")
+    if "recurrent" in model_path.lower() or os.path.exists(os.path.join(model_path, "recurrent_manifest.json")):
+        from ai_dna.models.recurrent_causal_lm import RecurrentQwenForCausalLM
+        model = RecurrentQwenForCausalLM.from_pretrained(
+            model_path,
+            device=device,
+            dtype=dtype,
+        )
+        is_recurrent = True
+        n_params = sum(p.numel() for p in model.base_weights.values())
+        n_params += sum(p.numel() for p in model.step_adapters.values())
+        if model.embed_tokens is not None:
+            n_params += model.embed_tokens.numel()
+        if model.step_embeddings is not None:
+            n_params += model.step_embeddings.numel()
+        n_params += sum(p.numel() for p in model.parameters())
+    else:
+        model = AutoModelForCausalLM.from_pretrained(
+            model_path,
+            torch_dtype=dtype,
+            low_cpu_mem_usage=True,
+        ).to(device)
+        model.eval()
+        n_params = sum(p.numel() for p in model.parameters())
+
+    print(f"  Model loaded in {time.time() - t_load:.2f}s ({n_params / 1e6:.1f}M parameters, Recurrent={is_recurrent}).")
 
     cat_results = {}
     total_passed = 0
@@ -488,7 +506,7 @@ def evaluate_model_batched(
             prompts = []
             for item in batch_slice:
                 q = item["q"]
-                if getattr(tokenizer, "chat_template", None):
+                if not is_recurrent and getattr(tokenizer, "chat_template", None):
                     try:
                         p = tokenizer.apply_chat_template(
                             [{"role": "user", "content": q}],
@@ -513,13 +531,20 @@ def evaluate_model_batched(
 
             iln = enc["input_ids"].shape[1]
             with torch.no_grad():
-                outputs = model.generate(
-                    input_ids=enc["input_ids"],
-                    attention_mask=enc["attention_mask"],
-                    max_new_tokens=24,
-                    do_sample=False,
-                    pad_token_id=tokenizer.pad_token_id,
-                )
+                if is_recurrent:
+                    outputs = model.generate(
+                        input_ids=enc["input_ids"],
+                        max_new_tokens=24,
+                        pad_token_id=tokenizer.pad_token_id,
+                    )
+                else:
+                    outputs = model.generate(
+                        input_ids=enc["input_ids"],
+                        attention_mask=enc["attention_mask"],
+                        max_new_tokens=24,
+                        do_sample=False,
+                        pad_token_id=tokenizer.pad_token_id,
+                    )
 
             # Batched Decoding and Verification
             for idx_item, (item, out_seq) in enumerate(zip(batch_slice, outputs)):
@@ -585,7 +610,7 @@ def evaluate_model_batched(
 def main():
     parser = argparse.ArgumentParser(description="25,000-Question Large-Scale AI-DNA Catastrophic Forgetting Benchmark")
     parser.add_argument("--count-per-cat", type=int, default=5000, help="Number of questions per category (default: 5000)")
-    parser.add_argument("--batch-size", type=int, default=64, help="Inference batch size on GPU (default: 64)")
+    parser.add_argument("--batch-size", type=int, default=128, help="Inference batch size on GPU (default: 128)")
     parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu", help="Execution device ('cuda' or 'cpu')")
     parser.add_argument("--output-file", default=os.path.join(WORKSPACE_ROOT, "outputs", "catastrophic_forgetting_25k_report.json"), help="Path to save JSON benchmark report")
     args = parser.parse_args()
@@ -600,14 +625,19 @@ def main():
     suite = compile_25k_benchmark_suite(count_per_cat=args.count_per_cat)
 
     models_to_run = [
-        ("Parent 1: SmolLM2-360M", os.path.join(WORKSPACE_ROOT, "modal", "text_models", "smollm2-360m")),
-        ("Parent 2: Qwen2.5-0.5B", os.path.join(WORKSPACE_ROOT, "modal", "text_models", "qwen2.5-0.5b")),
-        ("AI-DNA Fused Child", os.path.join(WORKSPACE_ROOT, "my_llm_folder")),
+        ("Baseline: Qwen2.5-0.5B", os.path.join(WORKSPACE_ROOT, "modal", "text_models", "qwen2.5-0.5b")),
+        ("Donor: SmolLM2-360M", os.path.join(WORKSPACE_ROOT, "modal", "text_models", "smollm2-360m")),
+        ("Fused Recurrent: 4-Model Type 7", os.path.join(WORKSPACE_ROOT, "modal", "recurrent_types", "fused_4model_layer_first_type7")),
+        ("Fused Feedforward: Tri-Parent LoRA", os.path.join(WORKSPACE_ROOT, "modal", "fused_tri_parent_lora")),
     ]
 
     all_reports = []
+    os.makedirs(os.path.dirname(args.output_file), exist_ok=True)
 
     for label, path in models_to_run:
+        if not os.path.exists(path):
+            print(f"[!] Warning: Model path {path} not found. Skipping.")
+            continue
         rep = evaluate_model_batched(
             model_path=path,
             model_label=label,
@@ -617,56 +647,48 @@ def main():
         )
         all_reports.append(rep)
 
-    # Simulated Naive Merging Baseline (Representation collapse)
-    naive_cats = {}
-    for cat, qs in suite.items():
-        naive_cats[cat] = {
-            "passed": 0,
-            "total": len(qs),
-            "accuracy_pct": 0.0,
-            "elapsed_seconds": 0.0,
-        }
-    naive_report = {
-        "model_label": "Naive Linear Merging (Non-AIDNA)",
-        "params": 494000000,
-        "total_passed": 0,
-        "total_evaluated": total_questions,
-        "total_accuracy_pct": 0.0,
-        "total_time_seconds": 0.0,
-        "categories": naive_cats,
-    }
-    all_reports.insert(2, naive_report)
+        # Periodic checkpoint save after each model
+        with open(args.output_file, "w", encoding="utf-8") as f:
+            json.dump(all_reports, f, indent=2, ensure_ascii=False)
+        print(f"  [+] Checkpointed progress -> {os.path.abspath(args.output_file)}")
 
-    # Save to JSON
-    os.makedirs(os.path.dirname(args.output_file), exist_ok=True)
-    with open(args.output_file, "w", encoding="utf-8") as f:
-        json.dump(all_reports, f, indent=2, ensure_ascii=False)
-    print(f"\n[+] Full 25,000-question report saved -> {os.path.abspath(args.output_file)}")
+    print(f"\n[+] Full evaluation complete! Final report saved -> {os.path.abspath(args.output_file)}")
 
     # Print Final Summary Comparison Matrix
-    print("\n" + "=" * 105)
-    print(f"  AI-DNA {total_questions:,}-QUESTION CATASTROPHIC FORGETTING BENCHMARK MATRIX")
-    print("=" * 105)
-    header = f"  {'Domain (' + str(args.count_per_cat) + ' Qs each)':<30} | {'SmolLM2-360M':<16} | {'Qwen2.5-0.5B':<16} | {'Naive Merge':<14} | {'AI-DNA Fused Child'}"
+    print("\n" + "=" * 125)
+    print(f"  AI-DNA {total_questions:,}-QUESTION BENCHMARK MATRIX ({args.count_per_cat:,} Qs per Category)")
+    print("=" * 125)
+
+    col_w = 22
+    header = f"  {'Domain':<18} | " + " | ".join(f"{r['model_label'][:col_w]:<{col_w}}" for r in all_reports)
     print(header)
-    print("  " + "─" * 100)
+    print("  " + "─" * (len(header) - 2))
 
     cats = ["Math", "Coding", "Science", "History/Geo", "Language/Logic"]
     for c in cats:
-        s_smol = f"{all_reports[0]['categories'][c]['passed']:,} ({all_reports[0]['categories'][c]['accuracy_pct']:.1f}%)"
-        s_qwen = f"{all_reports[1]['categories'][c]['passed']:,} ({all_reports[1]['categories'][c]['accuracy_pct']:.1f}%)"
-        s_naive = "0 (0.0%)"
-        s_fused = f"{all_reports[3]['categories'][c]['passed']:,} ({all_reports[3]['categories'][c]['accuracy_pct']:.1f}%)"
-        print(f"  {c:<30} | {s_smol:<16} | {s_qwen:<16} | {s_naive:<14} | {s_fused}")
+        row_vals = []
+        for r in all_reports:
+            p = r['categories'][c]['passed']
+            pct = r['categories'][c]['accuracy_pct']
+            row_vals.append(f"{p:,} ({pct:.1f}%)")
+        row_str = f"  {c:<18} | " + " | ".join(f"{v:<{col_w}}" for v in row_vals)
+        print(row_str)
 
-    print("  " + "─" * 100)
-    tot_smol = f"{all_reports[0]['total_passed']:,} ({all_reports[0]['total_accuracy_pct']:.2f}%)"
-    tot_qwen = f"{all_reports[1]['total_passed']:,} ({all_reports[1]['total_accuracy_pct']:.2f}%)"
-    tot_naive = f"0 (0.00%)"
-    tot_fused = f"{all_reports[3]['total_passed']:,} ({all_reports[3]['total_accuracy_pct']:.2f}%)"
-    print(f"  {'TOTAL SCORE':<30} | {tot_smol:<16} | {tot_qwen:<16} | {tot_naive:<14} | 🏆 {tot_fused}")
-    print("=" * 105 + "\n")
+    print("  " + "─" * (len(header) - 2))
+    tot_vals = []
+    for r in all_reports:
+        p = r['total_passed']
+        pct = r['total_accuracy_pct']
+        tot_vals.append(f"{p:,} ({pct:.2f}%)")
+    tot_str = f"  {'TOTAL ACCURACY':<18} | " + " | ".join(f"{v:<{col_w}}" for v in tot_vals)
+    print(tot_str)
+
+    times_vals = [f"{r['total_time_seconds']:.1f}s" for r in all_reports]
+    time_str = f"  {'TOTAL RUNTIME':<18} | " + " | ".join(f"{v:<{col_w}}" for v in times_vals)
+    print(time_str)
+    print("=" * 125 + "\n")
 
 
 if __name__ == "__main__":
     main()
+

@@ -1,0 +1,162 @@
+[
+  {
+    "model_label": "Baseline: Qwen2.5-0.5B",
+    "params": 494032768,
+    "total_passed": 6,
+    "total_evaluated": 10,
+    "total_accuracy_pct": 60.0,
+    "total_time_seconds": 5.2,
+    "categories": {
+      "Math": {
+        "passed": 0,
+        "total": 2,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 2.8
+      },
+      "Coding": {
+        "passed": 2,
+        "total": 2,
+        "accuracy_pct": 100.0,
+        "elapsed_seconds": 1.9
+      },
+      "Science": {
+        "passed": 1,
+        "total": 2,
+        "accuracy_pct": 50.0,
+        "elapsed_seconds": 0.2
+      },
+      "History/Geo": {
+        "passed": 2,
+        "total": 2,
+        "accuracy_pct": 100.0,
+        "elapsed_seconds": 0.2
+      },
+      "Language/Logic": {
+        "passed": 1,
+        "total": 2,
+        "accuracy_pct": 50.0,
+        "elapsed_seconds": 0.1
+      }
+    }
+  },
+  {
+    "model_label": "Donor: SmolLM2-360M",
+    "params": 361821120,
+    "total_passed": 7,
+    "total_evaluated": 10,
+    "total_accuracy_pct": 70.0,
+    "total_time_seconds": 5.8,
+    "categories": {
+      "Math": {
+        "passed": 0,
+        "total": 2,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 1.5
+      },
+      "Coding": {
+        "passed": 1,
+        "total": 2,
+        "accuracy_pct": 50.0,
+        "elapsed_seconds": 2.3
+      },
+      "Science": {
+        "passed": 2,
+        "total": 2,
+        "accuracy_pct": 100.0,
+        "elapsed_seconds": 1.3
+      },
+      "History/Geo": {
+        "passed": 2,
+        "total": 2,
+        "accuracy_pct": 100.0,
+        "elapsed_seconds": 0.4
+      },
+      "Language/Logic": {
+        "passed": 2,
+        "total": 2,
+        "accuracy_pct": 100.0,
+        "elapsed_seconds": 0.3
+      }
+    }
+  },
+  {
+    "model_label": "Fused Recurrent: 4-Model Type 7",
+    "params": 606092800,
+    "total_passed": 7,
+    "total_evaluated": 10,
+    "total_accuracy_pct": 70.0,
+    "total_time_seconds": 14.9,
+    "categories": {
+      "Math": {
+        "passed": 1,
+        "total": 2,
+        "accuracy_pct": 50.0,
+        "elapsed_seconds": 2.3
+      },
+      "Coding": {
+        "passed": 0,
+        "total": 2,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 2.6
+      },
+      "Science": {
+        "passed": 2,
+        "total": 2,
+        "accuracy_pct": 100.0,
+        "elapsed_seconds": 3.1
+      },
+      "History/Geo": {
+        "passed": 2,
+        "total": 2,
+        "accuracy_pct": 100.0,
+        "elapsed_seconds": 4.3
+      },
+      "Language/Logic": {
+        "passed": 2,
+        "total": 2,
+        "accuracy_pct": 100.0,
+        "elapsed_seconds": 2.6
+      }
+    }
+  },
+  {
+    "model_label": "Fused Feedforward: Tri-Parent LoRA",
+    "params": 494032768,
+    "total_passed": 5,
+    "total_evaluated": 10,
+    "total_accuracy_pct": 50.0,
+    "total_time_seconds": 4.6,
+    "categories": {
+      "Math": {
+        "passed": 0,
+        "total": 2,
+        "accuracy_pct": 0.0,
+        "elapsed_seconds": 2.1
+      },
+      "Coding": {
+        "passed": 1,
+        "total": 2,
+        "accuracy_pct": 50.0,
+        "elapsed_seconds": 2.0
+      },
+      "Science": {
+        "passed": 1,
+        "total": 2,
+        "accuracy_pct": 50.0,
+        "elapsed_seconds": 0.1
+      },
+      "History/Geo": {
+        "passed": 2,
+        "total": 2,
+        "accuracy_pct": 100.0,
+        "elapsed_seconds": 0.2
+      },
+      "Language/Logic": {
+        "passed": 1,
+        "total": 2,
+        "accuracy_pct": 50.0,
+        "elapsed_seconds": 0.2
+      }
+    }
+  }
+]
